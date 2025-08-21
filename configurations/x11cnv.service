@@ -1,0 +1,18 @@
+################################################################################################
+# File: x11vnc.service
+# Author: Andreas
+# Date: 20250818
+# purpose: x11cnv as service to access KlipperScreen via VNC.
+# 
+################################################################################################
+
+[Unit]
+Description=Start X11VNC
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/x11vnc -display :0 -usepw -forever -loop -noxdamage -repeat -rfbauth /etc/x11vnc.pass -rfbport 5900 -shared
+
+[Install]
+WantedBy=multi-user.target

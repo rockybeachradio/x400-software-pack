@@ -1,0 +1,40 @@
+#!/bin/bash
+
+################################################################################################
+# File: rc.local
+# Author: Eryone
+# Date: 20250812
+# purpose: In variable.cfg: replaces any "needreboot = 1" kind of writing into "needreboot = 0"
+#            Set timezone
+#
+# xx.local - Is a unix etension.
+#
+# How to call: ???
+# Called in ???
+################################################################################################
+
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other value on error.
+#
+# In order to enable or disable this script just change the execution bits.
+#
+# By default this script does nothing.
+#echo makerbase | sudo -S usbreset 802.11\ n\ WLAN
+#echo makerbase | sudo -S /home/mks/monitor.sh &
+#xrandr -display :0.0 -q --verbose -o inverted
+
+sed -i 's/needreboot = 1/needreboot = 0/g' /home/mks/printer_data/config/variable.cfg
+sed -i 's/needreboot =1/needreboot = 0/g' /home/mks/printer_data/config/variable.cfg
+sed -i 's/needreboot=1/needreboot = 0/g' /home/mks/printer_data/config/variable.cfg
+sed -i 's/needreboot= 1/needreboot = 0/g' /home/mks/printer_data/config/variable.cfg
+
+# curl -X POST http://127.0.0.1/printer/gcode/script?script=SAVE_VARIABLE%20VARIABLE=needreboot%20VALUE=0
+
+echo makerbase | sudo -S ifconfig can0 txqueuelen 1024      # Runs ifconfig as root (password fed via stdin) to set the transmit queue length of the can0 interface to 1024 packets.
+                                                            # low a deeper send buffer on the CAN bus under load. (ifconfig is deprecated; the modern equivalent is ip link set can0 txqueuelen 1024.)
+echo makerbase | sudo -S ln -fs /usr/share/zoneinfo/$(wget -qO - http://ip-api.com/line?fields=timezone) /etc/localtime &
+                                                            # As root, force-create a symlink from the system timezone file to the zone returned by ip-api.com (e.g., Europe/Berlin), and run it in the background (&).
+                                                            # Updates the system timezone by pointing /etc/localtime at /usr/share/zoneinfo/<zone>.
+exit 0

@@ -1,0 +1,221 @@
+#!/usr/bin/bash
+
+################################################################################################
+# File: update_printer.sh
+# Author: Andreas
+# Date: 20250819
+# Purpose: Update the printer software  with the files in $HOME/x400-software-pack/.
+#
+################################################################################################
+
+
+################################################################################################
+# commands used in this script
+################################################################################################
+#rm -rf /path/to/folder/*                       # Delete the folders content. r = recursive, f = force
+#rm -rf /path/to/folder/{*,.*} 2>/dev/null      # for hidden files
+
+#cp -r /source/fodler/* destination/folder/                         # copy content from one folder to another. r = recursive
+#cp -r /source/folder/{*,.*} /destination/folder/ 2>/dev/null       # including hidden files
+
+#cp /source/fodler/file /destination/folder/file            # replace a file with another
+
+#mv /path/to/newfile /path/to/existingfile                  # moves a file
+
+#ln -sfn /path/to/real-file /path/to/shortcut-symlinkl      # Create links. s = symlink, f = force, n = treat link as normal file if it exists
+
+#sed -i 's/OLD/NEW/g' file1 file2 file3     # Replaces OLD with NEW in the file(s). i= edit the file (in.place), s = subtitute the string with a new one, g = global replaces all strings in the file
+                                            # on Macos a backup suffix is requred. if non wanted: $ sed -i 's/OLD/NEW/g' filename
+                                            # $ sed 's/foo/bar/g' myfile.txt shows only the resuts
+
+
+################################################################################################
+# Variables
+################################################################################################
+source_base="$HOME""/x400-software-pack"
+config_source="$HOME""/x400-software-pack/configurations"
+config_destination="$HOME""/printer_data/config"
+
+
+################################################################################################
+# Dobule check that all the preparation is done.
+################################################################################################
+echo "Before we start, pelase doube check, that all needed preparations are comleted eg."
+echo "- Armbian is up to date"
+echo "- Armbian is set up"
+echo "- The folling tools are installed via KIAUH (v6+): klipper, moonraker, mainsail, mainsail-config, KlipperScreen, corwsnest, input shaper, G-Code Shell Command"
+echo "- Optional: Mobilemaker, Obico for Klipper is isntalled"
+echo "Furhter Information can be found in the documentation on GitHub"
+
+read -p "All preparations are done? [Y/n]: " answer
+answer=${answer:-N}     # default to "N" if empty
+if [[ "$answer" =~ ^[Yy]$ ]]; then
+    echo "Okay, letzt start with the installation routine ..."
+else
+    echo "See you later."
+    exit 0;
+fi
+
+
+################################################################################################
+# Copy Configuration files
+################################################################################################
+# printer_data - config
+echo "Preparing configuration folder ..."
+rm -rf "$config_destination""/*"  || echo "! Faild deleating folder content of ""$config_destination"
+
+echo "Copy configurations ..."
+files=(
+    Andreas_extensions.cfg
+    printer.cfg
+    canuid.cfg
+    chamber_heater.cfg
+    crowsnest.conf
+    EECAN.cfg
+    EECAN_macros.cfg
+    KAMP_Settings.cfg
+    KlipperScreen.conf
+    moonraker.conf
+    moonraker-obico.cfg
+    motor_driverv1_2.cfg
+    plr.sh
+    runout.cfg
+    variable.cfg
+    x400.cfg
+    x400_shell_commands_macros.cfg
+    x400_eryone_stuff.cfg
+)
+
+# Copy to printer_data/config/
+for f in "${files[@]}"; do
+    cp "$config_source""/""$f" "$config_destination/"  || echo "! Faild copying ""$f"
+done
+
+
+################################################################################################
+# Copy to spezial destinations
+################################################################################################
+cp "$source""/mainsail-client.cfg" "$HOME""/mainsail-config/client.cfg"  || echo "! Faild copying mainsail-client.cfg"
+cp "$source""/timelapse.cfg" "$HOME""/moonraker-timelapse/klipper_macro/timelapse.cfg"   || echo "! Faild copying timelapse.cfg"
+
+
+################################################################################################
+# Create Symlinks
+################################################################################################
+echo "Creating Symlinks ..."
+ln -sfn "$HOME""/mainsail-config/mainsail.cfg"                      "$config_destination""/mainsail.cfg"  || echo "! Faild setting symlink to mainsail.cfg"
+ln -sfn "$HOME""/moonraker-timelapse/klipper_macro/timelapse.cfg"   "$config_destination""/timelapse.cfg" || echo "! Faild setting symlink to timelapse.cfg"
+ln -sfn "$HOME""/Klipper-Adaptive-Meshing-Purging/Configuration/"   "$config_destination""/KAMP" || echo "! Faild setting symlink to KAMP configuration folder"
+
+
+################################################################################################
+# Copy KlipperScreen panels
+################################################################################################
+echo "Add KlipperScreen panels ..."
+cp "$source_base""/KlipperScreen-panels/*" "$HOME""/KlipperScreen/panels/" || echo "! Faild copying Klipper-panels."
+
+
+################################################################################################
+# Copy Network interce
+################################################################################################
+cp "$source""/can0" "/etc/network/interfaces.d/can0" || echo "! Faild copying network interface can0."
+
+
+################################################################################################
+# Copy Firnware config
+################################################################################################
+echo "Copy klipper firmware configurations ..."
+cp "$source_base""/firmware.configurations/stm32f407_firmware.config" "$HOME""/klipper/" || echo "! Faild copying stm32f407_firmare.config."
+cp "$source_base""/firmware.configurations/rp2040_firmware.config" "$HOME""/klipper/" ||| echo "! Faild copying rp2040_firmware.config."
+
+echo "Copy Katapult bootloader configuratons ..."
+cp "$source_base""/firmware.configurations/stm32f407_katapult.config" "$HOME""/katapult/" || echo "! Faild copying stm32f407_katapult.config."
+cp "$source_base""/firmware.configurations/rp2040n_katapult_usb.config" "$HOME""/katapult/" || echo "! Faild copying rp32040_katapult.config."
+
+#echo "Copy sensor firmware configuration ..."
+## sensor with stm32 chip on RP2040 board
+#cp "$source_base""/firmware.configurations/sensor_on_rp2040_firmware.config" "$HOME""/klipper/" || echo "! Faild copying sensor_on_rp2040_firmware.config."
+#cp "$source_base""/firmware.configurations/sensor_on_rp2040_katapult.config" "$HOME""/katapult/" || echo "! Faild copying sensor_on_rp2040_katapult.config."
+
+
+################################################################################################
+# Copy x11vnc
+################################################################################################
+sudo cp "$config_source""/x11cnv.service" "/lib/systemd/system/" || echo "! Copying service failed."
+
+
+################################################################################################
+# Copy and isntall farm3d
+################################################################################################
+echo "Installing Eryone farm3d ..."
+cp "$source_base""/farm3d/"  "$HOME""/"  -rf || echo "! Faild copying farm3d folder"
+chmod 777 "$HOME""/farm3d/*" || echo "! Faild chmod on farm3d fodler"
+cd "$source_base""/farm3d/" || echo "! Faild going into ""$source_base""/farm3d folder"
+chmod 777 *  || echo "! Faild chmod 777 *"
+./install.sh  || echo "! Faild starting the install.sh"
+#pip3 install opencv-python || echo "! Faild pip3 install opencv-python"        # This is installed by /x400-software-pack/scripts/install_software.sh
+#pip3 install qrcode[pil] || echo "! Faild pip3 install qrcode"                 # This is installed by /x400-software-pack/scripts/install_software.sh
+
+
+################################################################################################
+# Install farm3d
+################################################################################################
+echo "Installing needed tools for farm3d ...:"
+cd "$HOME"
+pip3 install opencv-python || echo "! Faild pip3 install opencv-python"
+pip3 install qrcode[pil] || echo "! Faild pip3 install qrcode"
+
+
+
+
+################################################################################################
+# Eryone script compatibility
+################################################################################################
+#ln -sfn "$source_base""/eryone-scripts-all/"   "$HOME""/mainsail/all/" || echo "! Faild setting symlink to eryone-all script in mainsail folder"
+
+
+################################################################################################
+# Update the MCUs
+################################################################################################
+echo "Shall the MCUs be updated?"
+answer=${answer:-N}     # default to "N" if empty
+if [[ "$answer" =~ ^[Yy]$ ]]; then
+    echo "Installing MCU updates ..."
+    "./""$HOME""/x400-software-pack/scripts/mcu_update.sh -x linux"                 # Update Linux MCU
+    "./""$HOME""/x400-software-pack/scripts/mcu_update.sh -x baord_mcu"             # Update SKIPR MCU
+    "./""$HOME""/x400-software-pack/scripts/mcu_update.sh -x toolhead_mcu"          # Update RP2040 MCU
+    #"./""$HOME""/x400-software-pack/scripts/mcu_update.sh -x toolehad_sensor"       # Update Sensor on RP2040
+else
+    echo "Please do it later."
+fi
+
+
+################################################################################################
+# replace PIN settings
+# not needed when SKIPR connections changed.
+################################################################################################
+echo "Replacing PIN declarations ..."
+read -p "Set PINs on SKIPR Board to Eryone setup? [Y/n]: " answer
+answer=${answer:-N}     # default to "N" if empty
+if [[ "$answer" =~ ^[Yy]$ ]]; then
+    echo "Calling the pin replacement script ..."
+    change_pins_to_eryone_setup.sh || echo "! change_pins_to_eryone_setup.sh could not be found."       # Calls the shell script which is replacing the pins in the cfg files
+else
+    echo "You chose NO"
+    echo "Make sure you changed the hardware connections on the SKIRP board !!!"
+fi
+
+
+################################################################################################
+# Ende
+################################################################################################
+echo "Installation completed."
+echo "Restart required. Restart now?."
+answer=${answer:-N}     # default to "N" if empty
+if [[ "$answer" =~ ^[Yy]$ ]]; then
+    sudo reboot
+else
+    echo "See you later."
+fi
+
+exit 0;

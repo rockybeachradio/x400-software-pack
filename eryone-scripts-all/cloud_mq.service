@@ -1,0 +1,28 @@
+################################################################################################
+# File: cloud_mq.service
+# Author: Eryone
+# Date: 20250711
+# purpose: Starting mqtt as a service
+#
+# original modified by Eryone ???
+#
+# !!! There is no mqtt folder in KlipperScreen 
+#
+################################################################################################
+
+[Unit]
+Description=cloud_mq
+After=moonraker.service
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=mks
+WorkingDirectory=/home/mks/KlipperScreen/mqtt/
+#Environment=""
+ExecStart="/home/mks/KlipperScreen/mqtt/run.sh"
+
+[Install]
+WantedBy=multi-user.target
