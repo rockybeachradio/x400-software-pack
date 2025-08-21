@@ -1,68 +1,70 @@
 Welcome, to my software pack for the Eryone Thinker x400
 
-### Information abut this project
-This is an alternative Firmware for the Eryone Thinker x400.
-    https://github.com/rockybeachradio/x400-software-pack
-From me for me. But feel free to use it as well :-)
 
-It is based on the original firmware from Eryone.
+# Information abut this project
+This is an alternative Firmware for the Eryone Thinker x400. \
+    https://github.com/rockybeachradio/x400-software-pack \
+From me for me. But feel free to use it as well :-) \
+ \
+It is based on the original firmware from Eryone. \
+ \
+I started to dig into the firmawre and how Eryone seted up the printer software. \
+During that process i started to scrut the configs to they make more sence for me. \
+During that process I found some tings I did not like and oters I whish tehy were included. \
+So I made the changes. And here is what I came up with. \
+ \
+Feel free to give me feedback and contribute ideas or code. \
+ \
 
-I started to dig into the firmawre and how Eryone seted up the printer software.
-During that process i started to scrut the configs to they make more sence for me.
-During that process I found some tings I did not like and oters I whish tehy were included.
-So I made the changes. And here is what I came up with.
-
-Feel free to give me feedback and contribute ideas or code.
-
-
-### !!! WARNING !!!
-My printer will arrive end August 2025. So I was not able to test anything !!!
-
-
-### Sources
-Eryone Thinker x400 printer:
-    https://eryone.com/
-    https://eryone3d.com/products/thinker-x400/
-    https://eryonewiki.com/
-    https://www.facebook.com/groups/eryoneofficial/
-    https://www.facebook.com/groups/thinkerx400/
-
-Eryone Repositories:
-    GitHub: https://github.com/Eryone/
-    GitHub: https://github.com/Eryoneoffical/
-    Gitee: https://gitee.com/everyone3d/
-    GitCode: https://gitcode.com/xpp012/KlipperScreen/
-
-Makerbase MKS:
-    https://makerbase.com.cn/en/
-    https://github.com/makerbase-mks/
-
-Informations:
-    Hardware: https://gitcode.com/xpp012/KlipperScreen/tree/master/docs
-    pressure_sensor:
-        code: https://gitee.com/everyone3d/stm32_pressure_sensor
-        binary: https://gitcode.com/xpp012/KlipperScreen/tree/master/docs/X400_firmware
-    3d printed Parts: https://github.com/Eryoneoffical/X400_printed_parts_cad_files
-    farm3d:
-        https://gitcode.com/xpp012/KlipperScreen/tree/master/farm3d
-        https://github.com/Eryone/farm3d
-
-Information preparing the Makerbase MKS Skipr board:
-    GitHub: https://github.com/makerbase-mks/MKS-SKIPR?tab=readme-ov-file
-
-Armbian for MKS boards (The Linux which is used):
-    GitHub: https://github.com/redrathnure/armbian-mkspi
+> [!IMPORTANT]
+> My printer will arrive end August 2025. So I was not able to test anything
 
 
+# Sources
+#### Eryone Thinker x400 printer:
+- https://eryone.com/
+- https://eryone3d.com/products/thinker-x400/
+- https://eryonewiki.com/
+- https://www.facebook.com/groups/eryoneofficial/
+- https://www.facebook.com/groups/thinkerx400/
 
-### Development log: To check why eryone has spezial versions and not using the original ones. (commands found in relink_conf.sh)
+#### Eryone Repositories:
+- GitHub: https://github.com/Eryone/
+- GitHub: https://github.com/Eryoneoffical/
+- Gitee: https://gitee.com/everyone3d/
+- GitCode: https://gitcode.com/xpp012/KlipperScreen/
+
+#### Makerbase MKS:
+- https://makerbase.com.cn/en/
+- https://github.com/makerbase-mks/
+
+#### Informations:
+- Hardware: https://gitcode.com/xpp012/KlipperScreen/tree/master/docs
+- pressure_sensor:
+    - code: https://gitee.com/everyone3d/stm32_pressure_sensor
+    - binary: https://gitcode.com/xpp012/KlipperScreen/tree/master/docs/X400_firmware
+- 3d printed Parts: https://github.com/Eryoneoffical/X400_printed_parts_cad_files
+- farm3d:
+    - https://gitcode.com/xpp012/KlipperScreen/tree/master/farm3d
+    - https://github.com/Eryone/farm3d
+
+#### Information preparing the Makerbase MKS Skipr board:
+- GitHub: https://github.com/makerbase-mks/MKS-SKIPR?tab=readme-ov-file
+
+#### Armbian for MKS boards (The Linux which is used):
+- GitHub: https://github.com/redrathnure/armbian-mkspi
+
+
+
+# Development log:
+#### To check why eryone has spezial versions and not using the original ones. (commands found in relink_conf.sh)
 - [ ] cp /home/mks/KlipperScreen/moonraker/moonraker/components/machine.py /home/mks/moonraker/moonraker/components/       - Check what is different in the Eryone version
 - [ ] cp /home/mks/KlipperScreen/config/timelapse.cfg  /home/mks/moonraker-timelapse/klipper_macro                         - Check what is different in the Eryone version
 ~~- [ ] cp  /home/mks/KlipperScreen/klipper/ /home/mks/  -rf~~
 - [ ] How is KlipperScreen calling eryone scripts? Where are the scripts used?
     - [ ] ln -s /home/mks/KlipperScreen/all /home/mks/mainsail/all
 
-### Development log: To check why these files are there in addition to original repo.
+#### To check why these files are there in addition to original repo.
 - [ ] Where are all the scripts in /eryone-scrits (all) used?
 - [ ] Check Eryone /KlipperScreen
     - [ ] /KlipperScreen/Panels/ - Check what is different in the Eryone version
@@ -86,14 +88,7 @@ Armbian for MKS boards (The Linux which is used):
     - MKS path hardwired & sudo makerspace added
     - timelapse.py: MKS path hardwired 
 
-### Development log: Extend update funktionality
-    Moonraker.conf [update_manager] add update for:
-        Mobileraker
-        Klipper, Moonraker
-        G-Code Shell Command, Input Shaper, Obico for Klipper
-        KIAUH, Katapult
-
-
+# Changelog
 ### Hardware mods
 ~~- [ ] Hardware connections used as intended by Makerspace MKS Skipr.~~
 ~~- [ ] DIAGS aktivated~~
@@ -107,7 +102,7 @@ Armbian for MKS boards (The Linux which is used):
 - [ ] RBG Status LED (Neopicel pin:PC5)
 - [ ] As soon as I can get my hands on the Bondtech INDX I will update the x400 with it.
 
-## Changes compared to the original:
+#### Changes compared to the original:
 - [x] Newest software is used: Linux, Klipper, Moonraker, Mainsail, KlipperScreen, etc.
 - [x] KlipperScreen is not used as "Eryone Update path".
 - [x] Config Files structured & cleaned - Phase 1
@@ -121,7 +116,7 @@ Armbian for MKS boards (The Linux which is used):
 - [x] [tmc2209 stepper_z] diag_pin: PB15 --> commented out. No XDIAG jumper is set. Was declared twiche: PB15 is used by filament tangle sensor
 - [x] [tmc2209 stepper_z] river_SGTHRS: 180 --> commented out. No sensorless homing is used in x400.
 
-## Changes in the macros:
+#### Changes in the macros:
 - [x] [gcode_macro CANCEL_PRINT] TURN_OFF_HEATERS
 - [x] [gcode_macro CANCEL_PRINT] _CLIENT_RETRACT LENGTH={retract} 
 - [x] [gcode_macro CANCEL_PRINT] _TOOLHEAD_PARK_PAUSE_CANCEL 
@@ -130,7 +125,7 @@ Armbian for MKS boards (The Linux which is used):
 - [x] [gcode_macro PAUSE] - using the mainsail-crew version, instead of the eryone version
 - [x] [gcode_macro RESUME] - using the mainsail-crew version, instead of the eryone version
 
-## Added Features
+#### Added Features
 - [x] x400-software-pack installer
 - [x] MCU Update function
 - [x] Backup function: local backup folder
@@ -145,108 +140,118 @@ Armbian for MKS boards (The Linux which is used):
 - [x] protection that chamber hfan is not extracting heat while chamber heater is heating the chamber up.
 - [x] chamber fan only runs when temperature is above set chamber temperature.
 - [x] chamber fan protects chamber from overheating
+- [ ] Update functionaloy in Moonraker.conf [update_manager] add update for:
+    - [ ] Klipper
+    - [ ]Moonraker
+    - [ ] KIAUH
+    - [ ] G-Code Shell Command
+    - [ ]Input Shaper
+    - [ ]Obico for Klipper
+    - [ ]Katapult
+    - [ ] Mobileraker
 
-### Added Software
-- [ ] sonar - Keep alife daemon
+#### Added Software
+- [ ] sonar - Keep alife daemon \
         https://github.com/mainsail-crew/sonar
-- [ ] Mobileraker - Mobile App support
+- [ ] Mobileraker - Mobile App support \
         https://github.com/Clon1998/mobileraker
-- [ ] Obico support for local AI server
+- [ ] Obico support for local AI server \
         https://www.obico.io/docs/user-guides/klipper-setup/
 
-## What is kept:
+#### What is kept:
 - [x] farm3d by Eryone
 - [x] Scripts by Eryone (for backward compatibility. in case famr3d needs them)
 - [ ] KlipperScreen panels by Eryone preserved
 
 
-### Before installing
-## Reconnect the following things on the Skipr Board
+# Before installing
+#### Reconnect the following things on the Skipr Board
 ~~- driver: from E0 slot to Z4 slot~~
 ~~- Z4 stopper motor from E0 to Z4~~
 ~~- change Y- to ??? EXP1/2 ???~~
 ~~- change Z- to ??? EXP1/2???~~
 
-## optional:
+#### optional:
 ~~- SET all DIAG pins~~
 - Use a EMMC (remove SD-Card)
 - Add RGB light and connect it to NeoPixel port.
 
+# How Tos
+## How to Install?
+> [!NOTE]
+> Read all the documentation for Klipper, Mainsail, Moonraker, XOur printer etc.
+> [!CAUTION]
+> Be aware that every modification on the devide and software may void the garanty and may damage your devide.
 
-### How to Install?
-1) Before starting
-1.1) Read all the documentation for Klipper, Mainsail, Moonraker, XOur printer etc.
-1.2) Be aware that every modification on the devide and software may void the garanty and may damage your devide.
-
-
-3) Preparing the System
-3.1) Install Armbian Linux for Skipr
+### Preparing the System
+1) Install Armbian Linux for Skipr \
     https://github.com/redrathnure/armbian-mkspi/releases
 
-3.2) Get the x400-sfotware-pack
-    ```
+2) Get the x400-sfotware-pack
+    ```bash
     cd ~/
     mkdir x400-software-pack
     git clone https://github.com/eryone-thinker-x400.git
     ```
 
-3.3) check if sudo is isntalled an your user is part of the sudo usergroup
+3) check if sudo is isntalled an your user is part of the sudo usergroup \
 If not:
-```
-su -
-apt-get install sudo
-/sbin/adduser <YOURUSER> sudo
-exit
-```
-
-3.4) Install and update software with: ~/x400-software-pack/scripts/install_ssoftware.sh
-    Linux updates
-    sudo
-    git (needed to download x400-software-pack)
-    Armbian-config
-    Clean up
-    fix for Python 3
-
-3.5) Make settings in linux
-    eg with
+    ```bash
+    su -
+    apt-get install sudo
+    /sbin/adduser <YOURUSER> sudo
+    exit
     ```
+
+4) Install and update software with: ~/x400-software-pack/scripts/install_ssoftware.sh \
+    - Linux updates
+    - sudo
+    - git (needed to download x400-software-pack)
+    - Armbian-config
+    - Clean up
+    - fix for Python 3
+
+5) Make settings in linux \
+    eg with
+    ```bash
     sudo armbian-config
     ```
 
 
-4) Install Software
-4.1) KIAUH, KAMP, moonraker-timelapse, Katapult, sonar
-```
-~/x400-software-pack/install_software.sh
-```
+### Install Software
+1) KIAUH, KAMP, moonraker-timelapse, Katapult, sonar
+    ```bash
+    ~/x400-software-pack/install_software.sh
+    ```
 
-4.2) Install software using KIAUH
-    Klipper, Moonraker, Mainsail, KlipperScreen, Crowsnest
+2) Install software using KIAUH \
+    Klipper, Moonraker, Mainsail, KlipperScreen, Crowsnest \
     G-Code Shell Command, Input Shaper, Mobileraker, Obico for Klipper
 
-4.3) Install/pdate Katapult on your boards
+3) Install/pdate Katapult on your boards
+
+### Check setup 
+1) Check all settings and printerbehaviour as descirped in Klipper, Mainsail, Moonraer documentation to avoid issues and damages.
+
+### Settings in Mainsail
+1) Add Camera
 
 
-5) Check all settings and printerbehaviour as descirped in Klipper, Mainsail, Moonraer documentation to avoid issues and damages.
-
-6) Settings in Mainsail
-6.1) Add Camera
-
-
-### How to get new verison of x400-software-pack
+## How to get new verison of x400-software-pack
 To check fopr updates, use git commands or the following script
-```
+```bash
  ~/x400-software-pack/scripts/get_x400-software-pack.sh
 ```
 
-### How to install a already downloaded verison of x400-software-pack
+## How to install a already downloaded verison of x400-software-pack
 Upgrade the software via bash command
-```
+```bash
  ~/x400-software-pack/scripts/update_printer.sh
 ```
 Do not forget to update the Linux system and the installed software upfront.
 
-### How to install flash MCUs
-```
+
+## How to install flash MCUs
+```bash
  ~/x400-software-pack/script/mcu-update.sh
 ```
