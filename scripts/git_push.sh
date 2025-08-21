@@ -87,12 +87,12 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ -z "$COMMENT" ]]; then
-  echo "Error: a commit message is required (-m|--comment)."
+  echo "❌ Error: a commit message is required (-m|--comment)."
   usage
   exit 1
 fi
 if [[ -n "$TAG" && -z "$TAG_MESSAGE" ]]; then
-    echo "Error: if tag is set, a tag comment message is required (-T|--tag-comment)."
+    echo "❌ Error: if tag is set, a tag comment message is required (-T|--tag-comment)."
     usage
     exit 1
 fi
@@ -159,7 +159,7 @@ fi
 ################################################################################################
 if [[ -n "$TAG" ]]; then
   if git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then    # Checks if local tag with that exact name already exists.
-    echo "Tag '$TAG' already exists locally; will push it as-is."
+    echo "❌ Tag '$TAG' already exists locally; will push it as-is."
   else
     # Choose tag message
     if [[ -z "$TAG_MESSAGE" ]]; then
@@ -199,7 +199,7 @@ if [[ $PUSH_RC -ne 0 ]]; then
   echo "Creating and pushing fallback branch: $FB"
   git branch "$FB"
   git push -u "$REMOTE" "$FB" || {
-    echo "Fallback push also failed. Check your permissions or authentication (PAT/SSH)."
+    echo "❌ Fallback push also failed. Check your permissions or authentication (PAT/SSH)."
     exit 1
   }
   echo "Pushed to '$FB'. Open a Pull Request on GitHub to merge."
