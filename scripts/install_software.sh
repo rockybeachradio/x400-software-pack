@@ -3,7 +3,7 @@
 ################################################################################################
 # File: isntall.sh
 # Author: Andreas
-# Date: 20250819
+# Date: 20250821
 # Purpose: Installs software that is needed by x400-software-pack
 #
 ################################################################################################
@@ -114,6 +114,17 @@ pip3 install qrcode[pil] || echo "! Faild pip3 install qrcode"
 echo "Installing needed tools for backup ..:"
 cd "$HOME"
 sudo apt install zip || echo "! Installation failed."
+mkdir "$HOME/printer_packup/"
+
+################################################################################################
+# Klipper-backup tool
+# https://klipperbackup.xyz
+################################################################################################
+# --> USE KIAUH to install
+#
+# cd "$HOME"
+# curl -fsSL get.klipperbackup.xyz | bash
+# $HOME/klipper-backup/install.sh
 
 
 ################################################################################################

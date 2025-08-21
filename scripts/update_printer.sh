@@ -4,7 +4,7 @@
 # File: update_printer.sh
 # Author: Andreas
 # Date: 20250819
-# Purpose: Update the printer software  with the files in $HOME/x400-software-pack/.
+# Purpose: Copies all Confgiruations file to the locations so the printer software can use it   &   Installing Eryone farm3d.
 #
 ################################################################################################
 
@@ -194,16 +194,16 @@ fi
 # replace PIN settings
 # not needed when SKIPR connections changed.
 ################################################################################################
-echo "Replacing PIN declarations ..."
-read -p "Set PINs on SKIPR Board to Eryone setup? [Y/n]: " answer
-answer=${answer:-N}     # default to "N" if empty
-if [[ "$answer" =~ ^[Yy]$ ]]; then
-    echo "Calling the pin replacement script ..."
-    change_pins_to_eryone_setup.sh || echo "! change_pins_to_eryone_setup.sh could not be found."       # Calls the shell script which is replacing the pins in the cfg files
-else
-    echo "You chose NO"
-    echo "Make sure you changed the hardware connections on the SKIRP board !!!"
-fi
+#echo "Replacing PIN declarations ..."
+#read -p "Set PINs on SKIPR Board to Eryone setup? [Y/n]: " answer
+#answer=${answer:-N}     # default to "N" if empty
+#if [[ "$answer" =~ ^[Yy]$ ]]; then
+#    echo "Calling the pin replacement script ..."
+#    change_pins_to_eryone_setup.sh || echo "! change_pins_to_eryone_setup.sh could not be found."       # Calls the shell script which is replacing the pins in the cfg files
+#else
+#    echo "You chose NO"
+#    echo "Make sure you changed the hardware connections on the SKIRP board !!!"
+#fi
 
 
 ################################################################################################

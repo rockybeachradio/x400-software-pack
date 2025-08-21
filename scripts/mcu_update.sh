@@ -58,10 +58,11 @@ toolhead_mcu_uuid="98629928762"                           # copy from /printer_d
 
 ################################################################################################
 # Get ARGUMENTS form shell call
-while getopts "x" opt; do
+while getopts "x:h" opt; do
   case $opt in
     x) which_mcu="$OPTARG" ;;         # -x which MCU to update
     h)                                # -h help
+
       echo "Only for internal use"
       echo "flashe_device is needed for USB flash mode only"
       echo "-x which MCU to update"
@@ -73,6 +74,7 @@ while getopts "x" opt; do
       ;;
     :)
       echo "! Option -$OPTARG requires an argument." >&2
+
       exit 1
       ;;
   esac

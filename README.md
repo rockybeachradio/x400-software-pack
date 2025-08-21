@@ -14,7 +14,6 @@ During that process I found some tings I did not like and oters I whish tehy wer
 So I made the changes. And here is what I came up with. \
  \
 Feel free to give me feedback and contribute ideas or code. \
- \
 
 > [!IMPORTANT]
 > My printer will arrive end August 2025. So I was not able to test anything
@@ -157,6 +156,9 @@ Feel free to give me feedback and contribute ideas or code. \
         https://github.com/Clon1998/mobileraker
 - [ ] Obico support for local AI server \
         https://www.obico.io/docs/user-guides/klipper-setup/
+- [x] KlipperBackup
+    - Backup on Boot
+    - Backup on file changes
 
 #### What is kept:
 - [x] farm3d by Eryone
@@ -183,18 +185,26 @@ Feel free to give me feedback and contribute ideas or code. \
 > [!CAUTION]
 > Be aware that every modification on the devide and software may void the garanty and may damage your devide.
 
+### Preparing the first boot
+1) "Install" Armbian Linux for Skipr \
+    https://github.com/redrathnure/armbian-mkspi/releases \
+    Copy it via Etcher or RPi-Imager to a SD-Card or EMMC card.
+
+2) Prepare Armbian for the first start  \
+    On the BOOT partition you will find the "Armbian_first_run.txt.template" \
+    Remove the template from the filename. \
+    Open the file and change the settings: \
+    - WiFi Settings
+    - Language code: en
+    - DHCP
+
+3) insert the SD-Card / EMMC into the Skipr voard and fire the printer up.
+
+4) Connect to the printer via SSH.
+
+
 ### Preparing the System
-1) Install Armbian Linux for Skipr \
-    https://github.com/redrathnure/armbian-mkspi/releases
-
-2) Get the x400-sfotware-pack
-    ```bash
-    cd ~/
-    mkdir x400-software-pack
-    git clone https://github.com/eryone-thinker-x400.git
-    ```
-
-3) check if sudo is isntalled an your user is part of the sudo usergroup \
+1) check if sudo is installed an your user is part of the sudo usergroup \
 If not:
     ```bash
     su -
@@ -203,7 +213,24 @@ If not:
     exit
     ```
 
-4) Install and update software with: ~/x400-software-pack/scripts/install_ssoftware.sh \
+2) Check if git is installed. If not install it \
+    ```bash
+    sudo apt install git
+    ```
+
+3) Download the x400-software-pack from the GitHub Repo
+    ```bash
+    cd ~/
+    mkdir x400-software-pack
+    git clone https://github.com/eryone-thinker-x400.git
+    ```
+
+4) Install and update needed software
+    ```bash
+    sudo ~/x400-software-pack/scripts/install_software.sh
+    ```
+    \
+    Wat it does: \
     - Linux updates
     - sudo
     - git (needed to download x400-software-pack)
@@ -218,7 +245,7 @@ If not:
     ```
 
 
-### Install Software
+### Install printer related Software
 1) KIAUH, KAMP, moonraker-timelapse, Katapult, sonar
     ```bash
     ~/x400-software-pack/install_software.sh
@@ -226,9 +253,24 @@ If not:
 
 2) Install software using KIAUH \
     Klipper, Moonraker, Mainsail, KlipperScreen, Crowsnest \
-    G-Code Shell Command, Input Shaper, Mobileraker, Obico for Klipper
+    G-Code Shell Command, Input Shaper, Mobileraker, Obico for Klipper \
+    KlipperBackup (optional: Backup on boot, Cron, Backup on file changes)
 
-3) Install/pdate Katapult on your boards
+3) Install x-400-software-pack  
+    ```bash
+    sudo ~/x400-software-pack/scripts/update_printer.sh
+    ```
+    On the first run, do not use the integrated "Update MCU firmware" function. Select NO when asked.
+
+4) Install/update Katapult on your boards
+
+5) Install/update Firmware on your boards
+
+
+### Needs to be dine maunal (for now)
+1) Klipper Backup
+Open the ~/KlipperBackup/.env file and copy in the backupPaths declaration from from ~/x400-software-pack/config/KlipperBackup env.cfg.
+
 
 ### Check setup 
 1) Check all settings and printerbehaviour as descirped in Klipper, Mainsail, Moonraer documentation to avoid issues and damages.
