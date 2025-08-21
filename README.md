@@ -222,15 +222,17 @@ If not:
     ```bash
     cd ~/
     mkdir x400-software-pack
-    git clone https://github.com/eryone-thinker-x400.git
+    git clone https://github.com/rockybeachradio/x400-software-pack.git
     ```
 
 4) Install and update needed software
     ```bash
-    sudo ~/x400-software-pack/scripts/install_software.sh
+    cd ~/
+    chmod +x install_software.sh
+    ./install_software.sh
     ```
     \
-    Wat it does: \
+    Wat it does:
     - Linux updates
     - sudo
     - git (needed to download x400-software-pack)
