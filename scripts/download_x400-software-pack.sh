@@ -49,6 +49,21 @@ done
 
 
 ################################################################################################
+# Ask if force_pull is really wanted.
+################################################################################################
+if ! $FORCE_PULL; then
+  echo "ℹ️  You selected force_pull. All local changes will be reset to the GitHub version."
+  read -p "Do you want to run force_pull? [Y/n]: " answer
+  answer=${answer:-N}     # default to "N" if empty
+  if [[ "$answer" =~ ^[Yy]$ ]]; then
+    FORCE_PULL=true
+  esle
+    FORCE_PULL=false
+  fi
+fi
+
+
+################################################################################################
 # Upstream check
 ################################################################################################
 # Ensure an upstream is configured (e.g., origin/master)
@@ -71,8 +86,7 @@ if ! $FORCE_PULL; then
     echo "❌ Working tree has local changes:"
     git status --porcelain
     echo "ℹ️  Commit/stash them, or run: ./$(basename "$0") -force_pull"
-    echo "force_pull will deleat all local changes"
-    
+    echo "force_pull will reset all local changes to the GitHub version."
     read -p "Do you want to run: force_pull? [Y/n]: " answer
     answer=${answer:-N}     # default to "N" if empty
     if [[ "$answer" =~ ^[Yy]$ ]]; then
@@ -86,7 +100,7 @@ fi
 # Force pull from GitHub
 ################################################################################################
 if $FORCE_PULL; then  # FORCE PULL: overwrite local changes with remote tracking branch
-  echo "ℹ️  Force-pulling latest from upstream and overwriting local changes..."
+  echo "ℹ️  Force_pull latest from upstream and overwriting local changes..."
   git fetch --prune --quiet   # Download new files. Fetches new commits/refs from the remote GitHub and prunes deleted branches.
   git reset --hard @{u}       # Moves your current branch and your working directory to the upstream branch (@{u} = the configured upstream, e.g. origin/master).
   git clean -fd               # Deletes untracked files and directories (but leaves ignored ones).
