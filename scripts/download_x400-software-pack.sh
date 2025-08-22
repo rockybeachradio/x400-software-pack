@@ -19,7 +19,7 @@ FORCE_PULL=false    # script calle dwith -force_pull
 #Resolve repo root (parent of this script), then cd into it
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-cd "$REPO_DIR" || { echo "❌ x400-software-pack not found: $REPO_DIR"; exit 1; }
+cd "$REPO_DIR" || { echo "❌ x400-software-pack not found: $REPO_DIR"; exit 2; }
 
 
 ################################################################################################
@@ -35,7 +35,7 @@ while [[ $# -gt 0 ]]; do
       exit 0 ;;
     *)
       echo "Unknown option: $1" >&2
-      echo "Use --help for usage."; exit 1 ;;
+      echo "Use --help for usage."; exit 0 ;;
   esac
 done
 
@@ -51,6 +51,7 @@ if $FORCE_PULL; then
     FORCE_PULL=true
   else
     FORCE_PULL=false
+    echo "ℹ️  Lets continue normal"
   fi
 fi
 
@@ -83,6 +84,10 @@ if ! $FORCE_PULL; then
     answer=${answer:-N}     # default to "N" if empty
     if [[ "$answer" =~ ^[Yy]$ ]]; then
         FORCE_PULL=true
+        echo "ℹ️  okay, lets forde_pull the new version form GitHub."
+    else
+        echo "ℹ️  Script willl exit now."
+        exit 0
     fi
   fi
 fi
@@ -121,9 +126,9 @@ elif [[ "$LOCAL" == "$BASE" ]]; then
   exit 50                                         # 50 = Tells the calling script, that an download was performed.
 elif [[ "$REMOTE" == "$BASE" ]]; then
   echo "ℹ️  Your local version is ahead of the remote version. To go back to last stable version delet the current x400-software-pack and follow the installation instruction."
-  exit 4
+  exit 3
 else
   echo "❌ Local and remote have diverged. Resolve manually: $ $(basename "$0") -force_pull)."
-  exit 5
+  exit 2
 fi
 exit 0
