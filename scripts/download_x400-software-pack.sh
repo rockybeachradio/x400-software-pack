@@ -13,15 +13,21 @@ set -euo pipefail
 ################################################################################################
 ## Variables
 ################################################################################################
-#REPO_DIR="$HOME/x400-software-pack"
-#cd "$REPO_DIR" || { echo "❌ x-400-software-pack not found: $REPO_DIR"; exit 1; }
-
 FORCE_PULL=false    # script calle dwith -force_pull
 
+######################################################
 #Resolve repo root (parent of this script), then cd into it
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$REPO_DIR" || { echo "❌ x400-software-pack not found: $REPO_DIR"; exit 1; }
+
+######################################################
+# Get data
+git fetch origin --quiet          # Fetch remote metadata
+
+LOCAL=$(git rev-parse @)          # current local commit
+REMOTE=$(git rev-parse @{u})      # Upstream-Commit (origin/master)
+BASE=$(git merge-base @ @{u})     # gemeinsamer Vorfahre
 
 
 ################################################################################################
@@ -58,56 +64,34 @@ fi
 
 
 ################################################################################################
-# Force pull from GitHub
-################################################################################################
-if $FORCE_PULL; then  # FORCE PULL: overwrite local changes with remote tracking branch
-  echo "ℹ️  Force-pulling latest from upstream and overwriting local changes..."
-  git fetch --prune --quiet
-  # Hard reset to upstream and remove untracked (but keep ignored files)
-  git reset --hard @{u}
-  git clean -fd
-  echo "✅ Repository synced to upstream."
-
-#  # Make scripts executable
-#  if [[ -d "$REPO_DIR/scripts" ]]; then
-#    find "$REPO_DIR/scripts" -type f -name '*.sh' -print0 | xargs -0 chmod +x || true
-#  fi
-#
-#  if [[ -x "$REPO_DIR/scripts/update_printer.sh" ]]; then           # tests whether the file exists and has the executable permission
-#    echo "ℹ️ Starting printer update ..."
-#    "$REPO_DIR/scripts/update_printer.sh"
-#    echo "✅ Printer update completed."
-#  elif [[ -f "$REPO_DIR/scripts/update_printer.sh" ]]; then         # If file found but not executable
-#    echo "ℹ️ Start printer update via bash ..."                      # run explicity with bash
-#    bash "$REPO_DIR/scripts/update_printer.sh"
-#    echo "✅ Printer update completed."
-#  else
-#    echo "❌ update_printer.sh not found. Please try again."
-#  fi
-#  exit 0
-fi
-
-
-################################################################################################
 # Don’t pull over a dirty working tree
 ################################################################################################
 if ! $FORCE_PULL; then
   if ! git diff --quiet || ! git diff --cached --quiet; then
     echo "❌ Working tree has local changes:"
     git status --porcelain
-    echo "ℹ️  Commit/stash them, or run: ./get_x400-software-pack.sh -force_pull"
-    exit 3
+    echo "ℹ️  Commit/stash them, or run: ./$(basename "$0") -force_pull"
+    echo "force_pull will deleat all local changes"
+    
+    echo "Run force_pull?"
+    answer=${answer:-N}     # default to "N" if empty
+    if [[ "$answer" =~ ^[Yy]$ ]]; then
+        FORCE_PULL=true
+    fi
   fi
 fi
 
-################################################################################################
-# Get data
-################################################################################################
-git fetch origin --quiet          # Fetch remote metadata
 
-LOCAL=$(git rev-parse @)          # current local commit
-REMOTE=$(git rev-parse @{u})      # Upstream-Commit (origin/master)
-BASE=$(git merge-base @ @{u})     # gemeinsamer Vorfahre
+################################################################################################
+# Force pull from GitHub
+################################################################################################
+if $FORCE_PULL; then  # FORCE PULL: overwrite local changes with remote tracking branch
+  echo "ℹ️  Force-pulling latest from upstream and overwriting local changes..."
+  git fetch --prune --quiet   # Download new files. Fetches new commits/refs from the remote GitHub and prunes deleted branches.
+  git reset --hard @{u}       # Moves your current branch and your working directory to the upstream branch (@{u} = the configured upstream, e.g. origin/master).
+  git clean -fd               # Deletes untracked files and directories (but leaves ignored ones).
+  echo "✅ Repository was build up from scratch. Now in synce with GitHub Repo."
+  exit 50
 
 
 ################################################################################################
@@ -117,34 +101,14 @@ if [[ "$LOCAL" == "$REMOTE" ]]; then
   echo "✅  Local Software Repo is up to date."
   exit 0
 elif [[ "$LOCAL" == "$BASE" ]]; then
-  echo "ℹ️ New version available. Downloading ..."
+  echo "ℹ️  New version available. Downloading ..."
   git pull --ff-only                              # Fast-forward only (safer, no merge commit)
   exit 50                                         # 50 = Tells the calling script, that an download was performed.
-
-## Make scripts executable
-#  if [[ -d "$REPO_DIR/scripts" ]]; then
-#    find "$REPO_DIR/scripts" -type f -name '*.sh' -print0 | xargs -0 chmod +x || true
-#  fi
-#  echo "✅ Download complete."
-#  #############################################################
-#  if [[ -x "./update_printer.sh" ]]; then           # tests whether the file exists and has the executable permission
-#    echo "ℹ️ Starting printer update ..."
-#    ./update_printer.sh
-#    echo "✅ Printer update completed."
-#  elif [[ -f "./update_printer.sh" ]]; then                # If file found but not executable
-#    echo "ℹ️ Start printer update via bash ..."     # run explicity with bash
-#    bash ./update_printer.sh
-#    echo "✅ Printer update completed."
-#  else
-#    echo "❌ update_printer.sh not found. Please try again."
-#  fi
-#  exit 0
-
 elif [[ "$REMOTE" == "$BASE" ]]; then
-  echo "ℹ️ Your local version is ahead of the remote version. To go back to last stable version delet the current x400-software-pack and follow the installation instruction."
-  exit 0
-else
-  echo "❌ Local and remote have diverged. Resolve manually: $ download_x400-software-pack.sh -force_pull)."
+  echo "ℹ️  Your local version is ahead of the remote version. To go back to last stable version delet the current x400-software-pack and follow the installation instruction."
   exit 4
+else
+  echo "❌ Local and remote have diverged. Resolve manually: $ $(basename "$0") -force_pull)."
+  exit 5
 fi
 exit 0

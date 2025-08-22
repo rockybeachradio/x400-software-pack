@@ -226,7 +226,7 @@ If not:
 3) Download the x400-software-pack from the GitHub Repo
     ```bash
     cd ~/
-    mkdir x400-software-pack/scripts
+    ~~mkdir x400-software-pack/~~
     git clone https://github.com/rockybeachradio/x400-software-pack.git
     ```
 

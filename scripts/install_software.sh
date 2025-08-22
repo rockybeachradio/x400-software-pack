@@ -34,7 +34,7 @@ if id -nG "$USER" | grep -qw sudo; then
 else
     echo "❌ Your user '$USER' is not part of the sudo group. Please add your user before executing this script."
     echo "$ su -"
-    echo "$ /sbin/adduser <USER> sudo"
+    echo "$ /sbin/adduser '$USER' sudo"
     echo "$ exit"
     exit 1
 fi
