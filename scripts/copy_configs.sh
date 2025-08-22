@@ -62,33 +62,34 @@ fi
 ################################################################################################
 # printer_data - config
 echo "ℹ️  Preparing configuration folder ..."
-rm -rf "$config_destination""/*"  || echo "! Faild deleating folder content of ""$config_destination"
+rm -rf "$config_destination""/*"  || echo "❌  Faild deleating folder content of ""$config_destination"
 
 echo "Copy configurations ..."
 files=(
-    Andreas_extensions.cfg
     printer.cfg
+    motor_driver_v1_2.cfg
     canuid.cfg
-    chamber_heater.cfg
-    crowsnest.conf
     EECAN.cfg
-    EECAN_macros.cfg
+    calibration.cfg
+    filament_mgmt.cfg
     KAMP_Settings.cfg
+    x400.cfg
+    printjob_mgmt.cfg
+    eryone_stuff.cfg
+    chamber_temp_mgmt.cfg
+    Andreas_extensions.cfg
+    variable.cfg
+    plr.sh
+    crowsnest.conf
     KlipperScreen.conf
     moonraker.conf
     moonraker-obico.cfg
-    motor_driverv1_2.cfg
-    plr.sh
-    runout.cfg
-    variable.cfg
-    x400.cfg
-    x400_shell_commands_macros.cfg
-    x400_eryone_stuff.cfg
-)
+    )
+
 
 # Copy to printer_data/config/
 for f in "${files[@]}"; do
-    cp "$config_source""/""$f" "$config_destination/"  || echo "! Faild copying ""$f"
+    cp "$config_source""/""$f" "$config_destination/"  || echo "❌  Faild copying ""$f"
 done
 
 
@@ -96,64 +97,66 @@ done
 # Copy to spezial destinations
 ################################################################################################
 echo "ℹ️  Copy config files to spezial folders ..."
-cp "$source""/mainsail-client.cfg" "$HOME""/mainsail-config/client.cfg"  || echo "! Faild copying mainsail-client.cfg"
-cp "$source""/timelapse.cfg" "$HOME""/moonraker-timelapse/klipper_macro/timelapse.cfg"   || echo "! Faild copying timelapse.cfg"
+cp "$source""/mainsail-client.cfg" "$HOME""/mainsail-config/client.cfg"  || echo "❌  Faild copying mainsail-client.cfg"
+cp "$source""/timelapse.cfg" "$HOME""/moonraker-timelapse/klipper_macro/timelapse.cfg"   || echo "❌  Faild copying timelapse.cfg"
+cp "$source""KlipperBackup env.cfg" "$HOME/KlipperBackup/.env"   || echo "❌  Faild copying KlipperBackup env.cfg"
+
 
 
 ################################################################################################
 # Create Symlinks
 ################################################################################################
 echo "ℹ️  Creating Symlinks ..."
-ln -sfn "$HOME""/mainsail-config/mainsail.cfg"                      "$config_destination""/mainsail.cfg"  || echo "! Faild setting symlink to mainsail.cfg"
-ln -sfn "$HOME""/moonraker-timelapse/klipper_macro/timelapse.cfg"   "$config_destination""/timelapse.cfg" || echo "! Faild setting symlink to timelapse.cfg"
-ln -sfn "$HOME""/Klipper-Adaptive-Meshing-Purging/Configuration/"   "$config_destination""/KAMP" || echo "! Faild setting symlink to KAMP configuration folder"
+ln -sfn "$HOME""/mainsail-config/mainsail.cfg"                      "$config_destination""/mainsail.cfg"  || echo "❌  Faild setting symlink to mainsail.cfg"
+ln -sfn "$HOME""/moonraker-timelapse/klipper_macro/timelapse.cfg"   "$config_destination""/timelapse.cfg" || echo "❌  Faild setting symlink to timelapse.cfg"
+ln -sfn "$HOME""/Klipper-Adaptive-Meshing-Purging/Configuration/"   "$config_destination""/KAMP" || echo "❌  Faild setting symlink to KAMP configuration folder"
 
 
 ################################################################################################
 # Copy KlipperScreen panels
 ################################################################################################
 echo "ℹ️  Add KlipperScreen panels ..."
-cp "$source_base""/KlipperScreen-panels/*" "$HOME""/KlipperScreen/panels/" || echo "! Faild copying Klipper-panels."
+cp "$source_base""/KlipperScreen-panels/*" "$HOME""/KlipperScreen/panels/" || echo "❌  Faild copying Klipper-panels."
 
 
 ################################################################################################
 # Copy Network interce
 ################################################################################################
-cp "$source""/can0" "/etc/network/interfaces.d/can0" || echo "! Faild copying network interface can0."
+cp "$source""/can0" "/etc/network/interfaces.d/can0" || echo "❌  Faild copying network interface can0."
 
 
 ################################################################################################
 # Copy Firnware config
 ################################################################################################
 echo "ℹ️  Copy klipper firmware configurations ..."
-cp "$source_base""/firmware.configurations/stm32f407_firmware.config" "$HOME""/klipper/" || echo "! Faild copying stm32f407_firmare.config."
-cp "$source_base""/firmware.configurations/rp2040_firmware.config" "$HOME""/klipper/" ||| echo "! Faild copying rp2040_firmware.config."
+cp "$source_base""/firmware.configurations/stm32f407_firmware.config" "$HOME""/klipper/" || echo "❌  Faild copying stm32f407_firmare.config."
+cp "$source_base""/firmware.configurations/rp2040_firmware.config" "$HOME""/klipper/" ||| echo "❌  Faild copying rp2040_firmware.config."
 
 echo "ℹ️  Copy Katapult bootloader configuratons ..."
-cp "$source_base""/firmware.configurations/stm32f407_katapult.config" "$HOME""/katapult/" || echo "! Faild copying stm32f407_katapult.config."
-cp "$source_base""/firmware.configurations/rp2040n_katapult_usb.config" "$HOME""/katapult/" || echo "! Faild copying rp32040_katapult.config."
+cp "$source_base""/firmware.configurations/stm32f407_katapult.config" "$HOME""/katapult/" || echo "❌ Faild copying stm32f407_katapult.config."
+cp "$source_base""/firmware.configurations/rp2040n_katapult_usb.config" "$HOME""/katapult/" || echo "❌  Faild copying rp32040_katapult.config."
 
 #echo "Copy sensor firmware configuration ..."
 ## sensor with stm32 chip on RP2040 board
-#cp "$source_base""/firmware.configurations/sensor_on_rp2040_firmware.config" "$HOME""/klipper/" || echo "! Faild copying sensor_on_rp2040_firmware.config."
-#cp "$source_base""/firmware.configurations/sensor_on_rp2040_katapult.config" "$HOME""/katapult/" || echo "! Faild copying sensor_on_rp2040_katapult.config."
+#cp "$source_base""/firmware.configurations/sensor_on_rp2040_firmware.config" "$HOME""/klipper/" || echo "❌  Faild copying sensor_on_rp2040_firmware.config."
+#cp "$source_base""/firmware.configurations/sensor_on_rp2040_katapult.config" "$HOME""/katapult/" || echo "❌  Faild copying sensor_on_rp2040_katapult.config."
 
 
 ################################################################################################
 # Copy x11vnc
 ################################################################################################
-sudo cp "$config_source""/x11cnv.service" "/lib/systemd/system/" || echo "! Copying service failed."
+sudo cp "$config_source""/x11cnv.service" "/lib/systemd/system/" || echo "❌  Copying service failed."
 
 
 ################################################################################################
 # Copy and isntall farm3d
 ################################################################################################
 echo "ℹ️  Installing Eryone farm3d ..."
-cp "$source_base""/farm3d/"  "$HOME""/"  -rf || echo "! Faild copying farm3d folder"
-chmod 777 "$HOME""/farm3d/*" || echo "! Faild chmod on farm3d fodler"
-cd "$source_base""/farm3d/" || echo "! Faild going into ""$source_base""/farm3d folder"
-chmod 777 *  || echo "! Faild chmod 777 *"
-./install.sh  || echo "! Faild starting the install.sh"
+cp "$source_base""/farm3d/"  "$HOME""/"  -rf || echo "❌  Faild copying farm3d folder"
+chmod 777 "$HOME""/farm3d/*" || echo "❌  Faild chmod on farm3d fodler"
+cd "$source_base""/farm3d/" || echo "❌  Faild going into ""$source_base""/farm3d folder"
+chmod 777 *  || echo "❌  Faild chmod 777 *"
+./install.sh  || echo "❌  Faild starting the install.sh"
 #pip3 install opencv-python || echo "! Faild pip3 install opencv-python"        # This is installed by /x400-software-pack/scripts/install_software.sh
 #pip3 install qrcode[pil] || echo "! Faild pip3 install qrcode"                 # This is installed by /x400-software-pack/scripts/install_software.sh
 
@@ -163,8 +166,8 @@ chmod 777 *  || echo "! Faild chmod 777 *"
 ################################################################################################
 echo "ℹ️  Installing needed tools for farm3d ...:"
 cd "$HOME"
-pip3 install opencv-python || echo "! Faild pip3 install opencv-python"
-pip3 install qrcode[pil] || echo "! Faild pip3 install qrcode"
+pip3 install opencv-python || echo "❌  Faild pip3 install opencv-python"
+pip3 install qrcode[pil] || echo "❌ Faild pip3 install qrcode"
 
 
 
