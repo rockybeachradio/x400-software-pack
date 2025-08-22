@@ -3,7 +3,7 @@
 ################################################################################################
 # File: git_push.sh
 # Author: ChatGPT & Andreas
-# Date: 20250821
+# Date: 20250822
 # Purpose: Update the GitHub repo with changes in local repo folder
 ################################################################################################
 
@@ -92,7 +92,7 @@ if [[ -z "$COMMENT" ]]; then
   exit 1
 fi
 if [[ -n "$TAG" && -z "$TAG_MESSAGE" ]]; then
-    echo "❌ Error: if tag is set, a tag comment message is required (-T|--tag-comment)."
+    echo "❌ Error: if tag is set, a tag comment message is required (-T|--tag-message)."
     usage
     exit 1
 fi
@@ -131,7 +131,8 @@ fi
 ################################################################################################
 # Stage
 ################################################################################################
-git add -A      # Use git add -A when you want a complete, repo-wide snapshot (new, modified and deleted files), no matter where you run the command from.
+git add -A      # Staging files: locaklWorkingDir --> StagingArea.
+                # Use git add -A when you want a complete, repo-wide snapshot (new, modified and deleted files), no matter where you run the command from.
 
 
 ################################################################################################
@@ -140,7 +141,7 @@ git add -A      # Use git add -A when you want a complete, repo-wide snapshot (n
 if git diff --cached --quiet; then
   echo "No staged changes to commit; will pull/push anyway."
 else
-  git commit -m "$COMMENT"
+  git commit -m "$COMMENT"    # StagingArea --> Local Repository
 fi
 
 
@@ -149,6 +150,7 @@ fi
 ################################################################################################
 if git rev-parse --abbrev-ref --symbolic-full-name "@{u}" >/dev/null 2>&1; then
   git pull --rebase --autostash   # Rebase local branch on its upstream and autostash uncommitted changes
+                                  # Brings the local branch to the remote version.
 else
   echo "No upstream set for '$BRANCH'. Will set upstream on first push."
 fi
@@ -169,18 +171,18 @@ if [[ -n "$TAG" ]]; then
         TAG_MESSAGE="Release $TAG"
       fi
     fi
-    git tag -a "$TAG" -m "$TAG_MESSAGE"
+    git tag -a "$TAG" -m "$TAG_MESSAGE"     # Creats a tag
     echo "Created annotated tag '$TAG'."
   fi
 fi
 
 
 ################################################################################################
-# Push (set upstream if needed)
+# Push code (set upstream if needed)
 ################################################################################################
 set +e      # Turn off Bash’s “exit on error” mode
 if git rev-parse --abbrev-ref --symbolic-full-name "@{u}" >/dev/null 2>&1; then
-  git push
+  git push      # Uploads the Lcal Repository content to Remote Repository (GitHub)
   PUSH_RC=$?
 else
   git push -u "$REMOTE" "$BRANCH"
@@ -212,13 +214,14 @@ fi
 # Push tag (if requested)
 ################################################################################################
 if [[ -n "$TAG" ]]; then
-  git push "$REMOTE" "$TAG" || error_exit "Failed to push tag '$TAG'."
+  git push "$REMOTE" "$TAG" || error_exit "❌ Failed to push tag '$TAG'."
   echo "🏷️  Pushed tag '$TAG'."
-
+fi
 
 ################################################################################################
-# Print URL to draft a release on GitHub if remote is GitHub
+# Print URL to draft a release on GitHub if remote is GitHub. And a TAG was set.
 ################################################################################################
+if [[ -n "$TAG" ]]; then
   REMOTE_URL="$(git config --get "remote.$REMOTE.url" || true)"
   if [[ "$REMOTE_URL" =~ github\.com[:/]+([^/]+)/([^/.]+)(\.git)?$ ]]; then
     OWNER="${BASH_REMATCH[1]}"; REPO="${BASH_REMATCH[2]}"

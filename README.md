@@ -1,7 +1,6 @@
 Welcome, to my software pack for the Eryone Thinker x400
 
-
-# Information abut this project
+# Information about this project
 This is an alternative Firmware for the Eryone Thinker x400. \
     https://github.com/rockybeachradio/x400-software-pack \
 From me for me. But feel free to use it as well :-) \
@@ -17,6 +16,7 @@ Feel free to give me feedback and contribute ideas or code. \
 
 > [!IMPORTANT]
 > My printer will arrive end August 2025. So I was not able to test anything
+
 
 
 # Sources
@@ -37,31 +37,36 @@ Feel free to give me feedback and contribute ideas or code. \
 - https://makerbase.com.cn/en/
 - https://github.com/makerbase-mks/
 
-#### Informations:
-- Hardware: https://gitcode.com/xpp012/KlipperScreen/tree/master/docs
-- pressure_sensor:
-    - code: https://gitee.com/everyone3d/stm32_pressure_sensor
-    - binary: https://gitcode.com/xpp012/KlipperScreen/tree/master/docs/X400_firmware
-- 3d printed Parts: https://github.com/Eryoneoffical/X400_printed_parts_cad_files
-- farm3d:
-    - https://gitcode.com/xpp012/KlipperScreen/tree/master/farm3d
-    - https://github.com/Eryone/farm3d
-
-#### Information preparing the Makerbase MKS Skipr board:
-- GitHub: https://github.com/makerbase-mks/MKS-SKIPR?tab=readme-ov-file
-
 #### Armbian for MKS boards (The Linux which is used):
 - GitHub: https://github.com/redrathnure/armbian-mkspi
 
+#### Informations:
+- Eryone Ttolhead board: https://gitcode.com/xpp012/KlipperScreen/tree/master/docs
+- Eryone pressure sensor:
+    - code: https://gitee.com/everyone3d/stm32_pressure_sensor
+    - binary: https://gitcode.com/xpp012/KlipperScreen/tree/master/docs/X400_firmware
+- Eryone x400 3d printed Parts: https://github.com/Eryoneoffical/X400_printed_parts_cad_files
+- Eryone farm3d:
+    - https://gitcode.com/xpp012/KlipperScreen/tree/master/farm3d
+    - https://github.com/Eryone/farm3d
+
+All rellevant Eryone documents, files are part are collected from all soruces and part of this Repository.
+
+
+#### Repo check for updates:
+https://gitcode.com/xpp012/KlipperScreen/ - last ceck 20250821
 
 
 # Development log:
 #### To check why eryone has spezial versions and not using the original ones. (commands found in relink_conf.sh)
 - [ ] cp /home/mks/KlipperScreen/moonraker/moonraker/components/machine.py /home/mks/moonraker/moonraker/components/       - Check what is different in the Eryone version
-- [ ] cp /home/mks/KlipperScreen/config/timelapse.cfg  /home/mks/moonraker-timelapse/klipper_macro                         - Check what is different in the Eryone version
+- [ ] cp /home/mks/KlipperScreen/config/timelapse.cfg  /home/mks/moonraker-timelapse/klipper_macro/                        - Check what is different in the Eryone version
 ~~- [ ] cp  /home/mks/KlipperScreen/klipper/ /home/mks/  -rf~~
 - [ ] How is KlipperScreen calling eryone scripts? Where are the scripts used?
-    - [ ] ln -s /home/mks/KlipperScreen/all /home/mks/mainsail/all
+    - ln -s /home/mks/KlipperScreen/all /home/mks/mainsail/all
+
+
+
 
 #### To check why these files are there in addition to original repo.
 - [ ] Where are all the scripts in /eryone-scrits (all) used?

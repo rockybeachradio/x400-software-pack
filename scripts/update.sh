@@ -1,0 +1,81 @@
+#!/bin/bash
+set -euo pipefail
+
+################################################################################################
+# File: update.sh
+# Author: Andreas
+# Date: 20250822
+# Purpose: Call the download and update scripts
+#
+################################################################################################
+
+
+################################################################################################
+# Variables
+################################################################################################
+$dl=""      # Variable: (50 = new version was downloaded from GitHub)
+REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+cd "$REPO_DIR" || { echo "❌ x400-software-pack not found: $REPO_DIR"; exit 1; }
+
+################################################################################################
+# Update Linux
+################################################################################################
+echo "ℹ️  Updating Linux, components and software ..."
+sudo apt update
+sudo apt upgrade
+sudo apt install
+
+
+################################################################################################
+# download x400-software-pack
+################################################################################################
+cd "$REPO_DIR/scripts/"
+./download-x400-software-pack.sh
+de=$?       #capture exit code from script above (50 = new version was downloaded from GitHub)
+
+################################################################################################
+# copy config files
+################################################################################################
+cd "$REPO_DIR/scripts/"
+if [[ $de -eq 50 ]]; then     # if exitcode of download-x400-software-pack.sh was "50" = "something was downloaded"
+  bash "$REPO_DIR/scripts/copy_config.sh"
+fi
+
+## if something was fownloaded
+#  if [[ -x "$REPO_DIR/scripts/copy_config.sh" ]]; then           # tests whether the file exists and has the executable permission
+#    echo "ℹ️  Starting printer update ..."
+#    "$REPO_DIR/scripts/copy_config.sh"
+#    echo "✅ Printer update completed."
+#  elif [[ -f "$REPO_DIR/scripts/copy_config.sh" ]]; then         # If file found but not executable
+#    echo "ℹ️  Start printer update via bash ..."                      # run explicity with bash
+#    bash "$REPO_DIR/scripts/copy_config.sh"
+#    echo "✅ Printer update completed."
+#  else
+#   echo "❌ copy_config.sh not found. Please try again."
+#  fi
+
+
+################################################################################################
+# Update the MCUs
+################################################################################################
+echo "Shall the MCUs be updated?"
+answer=${answer:-N}     # default to "N" if empty
+if [[ "$answer" =~ ^[Yy]$ ]]; then
+    echo "Installing MCU updates ..."
+    "./""$HOME""/x400-software-pack/scripts/mcu_update.sh -x linux"                 # Update Linux MCU
+    "./""$HOME""/x400-software-pack/scripts/mcu_update.sh -x baord_mcu"             # Update SKIPR MCU
+    "./""$HOME""/x400-software-pack/scripts/mcu_update.sh -x toolhead_mcu"          # Update RP2040 MCU
+    #"./""$HOME""/x400-software-pack/scripts/mcu_update.sh -x toolehad_sensor"       # Update Sensor on RP2040
+else
+    echo "Please do it later."
+fi
+
+echo "✅ Update complete"
+echo "Restart required. Restart now?."
+answer=${answer:-N}     # default to "N" if empty
+if [[ "$answer" =~ ^[Yy]$ ]]; then
+    sudo reboot
+else
+    echo "See you later."
+fi
+exit 0

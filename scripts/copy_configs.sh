@@ -1,9 +1,9 @@
 #!/usr/bin/bash
 
 ################################################################################################
-# File: update_printer.sh
+# File: copy_configs.sh
 # Author: Andreas
-# Date: 20250819
+# Date: 20250822
 # Purpose: Copies all Confgiruations file to the locations so the printer software can use it   &   Installing Eryone farm3d.
 #
 ################################################################################################
@@ -177,17 +177,17 @@ pip3 install qrcode[pil] || echo "! Faild pip3 install qrcode"
 ################################################################################################
 # Update the MCUs
 ################################################################################################
-echo "Shall the MCUs be updated?"
-answer=${answer:-N}     # default to "N" if empty
-if [[ "$answer" =~ ^[Yy]$ ]]; then
-    echo "Installing MCU updates ..."
-    "./""$HOME""/x400-software-pack/scripts/mcu_update.sh -x linux"                 # Update Linux MCU
-    "./""$HOME""/x400-software-pack/scripts/mcu_update.sh -x baord_mcu"             # Update SKIPR MCU
-    "./""$HOME""/x400-software-pack/scripts/mcu_update.sh -x toolhead_mcu"          # Update RP2040 MCU
-    #"./""$HOME""/x400-software-pack/scripts/mcu_update.sh -x toolehad_sensor"       # Update Sensor on RP2040
-else
-    echo "Please do it later."
-fi
+#echo "Shall the MCUs be updated?"
+#answer=${answer:-N}     # default to "N" if empty
+#if [[ "$answer" =~ ^[Yy]$ ]]; then
+#    echo "Installing MCU updates ..."
+#    "./""$HOME""/x400-software-pack/scripts/mcu_update.sh -x linux"                 # Update Linux MCU
+#    "./""$HOME""/x400-software-pack/scripts/mcu_update.sh -x baord_mcu"             # Update SKIPR MCU
+#    "./""$HOME""/x400-software-pack/scripts/mcu_update.sh -x toolhead_mcu"          # Update RP2040 MCU
+#    #"./""$HOME""/x400-software-pack/scripts/mcu_update.sh -x toolehad_sensor"       # Update Sensor on RP2040
+#else
+#    echo "Please do it later."
+#fi
 
 
 ################################################################################################
@@ -209,13 +209,5 @@ fi
 ################################################################################################
 # Ende
 ################################################################################################
-echo "Installation completed."
-echo "Restart required. Restart now?."
-answer=${answer:-N}     # default to "N" if empty
-if [[ "$answer" =~ ^[Yy]$ ]]; then
-    sudo reboot
-else
-    echo "See you later."
-fi
-
+echo "Copy completed."
 exit 0;
