@@ -12,7 +12,10 @@ set -euo pipefail
 ################################################################################################
 # Variables
 ################################################################################################
-$dl=""      # Variable: (50 = new version was downloaded from GitHub)
+dl=""      # Variable: (50 = new version was downloaded from GitHub)
+
+#Resolve repo root (parent of this script), then cd into it
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$REPO_DIR" || { echo "❌ x400-software-pack not found: $REPO_DIR"; exit 1; }
 
@@ -22,7 +25,7 @@ cd "$REPO_DIR" || { echo "❌ x400-software-pack not found: $REPO_DIR"; exit 1; 
 ################################################################################################
 echo "Check for updates ..."
 cd "$REPO_DIR/scripts/"
-./download-x400-software-pack.sh
+./download_x400-software-pack.sh
 de=$?       #capture exit code from script above (50 = new version was downloaded from GitHub)
 
 ################################################################################################
@@ -59,6 +62,7 @@ echo "Restart required. Restart now?."
 answer=${answer:-N}     # default to "N" if empty
 if [[ "$answer" =~ ^[Yy]$ ]]; then
     sudo reboot
+    exit 0
 else
     echo "See you later."
 fi

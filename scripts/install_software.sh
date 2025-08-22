@@ -199,11 +199,4 @@ sudo apt autoremove -y modem* cups* pulse* avahi* triggerhappy*
 # Ende
 ################################################################################################
 echo "ℹ️ Installation completed."
-echo "ℹ️ Restart required. Restart now?."
-answer=${answer:-N}     # default to "N" if empty
-if [[ "$answer" =~ ^[Yy]$ ]]; then
-    sudo reboot
-else
-    echo "ℹ️ See you later."
-fi
 exit 0;

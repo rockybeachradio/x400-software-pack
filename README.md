@@ -226,15 +226,14 @@ If not:
 3) Download the x400-software-pack from the GitHub Repo
     ```bash
     cd ~/
-    mkdir x400-software-pack
+    mkdir x400-software-pack/scripts
     git clone https://github.com/rockybeachradio/x400-software-pack.git
     ```
 
 4) Install and update needed software
     ```bash
-    cd ~/
-    chmod +x install_software.sh
-    ./install_software.sh
+    cd ~/x400-software-pack/scripts
+    ./install.sh
     ```
     \
     Wat it does:
@@ -245,6 +244,8 @@ If not:
     - Clean up
     - fix for Python 3
 
+KIAUH, KAMP, moonraker-timelapse, Katapult, sonar
+
 5) Make settings in linux \
     eg with
     ```bash
@@ -253,11 +254,6 @@ If not:
 
 
 ### Install printer related Software
-1) KIAUH, KAMP, moonraker-timelapse, Katapult, sonar
-    ```bash
-    ~/x400-software-pack/install_software.sh
-    ```
-
 2) Install software using KIAUH \
     Klipper, Moonraker, Mainsail, KlipperScreen, Crowsnest \
     G-Code Shell Command, Input Shaper, Mobileraker, Obico for Klipper \
@@ -265,7 +261,8 @@ If not:
 
 3) Install x-400-software-pack  
     ```bash
-    sudo ~/x400-software-pack/scripts/update_printer.sh
+    cd ~/x400-software-pack/scripts
+    ./update.sh
     ```
     On the first run, do not use the integrated "Update MCU firmware" function. Select NO when asked.
 
@@ -289,18 +286,12 @@ Open the ~/KlipperBackup/.env file and copy in the backupPaths declaration from 
 ## How to get new verison of x400-software-pack
 To check fopr updates, use git commands or the following script
 ```bash
- ~/x400-software-pack/scripts/get_x400-software-pack.sh
+cd ~/x400-software-pack
+./update.sh
 ```
-
-## How to install a already downloaded verison of x400-software-pack
-Upgrade the software via bash command
-```bash
- ~/x400-software-pack/scripts/update_printer.sh
-```
-Do not forget to update the Linux system and the installed software upfront.
-
 
 ## How to install flash MCUs
 ```bash
- ~/x400-software-pack/script/mcu-update.sh
+cd ~/x400-software-pack/script/
+./mcu-update.sh
 ```

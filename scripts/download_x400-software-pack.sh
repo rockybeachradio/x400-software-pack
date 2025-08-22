@@ -16,6 +16,8 @@ set -euo pipefail
 #REPO_DIR="$HOME/x400-software-pack"
 #cd "$REPO_DIR" || { echo "❌ x-400-software-pack not found: $REPO_DIR"; exit 1; }
 
+FORCE_PULL=false    # script calle dwith -force_pull
+
 #Resolve repo root (parent of this script), then cd into it
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
@@ -25,14 +27,13 @@ cd "$REPO_DIR" || { echo "❌ x400-software-pack not found: $REPO_DIR"; exit 1; 
 ################################################################################################
 # Get parameters
 ################################################################################################
-FORCE_PULL=false
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    -force_pull|--force_pull)
+    -f|--force_pull)
       FORCE_PULL=true; shift ;;
     -h|--help)
       echo "Usage: $0 [--force_pull]"
-      echo "  --force_pull   Fetch remote and overwrite local changes (git reset --hard + clean)"
+      echo "  -f   Fetch remote and overwrite local changes (git reset --hard + clean)"
       exit 0 ;;
     *)
       echo "Unknown option: $1" >&2
@@ -84,19 +85,20 @@ if $FORCE_PULL; then  # FORCE PULL: overwrite local changes with remote tracking
 #    echo "❌ update_printer.sh not found. Please try again."
 #  fi
 #  exit 0
-#fi
+fi
 
 
 ################################################################################################
 # Don’t pull over a dirty working tree
 ################################################################################################
-if ! git diff --quiet || ! git diff --cached --quiet; then
-  echo "❌ Working tree has local changes:"
-  git status --porcelain
-  echo "ℹ️ Commit/stash them, or run: ./get_x400-software-pack.sh --force-pull"
-  exit 3
+if ! $FORCE_PULL; then
+  if ! git diff --quiet || ! git diff --cached --quiet; then
+    echo "❌ Working tree has local changes:"
+    git status --porcelain
+    echo "ℹ️  Commit/stash them, or run: ./get_x400-software-pack.sh -force_pull"
+    exit 3
+  fi
 fi
-
 
 ################################################################################################
 # Get data
@@ -145,3 +147,4 @@ else
   echo "❌ Local and remote have diverged. Resolve manually: $ download_x400-software-pack.sh -force_pull)."
   exit 4
 fi
+exit 0
