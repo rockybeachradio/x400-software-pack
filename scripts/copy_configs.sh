@@ -47,7 +47,7 @@ echo "- The folling tools are installed via KIAUH (v6+): klipper, moonraker, mai
 echo "- Optional: Mobilemaker, Obico for Klipper is isntalled"
 echo "Furhter Information can be found in the documentation on GitHub"
 
-read -p "All preparations are done? [Y/n]: " answer
+read -p "ℹ️  All preparations are done? [Y/n]: " answer
 answer=${answer:-N}     # default to "N" if empty
 if [[ "$answer" =~ ^[Yy]$ ]]; then
     echo "Okay, letzt start with the installation routine ..."
@@ -61,7 +61,7 @@ fi
 # Copy Configuration files
 ################################################################################################
 # printer_data - config
-echo "Preparing configuration folder ..."
+echo "ℹ️  Preparing configuration folder ..."
 rm -rf "$config_destination""/*"  || echo "! Faild deleating folder content of ""$config_destination"
 
 echo "Copy configurations ..."
@@ -95,6 +95,7 @@ done
 ################################################################################################
 # Copy to spezial destinations
 ################################################################################################
+echo "ℹ️  Copy config files to spezial folders ..."
 cp "$source""/mainsail-client.cfg" "$HOME""/mainsail-config/client.cfg"  || echo "! Faild copying mainsail-client.cfg"
 cp "$source""/timelapse.cfg" "$HOME""/moonraker-timelapse/klipper_macro/timelapse.cfg"   || echo "! Faild copying timelapse.cfg"
 
@@ -102,7 +103,7 @@ cp "$source""/timelapse.cfg" "$HOME""/moonraker-timelapse/klipper_macro/timelaps
 ################################################################################################
 # Create Symlinks
 ################################################################################################
-echo "Creating Symlinks ..."
+echo "ℹ️  Creating Symlinks ..."
 ln -sfn "$HOME""/mainsail-config/mainsail.cfg"                      "$config_destination""/mainsail.cfg"  || echo "! Faild setting symlink to mainsail.cfg"
 ln -sfn "$HOME""/moonraker-timelapse/klipper_macro/timelapse.cfg"   "$config_destination""/timelapse.cfg" || echo "! Faild setting symlink to timelapse.cfg"
 ln -sfn "$HOME""/Klipper-Adaptive-Meshing-Purging/Configuration/"   "$config_destination""/KAMP" || echo "! Faild setting symlink to KAMP configuration folder"
@@ -111,7 +112,7 @@ ln -sfn "$HOME""/Klipper-Adaptive-Meshing-Purging/Configuration/"   "$config_des
 ################################################################################################
 # Copy KlipperScreen panels
 ################################################################################################
-echo "Add KlipperScreen panels ..."
+echo "ℹ️  Add KlipperScreen panels ..."
 cp "$source_base""/KlipperScreen-panels/*" "$HOME""/KlipperScreen/panels/" || echo "! Faild copying Klipper-panels."
 
 
@@ -124,11 +125,11 @@ cp "$source""/can0" "/etc/network/interfaces.d/can0" || echo "! Faild copying ne
 ################################################################################################
 # Copy Firnware config
 ################################################################################################
-echo "Copy klipper firmware configurations ..."
+echo "ℹ️  Copy klipper firmware configurations ..."
 cp "$source_base""/firmware.configurations/stm32f407_firmware.config" "$HOME""/klipper/" || echo "! Faild copying stm32f407_firmare.config."
 cp "$source_base""/firmware.configurations/rp2040_firmware.config" "$HOME""/klipper/" ||| echo "! Faild copying rp2040_firmware.config."
 
-echo "Copy Katapult bootloader configuratons ..."
+echo "ℹ️  Copy Katapult bootloader configuratons ..."
 cp "$source_base""/firmware.configurations/stm32f407_katapult.config" "$HOME""/katapult/" || echo "! Faild copying stm32f407_katapult.config."
 cp "$source_base""/firmware.configurations/rp2040n_katapult_usb.config" "$HOME""/katapult/" || echo "! Faild copying rp32040_katapult.config."
 
@@ -147,7 +148,7 @@ sudo cp "$config_source""/x11cnv.service" "/lib/systemd/system/" || echo "! Copy
 ################################################################################################
 # Copy and isntall farm3d
 ################################################################################################
-echo "Installing Eryone farm3d ..."
+echo "ℹ️  Installing Eryone farm3d ..."
 cp "$source_base""/farm3d/"  "$HOME""/"  -rf || echo "! Faild copying farm3d folder"
 chmod 777 "$HOME""/farm3d/*" || echo "! Faild chmod on farm3d fodler"
 cd "$source_base""/farm3d/" || echo "! Faild going into ""$source_base""/farm3d folder"
@@ -160,7 +161,7 @@ chmod 777 *  || echo "! Faild chmod 777 *"
 ################################################################################################
 # Install farm3d
 ################################################################################################
-echo "Installing needed tools for farm3d ...:"
+echo "ℹ️  Installing needed tools for farm3d ...:"
 cd "$HOME"
 pip3 install opencv-python || echo "! Faild pip3 install opencv-python"
 pip3 install qrcode[pil] || echo "! Faild pip3 install qrcode"
@@ -209,5 +210,5 @@ pip3 install qrcode[pil] || echo "! Faild pip3 install qrcode"
 ################################################################################################
 # Ende
 ################################################################################################
-echo "Copy completed."
+echo "ℹ️  Copy completed."
 exit 0;
