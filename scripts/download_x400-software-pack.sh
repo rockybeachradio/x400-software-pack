@@ -21,14 +21,6 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$REPO_DIR" || { echo "❌ x400-software-pack not found: $REPO_DIR"; exit 1; }
 
-######################################################
-# Get data
-git fetch origin --quiet          # Fetch remote metadata
-
-LOCAL=$(git rev-parse @)          # current local commit
-REMOTE=$(git rev-parse @{u})      # Upstream-Commit (origin/master)
-BASE=$(git merge-base @ @{u})     # gemeinsamer Vorfahre
-
 
 ################################################################################################
 # Get parameters
@@ -51,13 +43,13 @@ done
 ################################################################################################
 # Ask if force_pull is really wanted.
 ################################################################################################
-if ! $FORCE_PULL; then
+if $FORCE_PULL; then
   echo "ℹ️  You selected force_pull. All local changes will be reset to the GitHub version."
   read -p "Do you want to run force_pull? [Y/n]: " answer
   answer=${answer:-N}     # default to "N" if empty
   if [[ "$answer" =~ ^[Yy]$ ]]; then
     FORCE_PULL=true
-  esle
+  else
     FORCE_PULL=false
   fi
 fi
@@ -111,6 +103,15 @@ fi
 ################################################################################################
 # Check for new Version on GitHub. If newer verison: Download it and execute update_printer.sh
 ################################################################################################
+######################################################
+# Get data
+git fetch origin --quiet          # Fetch remote metadata
+
+LOCAL=$(git rev-parse @)          # current local commit
+REMOTE=$(git rev-parse @{u})      # Upstream-Commit (origin/master)
+BASE=$(git merge-base @ @{u})     # gemeinsamer Vorfahre
+
+
 if [[ "$LOCAL" == "$REMOTE" ]]; then
   echo "✅  Local Software Repo is up to date."
   exit 0
