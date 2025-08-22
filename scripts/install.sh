@@ -45,7 +45,7 @@ cd "$REPO_DIR/scripts/"
 ################################################################################################
 # Update the MCUs
 ################################################################################################
-echo "Shall the MCUs be updated?"
+read -p "Shall the MCUs be updated? [Y/n]: " answer
 answer=${answer:-N}     # default to "N" if empty
 if [[ "$answer" =~ ^[Yy]$ ]]; then
     echo "Installing MCU updates ..."
@@ -58,7 +58,7 @@ else
 fi
 
 echo "✅ Installation complete."
-echo "Restart required. Restart now?."
+read -p "Restart required. Restart now? [Y/n]: " answer
 answer=${answer:-N}     # default to "N" if empty
 if [[ "$answer" =~ ^[Yy]$ ]]; then
     sudo reboot

@@ -74,7 +74,8 @@ else
 fi
 
 echo "✅ Update complete"
-echo "Restart required. Restart now?."
+
+read -p "Restart required. Restart now? [Y/n]: " answer
 answer=${answer:-N}     # default to "N" if empty
 if [[ "$answer" =~ ^[Yy]$ ]]; then
     sudo reboot

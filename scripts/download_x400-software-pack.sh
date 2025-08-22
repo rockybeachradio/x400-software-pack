@@ -73,7 +73,7 @@ if ! $FORCE_PULL; then
     echo "ℹ️  Commit/stash them, or run: ./$(basename "$0") -force_pull"
     echo "force_pull will deleat all local changes"
     
-    echo "Run force_pull?"
+    read -p "Do you want to run: force_pull? [Y/n]: " answer
     answer=${answer:-N}     # default to "N" if empty
     if [[ "$answer" =~ ^[Yy]$ ]]; then
         FORCE_PULL=true
@@ -92,7 +92,7 @@ if $FORCE_PULL; then  # FORCE PULL: overwrite local changes with remote tracking
   git clean -fd               # Deletes untracked files and directories (but leaves ignored ones).
   echo "✅ Repository was build up from scratch. Now in synce with GitHub Repo."
   exit 50
-
+fi
 
 ################################################################################################
 # Check for new Version on GitHub. If newer verison: Download it and execute update_printer.sh
