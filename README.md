@@ -118,14 +118,11 @@ https://gitcode.com/xpp012/KlipperScreen/ - last ceck 20250821
     - [ ] "KlipperBackup env.conf" not existing in /configurations/
     - [ ] "can0.conf" file not existing in /configurations/
     - [x] KlipperScreen panels copy not working
-- [ ] Klipper-Backup is not backing up:
-    - [ ] $HOME/KlipperBackup/.env
-    - [ ] /etc/network/interfaces.d/can0
 - [x] update.sh is overwriting: Klipper-Backup/.env & /configuration/uuid.cfg
 
 
 # Changelog
-### Hardware mods
+### Hardware modifications
 ~~- [ ] Hardware connections used as intended by Makerspace MKS Skipr.~~
 ~~- [ ] DIAGS aktivated~~
 - [ ] Poop bin
@@ -153,19 +150,21 @@ https://gitcode.com/xpp012/KlipperScreen/ - last ceck 20250821
 - [x] [tmc2209 stepper_z] river_SGTHRS: 180 --> commented out. No sensorless homing is used in x400.
 
 #### Changes in the macros:
-- [x] [gcode_macro CANCEL_PRINT] TURN_OFF_HEATERS
-- [x] [gcode_macro CANCEL_PRINT] _CLIENT_RETRACT LENGTH={retract} 
-- [x] [gcode_macro CANCEL_PRINT] _TOOLHEAD_PARK_PAUSE_CANCEL 
-- [x] [gcode_macro PAUSE] PAUSE_BASE instead of BASE_PAUSE renamed
-- [x] Max 150°C on nozzle while probing
-- [x] [gcode_macro PAUSE] - using the mainsail-crew version, instead of the eryone version
-- [x] [gcode_macro RESUME] - using the mainsail-crew version, instead of the eryone version
+- [x] [gcode_macro CANCEL_PRINT] TURN_OFF_HEATERS -->
+- [x] [gcode_macro CANCEL_PRINT] _CLIENT_RETRACT LENGTH={retract} -->
+- [x] [gcode_macro CANCEL_PRINT] _TOOLHEAD_PARK_PAUSE_CANCEL -->
+- [x] [gcode_macro PAUSE] --> renamed BASE_PAUSE to PAUSE_BASE
+- [x] [probe] --> Added script: Max 150°C on nozzle while probing
+- [x] [gcode_macro PAUSE] --> using the mainsail-crew version, instead of the eryone version
+- [x] [gcode_macro RESUME] --> using the mainsail-crew version, instead of the eryone version
+- [x] [gcode_macro PRINT_START]  # SET_FAN_SPEED FAN=filter_fan SPEED=0.9  --> deactivated. It is now temperature controlled
+
 
 #### Added Features
 - [x] x400-software-pack installer
 - [x] MCU Update function
-- [x] Backup function: local backup folder
-- [ ] Backup function: GitHub
+- [x] Backup script function: local backup folder
+- [ ] Backup script function: GitHub
 - [x] x11cnv service
 - [x] Host, SKIPR-MCU toolhead-board-MCU processor temepratures are shown in mainsail
 - [ ] Temeprature monitoring (what to do when to hot)
@@ -176,28 +175,28 @@ https://gitcode.com/xpp012/KlipperScreen/ - last ceck 20250821
 - [x] protection that chamber hfan is not extracting heat while chamber heater is heating the chamber up.
 - [x] chamber fan only runs when temperature is above set chamber temperature.
 - [x] chamber fan protects chamber from overheating
-- [ ] Update functionaloy in Moonraker.conf [update_manager] add update for:
-    - [ ] Klipper
-    - [ ]Moonraker
-    - [ ] KIAUH
+- [ ] Update functionality in Moonraker.conf [update_manager] add update for:
+    - [x] KIAUH
+    - [x] Obico for Klipper
+    - [x] Katapult
+    - [x] Mobileraker
+    - [x] Sonar
     - [ ] G-Code Shell Command
-    - [ ]Input Shaper
-    - [ ]Obico for Klipper
-    - [ ]Katapult
-    - [ ] Mobileraker
+    - [ ] Input Shaper
 
 #### Added Software
-- [ ] sonar - Keep alife daemon \
+- [x] sonar - Keep alife daemon \
         https://github.com/mainsail-crew/sonar
+- [x] KlipperBackup
+    - Backup on Boot
+    - Backup on file changes
+    - Klipper-Backup is not backing up: $HOME/KlipperBackup/.env  --> Not a bug. The file contains user credentials
 - [ ] Mobileraker - Mobile App support \
         https://github.com/Clon1998/mobileraker
 - [ ] Obico support for local AI server \
         https://www.obico.io/docs/user-guides/klipper-setup/
-- [x] KlipperBackup
-    - Backup on Boot
-    - Backup on file changes
 
-#### What is kept:
+#### What is kept from Eryone:
 - [x] farm3d by Eryone
 - [x] Scripts by Eryone (for backward compatibility. in case famr3d needs them)
 - [ ] KlipperScreen panels by Eryone preserved
@@ -347,6 +346,12 @@ Open the ~/KlipperBackup/.env file and add your GitHub credentials.
 1) Check all settings and printerbehaviour as descirped in Klipper, Mainsail, Moonraer documentation to avoid issues and damages.
 
 
+## How to install/update (flash) the MCUs
+```bash
+cd ~/x400-software-pack/script/
+./mcu-update_all.sh
+```
+
 ## How to update x400-software-pack
 ```bash
 cd ~/x400-software-pack
@@ -367,9 +372,3 @@ rm -r ~/x400-software-pack"
 ```
 Note: This will not uninstall software nor deleat any (config) files, folders, etc. which were created during installation.
 This need to be done manually.
-
-## How to install flash MCUs
-```bash
-cd ~/x400-software-pack/script/
-./mcu-update.sh
-```
