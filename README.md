@@ -41,7 +41,7 @@ Feel free to give me feedback and contribute ideas or code. \
 - GitHub: https://github.com/redrathnure/armbian-mkspi
 
 #### Informations:
-- Eryone Ttolhead board: https://gitcode.com/xpp012/KlipperScreen/tree/master/docs
+- Eryone toolhead board: https://gitcode.com/xpp012/KlipperScreen/tree/master/docs
 - Eryone pressure sensor:
     - code: https://gitee.com/everyone3d/stm32_pressure_sensor
     - binary: https://gitcode.com/xpp012/KlipperScreen/tree/master/docs/X400_firmware
@@ -59,7 +59,7 @@ https://gitcode.com/xpp012/KlipperScreen/ - last ceck 20250821
 
 
 
-# Development log:
+# Development backlog:
 #### To check why eryone has spezial versions and not using the original ones. (commands found in relink_conf.sh)
 - [ ] cp /home/mks/KlipperScreen/moonraker/moonraker/components/machine.py /home/mks/moonraker/moonraker/components/       - Check what is different in the Eryone version
 - [ ] cp /home/mks/KlipperScreen/config/timelapse.cfg  /home/mks/moonraker-timelapse/klipper_macro/                        - Check what is different in the Eryone version
@@ -114,9 +114,9 @@ https://gitcode.com/xpp012/KlipperScreen/ - last ceck 20250821
 #### known bugs
 - [ ] /scripts/install_software.sh
     - see farm3d
-- [ ] /scripts/copy_configs.sh
-    - [ ] "KlipperBackup env.conf" not existing in /configurations/
-    - [ ] "can0.conf" file not existing in /configurations/
+- [x] /scripts/copy_configs.sh
+    - [x] "KlipperBackup env.conf" not existing in /configurations/
+    - [x] "can0.conf" file not existing in /configurations/
     - [x] KlipperScreen panels copy not working
 - [x] update.sh is overwriting: Klipper-Backup/.env & /configuration/uuid.cfg
 
@@ -133,6 +133,7 @@ https://gitcode.com/xpp012/KlipperScreen/ - last ceck 20250821
 - [ ] Chamber filtration unit: Coal Filter and HEPA filter (recirculation air)
 - [ ] Filament storage and feed unit with electric dehumidifier
 - [ ] RBG Status LED (Neopicel pin:PC5)
+- [ ] Nozzle camera (for Obico)
 - [ ] As soon as I can get my hands on the Bondtech INDX I will update the x400 with it.
 
 #### Changes compared to the original:
@@ -163,8 +164,9 @@ https://gitcode.com/xpp012/KlipperScreen/ - last ceck 20250821
 #### Added Features
 - [x] x400-software-pack installer
 - [x] MCU Update function
-- [x] Backup script function: local backup folder
-- [ ] Backup script function: GitHub
+- Backup script function
+    - [x] local backup folder
+    - [ ] Backup script function: GitHub
 - [x] x11cnv service
 - [x] Host, SKIPR-MCU toolhead-board-MCU processor temepratures are shown in mainsail
 - [ ] Temeprature monitoring (what to do when to hot)
@@ -175,7 +177,7 @@ https://gitcode.com/xpp012/KlipperScreen/ - last ceck 20250821
 - [x] protection that chamber hfan is not extracting heat while chamber heater is heating the chamber up.
 - [x] chamber fan only runs when temperature is above set chamber temperature.
 - [x] chamber fan protects chamber from overheating
-- [ ] Update functionality in Moonraker.conf [update_manager] add update for:
+- Update functionality in Moonraker.conf [update_manager] add update for:
     - [x] KIAUH
     - [x] Obico for Klipper
     - [x] Katapult
@@ -190,11 +192,19 @@ https://gitcode.com/xpp012/KlipperScreen/ - last ceck 20250821
 - [x] KlipperBackup
     - Backup on Boot
     - Backup on file changes
-    - Klipper-Backup is not backing up: $HOME/KlipperBackup/.env  --> Not a bug. The file contains user credentials
+    - [x] KlipperBackup can now backup files outside of users home folder via using symlinks. symlinks are created in copy_configs.sh
+    - [x] Klipper-Backup is not backing up: $HOME/KlipperBackup/.env  --> Not a bug. The file contains user credentials
 - [ ] Mobileraker - Mobile App support \
         https://github.com/Clon1998/mobileraker
+        https://github.com/Clon1998/mobileraker_companion
+    - [x] installation
+    - [ ] setup
 - [ ] Obico support for local AI server \
-        https://www.obico.io/docs/user-guides/klipper-setup/
+    https://www.obico.io/docs/user-guides/klipper-setup/
+    https://www.obico.io/docs/server-guides/
+    - [x] installation
+    - [ ] setup
+
 
 #### What is kept from Eryone:
 - [x] farm3d by Eryone

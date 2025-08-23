@@ -70,7 +70,7 @@ fi
 
 
 ################################################################################################
-# Copy Configuration files to /pinrter_data/config/
+# Configuration files - Copy files to /printer_data/config/
 ################################################################################################
 # printer_data - config
 echo "ℹ️  Preparing configuration folder ..."
@@ -105,7 +105,7 @@ done
 
 
 ################################################################################################
-# Copy Configurations fiels to spezial destinations
+# Configuration files - Copy fiels to spezial destinations
 ################################################################################################
 echo "ℹ️  Copy config files to spezial folders ..."
 cp "$config_source""/mainsail-client.cfg" "$HOME""/mainsail-config/client.cfg"  || echo "❌  Faild copying mainsail-client.cfg"
@@ -113,7 +113,7 @@ cp "$config_source""/timelapse.cfg" "$HOME""/moonraker-timelapse/klipper_macro/t
 
 
 ################################################################################################
-# Copy only during installation
+# Configuration files - Copy only during installation
 ################################################################################################
 if $INSTALL=true; then
     echo "ℹ️  Copy/override config files which were customised by users ..."
@@ -123,7 +123,7 @@ fi
 
 
 ################################################################################################
-# Create Symlinks
+# Configuration files - Create Symlinks
 ################################################################################################
 echo "ℹ️  Creating Symlinks ..."
 ln -sfn "$HOME""/mainsail-config/mainsail.cfg"                      "$config_destination""/mainsail.cfg"  || echo "❌  Faild setting symlink to mainsail.cfg"
@@ -132,21 +132,21 @@ ln -sfn "$HOME""/Klipper-Adaptive-Meshing-Purging/Configuration/"   "$config_des
 
 
 ################################################################################################
-# Copy KlipperScreen panels
+# KlipperScreen panels  - Copy
 ################################################################################################
 echo "ℹ️  Add KlipperScreen panels ..."
 cp "$source_base""/eryone-KlipperScreen-panels/"* "$HOME""/KlipperScreen/panels/" || echo "❌  Faild copying Klipper-panels."
 
 
 ################################################################################################
-# Copy Network interce
+# Network interce  - Copy
 ################################################################################################
 echo "ℹ️  Add Network interfaces ..."
 sudo cp "$config_source""/can0.conf" "/etc/network/interfaces.d/can0" || echo "❌  Faild copying network interface can0."
 
 
 ################################################################################################
-# Copy Firnware config
+# Firnware config - Copy
 ################################################################################################
 echo "ℹ️  Copy Klipper firmware configurations ..."
 cp "$source_base""/firmware-configurations/stm32f407_firmware.config" "$HOME""/klipper/" || echo "❌  Faild copying stm32f407_firmare.config."
@@ -163,14 +163,22 @@ cp "$source_base""/firmware-configurations/rp2040n_katapult_usb.config" "$HOME""
 
 
 ################################################################################################
-# Copy x11vnc
+# x11vnc - Copy
 ################################################################################################
 echo "ℹ️  Coyp x11cnv.service ..."
 sudo cp "$config_source""/x11cnv.service" "/lib/systemd/system/" || echo "❌  Copying service failed."
 
 
 ################################################################################################
-# Copy and isntall farm3d
+# Klipper-Backup  - Create symlinks, to allow Klipper-Backup to backup files outside of the user`s folder
+################################################################################################
+mkdir -p "$HOME/printer_data/symlinks_for_backup/"   || echo "❌  creating the /printer_data/symlink symlinks_for_backup/"
+ln -s /etc/hostname                     "$HOME/printer_data/symlinks_for_backup/hostname"   || echo "❌  Faild setting symlink /printer_data/symlinks_for_backup/hostname"
+ln -s /etc/network/interfaces.d/can0    "$HOME/printer_data/symlinks_for_backup/can0"       || echo "❌  Faild setting symlink /printer_data/symlinks_for_backup/can0"
+
+
+################################################################################################
+# farm3d - Copy and call .install
 # source: eryone-scripts-all/install_lib.sh
 ################################################################################################
 echo "ℹ️  Copy Eryone farm3d ..."
@@ -192,14 +200,14 @@ fi
 
 
 ################################################################################################
-# Eryone script compatibility
+# Eryone script - Copy
 ################################################################################################
 #echo "ℹ️  Create symling to Eryone scripts ..."
 #ln -sfn "$source_base""/eryone-scripts-all/"   "$HOME""/mainsail/all/" || echo "! Faild setting symlink to eryone-all script in mainsail folder"
 
 
 ################################################################################################
-# replace PIN settings
+# Board PINS - CHange configuration
 # not needed when SKIPR connections changed.
 ################################################################################################
 #echo "ℹ️  Replacing PIN declarations ..."
