@@ -46,7 +46,7 @@ cd "$REPO_DIR/scripts/"
 ################################################################################################
 # copy config files
 ################################################################################################
-echo "ℹ️  Start confoguration copy script (copy_configuration.sh) ..."
+echo "ℹ️  Start confoguration copy script (copy_configs.sh) ..."
 cd "$REPO_DIR/scripts/"
 ./copy_configs.sh
 

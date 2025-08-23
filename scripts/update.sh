@@ -22,13 +22,13 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$REPO_DIR" || { echo "❌ x400-software-pack not found: $REPO_DIR"; exit 1; }
 
+
 ################################################################################################
 # Update Linux
 ################################################################################################
 echo "ℹ️  Updating Linux, components and software ..."
 sudo apt update
 sudo apt upgrade
-sudo apt install
 
 
 ################################################################################################
@@ -48,7 +48,7 @@ fi
 ################################################################################################
 # copy config files
 ################################################################################################
-echo "ℹ️  Start configuration copy script (copy_configuration.sh) ..."
+echo "ℹ️  Start configuration copy script (copy_configs.sh) ..."
 cd "$REPO_DIR/scripts/"
 bash "$REPO_DIR/scripts/copy_configs.sh"
 
@@ -56,7 +56,7 @@ bash "$REPO_DIR/scripts/copy_configs.sh"
 ################################################################################################
 # Update the MCUs
 ################################################################################################
-echo "ℹ️  Shall Klipper be updated on the MCUs?"
+read -p "ℹ️  Shall Klipper be updated on the MCUs?" answer
 answer=${answer:-N}     # default to "N" if empty
 if [[ "$answer" =~ ^[Yy]$ ]]; then
     echo "Installing MCU updates ..."
