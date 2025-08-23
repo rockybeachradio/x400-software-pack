@@ -115,7 +115,7 @@ ln -sfn "$HOME""/Klipper-Adaptive-Meshing-Purging/Configuration/"   "$config_des
 # Copy KlipperScreen panels
 ################################################################################################
 echo "ℹ️  Add KlipperScreen panels ..."
-cp "$source_base""/eryone-KlipperScreen-panels/"* "$HOME""/KlipperScreen/panels/" || echo "❌  Faild copying Klipper-panels."
+cp "$source_base""/eryone-KlipperScreen-panels/" "$HOME""/KlipperScreen/panels/" || echo "❌  Faild copying Klipper-panels."
 
 
 ################################################################################################
