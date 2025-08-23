@@ -268,7 +268,7 @@ If not:
 2) Install software using KIAUH
     ```bash
     cd ~/kiauh
-    ./kiauh
+    ./kiauh.sh
     ```
 
 What to install: \

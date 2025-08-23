@@ -24,14 +24,15 @@ cd "$REPO_DIR" || { echo "❌ x400-software-pack not found: $REPO_DIR"; exit 1; 
 ################################################################################################
 # download x400-software-pack
 ################################################################################################
-echo "Check for updates ..."
+echo "ℹ️  Start update check & download script (download_x400-software-pack) ..."
 cd "$REPO_DIR/scripts/"
 ./download_x400-software-pack.sh
-de=$?       #capture exit code from script above (50 = new version was downloaded from GitHub)
+dl=$?       #capture exit code from script above  (0 = new version was downloaded from GitHub, 1 = no newer verison on GitHub)
 
 ################################################################################################
 # install required software
 ################################################################################################
+echo "ℹ️  Start software isntaller (install_software.sh) ..."
 cd "$REPO_DIR/scripts/"
 ./install_software.sh
 
@@ -39,6 +40,7 @@ cd "$REPO_DIR/scripts/"
 ################################################################################################
 # copy config files
 ################################################################################################
+echo "ℹ️  Start confoguration copy script (copy_configuration.sh) ..."
 cd "$REPO_DIR/scripts/"
 ./copy_config.sh
 

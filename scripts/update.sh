@@ -34,13 +34,15 @@ sudo apt install
 ################################################################################################
 # download x400-software-pack
 ################################################################################################
+echo "ℹ️  Start update check & download script (download_x400-software-pack) ..."
 cd "$REPO_DIR/scripts/"
 ./download_x400-software-pack.sh
-de=$?       #capture exit code from script above (50 = new version was downloaded from GitHub)
+dl=$?       #capture exit code from script above (50 = new version was downloaded from GitHub)
 
 ################################################################################################
 # copy config files
 ################################################################################################
+echo "ℹ️  Start confoguration copy script (copy_configuration.sh) ..."
 cd "$REPO_DIR/scripts/"
 if [[ $de -eq 50 ]]; then     # if exitcode of download-x400-software-pack.sh was "50" = "something was downloaded"
   bash "$REPO_DIR/scripts/copy_config.sh"
