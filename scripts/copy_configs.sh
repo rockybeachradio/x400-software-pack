@@ -122,7 +122,7 @@ cp "$source_base""/eryone-KlipperScreen-panels/"* "$HOME""/KlipperScreen/panels/
 # Copy Network interce
 ################################################################################################
 echo "ℹ️  Add Network interfaces ..."
-cp "$config_source""/can0" "/etc/network/interfaces.d/can0" || echo "❌  Faild copying network interface can0."
+cp "$config_source""/can0" "/etc/network/interfaces.d/can0.conf" || echo "❌  Faild copying network interface can0."
 
 
 ################################################################################################
