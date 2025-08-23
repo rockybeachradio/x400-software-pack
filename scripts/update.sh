@@ -65,7 +65,7 @@ bash "$REPO_DIR/scripts/mcu_update_all.sh"
 # End
 ################################################################################################
 echo "✅ Update complete"
-read -p "Restart required. Restart now? [Y/n]: " answer
+read -p "❓ Restart required. Restart now? [Y/n]: " answer
 answer=${answer:-N}     # default to "N" if empty
 if [[ "$answer" =~ ^[Yy]$ ]]; then
     sudo reboot

@@ -23,17 +23,22 @@ cd "$REPO_DIR" || { echo "❌ x400-software-pack not found: $REPO_DIR"; exit 1; 
 ################################################################################################
 # Update the MCUs
 ################################################################################################
-read -p "ℹ️  Shall Klipper be updated on the MCUs? [Y/n]" answer
+read -p "❓  Shall Klipper be updated on the MCUs? [Y/n]" answer
 answer=${answer:-N}     # default to "N" if empty
 if [[ "$answer" =~ ^[Yy]$ ]]; then
     echo "Installing MCU updates ..."
     cd "$REPO_DIR/scripts"
+    echo "ℹ️  Call mcu_update for linux mcu"
     ./mcu_update.sh -x linux                 # Update Linux MCU
+    echo "ℹ️  Call mcu_update for lbaord mcu"
     ./mcu_update.sh -x baord_mcu             # Update SKIPR MCU
+    echo "ℹ️  Call mcu_update for toolhead mcu"
     .//mcu_update.sh -x toolhead_mcu         # Update RP2040 MCU
+    #echo "ℹ️  Call mcu_update for toolehad sensor"
     #./mcu_update.sh -x toolehad_sensor       # Update Sensor on RP2040
 else
     echo "Please do it later."
 fi
 
+echo "✅  mcu_update_all.sh comlete"
 exit 0

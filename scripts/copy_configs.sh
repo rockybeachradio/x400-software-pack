@@ -40,7 +40,7 @@ config_destination="$HOME""/printer_data/config"
 ################################################################################################
 # Dobule check that all the preparation is done.
 ################################################################################################
-read -p "ℹ️  This script will evetnually override existing files and fodlers. Contiue? [Y/n]: " answer
+read -p "❓ This script will evetnually override existing files and fodlers. Contiue? [Y/n]: " answer
 answer=${answer:-N}     # default to "N" if empty
 if [[ "$answer" =~ ^[Yy]$ ]]; then
     echo "Okay, letzt start ..."
@@ -176,7 +176,7 @@ fi
 # not needed when SKIPR connections changed.
 ################################################################################################
 #echo "ℹ️  Replacing PIN declarations ..."
-#read -p "Set PINs on SKIPR Board to Eryone setup? [Y/n]: " answer
+#read -p "❓ Set PINs on SKIPR Board to Eryone setup? [Y/n]: " answer
 #answer=${answer:-N}     # default to "N" if empty
 #if [[ "$answer" =~ ^[Yy]$ ]]; then
 #    echo "Calling the pin replacement script ..."

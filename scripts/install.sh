@@ -52,7 +52,7 @@ cd "$REPO_DIR/scripts/"
 
 
 echo "✅ Installation complete."
-read -p "Restart required. Restart now? [Y/n]: " answer
+read -p "❓ Restart required. Restart now? [Y/n]: " answer
 answer=${answer:-N}     # default to "N" if empty
 if [[ "$answer" =~ ^[Yy]$ ]]; then
     sudo reboot
