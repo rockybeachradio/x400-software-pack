@@ -91,15 +91,15 @@ https://gitcode.com/xpp012/KlipperScreen/ - last ceck 20250821
     - timelapse.py: MKS path hardwired 
 
 #### farm3d things
-- [ ] Eryone farm3d
-    - [ ] scripts/install_software.sh
-        Uses "pip3 install" commands. Code from eryone-scripts-all/install_lib.sh
+- Eryone farm3d
+    - scripts/install_software.sh
+        - [ ] Uses "pip3 install" commands. Code from eryone-scripts-all/install_lib.sh
     - eryone-farm3d/install.sh
         - [ ] uses pip3 install \
             Debian/Ubuntu-like system that implements PEP 668.  \
             It marks the system Python as “externally managed,” so "pip3 install" to the system site-packages is blocked to avoid breaking OS packages. \
         - [x] changes strings in farm3d.service which are not there --> fixed it in farm3d.service
-    - [ ] run.sh
+    - run.sh
         - [ ] Uses /eryone-scripts-all/monitor.sh which is doing nothing
         - [ ] Uses fixed pathes "/home/mks/"  --> Extend install.sh to change it like in farm3d.service file
         - [ ] Uses: "echo makerbase | sudo -S service crowsnest restart"  --> the makerbase password fix coded does not make sens.
@@ -109,7 +109,13 @@ https://gitcode.com/xpp012/KlipperScreen/ - last ceck 20250821
     - [ ] klipper_config.cfg - not used. Why?
     - [ ] get-pip.py - not used. Why?
 
-
+#### known bugs
+- [ ] install_software
+    - see farm3d
+- [ ] copy_configs
+    - [ ] "KlipperBackup env.conf" not existing in /configurations/
+    - [ ] "can0.conf" file not existing in /configurations/
+    - [ ] KlipperScreen panels copy issue
 
 # Changelog
 ### Hardware mods
