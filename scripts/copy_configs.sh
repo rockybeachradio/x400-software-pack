@@ -108,7 +108,7 @@ cp "$config_source""/KlipperBackup env.cfg" "$HOME/KlipperBackup/.env"   || echo
 echo "ℹ️  Creating Symlinks ..."
 ln -sfn "$HOME""/mainsail-config/mainsail.cfg"                      "$config_destination""/mainsail.cfg"  || echo "❌  Faild setting symlink to mainsail.cfg"
 ln -sfn "$HOME""/moonraker-timelapse/klipper_macro/timelapse.cfg"   "$config_destination""/timelapse.cfg" || echo "❌  Faild setting symlink to timelapse.cfg"
-ln -sfn "$HOME""/Klipper-Adaptive-Meshing-Purging/Configuration/"   "$config_destination""/KAMP" || echo "❌  Faild setting symlink to KAMP configuration folder"
+ln -sfn "$HOME""/Klipper-Adaptive-Meshing-Purging/Configuration/"*   "$config_destination""/KAMP" || echo "❌  Faild setting symlink to KAMP configuration folder"
 
 
 ################################################################################################
