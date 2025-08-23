@@ -99,7 +99,7 @@ done
 echo "ℹ️  Copy config files to spezial folders ..."
 cp "$config_source""/mainsail-client.cfg" "$HOME""/mainsail-config/client.cfg"  || echo "❌  Faild copying mainsail-client.cfg"
 cp "$config_source""/timelapse.cfg" "$HOME""/moonraker-timelapse/klipper_macro/timelapse.cfg"   || echo "❌  Faild copying timelapse.cfg"
-cp "$config_source""/KlipperBackup env.cfg" "$HOME/KlipperBackup/.env"   || echo "❌  Faild copying KlipperBackup env.cfg"
+cp "$config_source""/klipper-backup env.conf" "$HOME/klipper-backup/.env"   || echo "❌  Faild copying KlipperBackup env.cfg"
 
 
 ################################################################################################
