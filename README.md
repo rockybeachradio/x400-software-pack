@@ -66,8 +66,6 @@ https://gitcode.com/xpp012/KlipperScreen/ - last ceck 20250821
     - ln -s /home/mks/KlipperScreen/all /home/mks/mainsail/all
 
 
-
-
 #### To check why these files are there in addition to original repo.
 - [ ] Where are all the scripts in /eryone-scrits (all) used?
 - [ ] Check Eryone /KlipperScreen
@@ -91,6 +89,27 @@ https://gitcode.com/xpp012/KlipperScreen/ - last ceck 20250821
 - [x] Check Eryone /moonraker-timelapse
     - MKS path hardwired & sudo makerspace added
     - timelapse.py: MKS path hardwired 
+
+#### farm3d things
+- [ ] Eryone farm3d
+    - [ ] scripts/install_software.sh
+        Uses "pip3 install" commands. Code from eryone-scripts-all/install_lib.sh
+    - eryone-farm3d/install.sh
+        - [ ] uses pip3 install \
+            Debian/Ubuntu-like system that implements PEP 668.  \
+            It marks the system Python as “externally managed,” so "pip3 install" to the system site-packages is blocked to avoid breaking OS packages. \
+        - [x] changes strings in farm3d.service which are not there --> fixed it in farm3d.service
+    - [ ] run.sh
+        - [ ] Uses /eryone-scripts-all/monitor.sh which is doing nothing
+        - [ ] Uses fixed pathes "/home/mks/"  --> Extend install.sh to change it like in farm3d.service file
+        - [ ] Uses: "echo makerbase | sudo -S service crowsnest restart"  --> the makerbase password fix coded does not make sens.
+        - Calls mq.py
+    - [ ] update.sh - executes git fetch. but there is no /.git/. Calls mq.py
+    - [ ] mq.py - what is it doing?
+    - [ ] klipper_config.cfg - not used. Why?
+    - [ ] get-pip.py - not used. Why?
+
+
 
 # Changelog
 ### Hardware mods

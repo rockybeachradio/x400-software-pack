@@ -51,7 +51,7 @@ if $FORCE_PULL; then
     FORCE_PULL=true
   else
     FORCE_PULL=false
-    echo "ℹ️  Lets continue normal"
+    echo "Lets continue normal"
   fi
 fi
 

@@ -157,7 +157,7 @@ sudo systemctl start x11vnc.service || echo "! Starting service failed."
 
 ################################################################################################
 # Install software needed for farm3d
-# The actual famr3d software is installed/updated by /x400-software-pack/scripts/update_printer.sh 
+# The actual famr3d software is installed/updated by /x400-software-pack/scripts/copy_configs.sh 
 ################################################################################################
 echo "ℹ️  Installing needed tools for farm3d ...:"
 cd "$HOME"

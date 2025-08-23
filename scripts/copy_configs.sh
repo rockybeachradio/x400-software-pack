@@ -151,6 +151,7 @@ sudo cp "$config_source""/x11cnv.service" "/lib/systemd/system/" || echo "❌  C
 
 ################################################################################################
 # Copy and isntall farm3d
+# source: eryone-scripts-all/install_lib.sh
 ################################################################################################
 echo "ℹ️  Copy Eryone farm3d ..."
 if [[ -d "$HOME""/farm3d/" ]]; then
