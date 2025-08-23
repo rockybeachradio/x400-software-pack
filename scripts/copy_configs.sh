@@ -99,7 +99,7 @@ done
 echo "ℹ️  Copy config files to spezial folders ..."
 cp "$config_source""/mainsail-client.cfg" "$HOME""/mainsail-config/client.cfg"  || echo "❌  Faild copying mainsail-client.cfg"
 cp "$config_source""/timelapse.cfg" "$HOME""/moonraker-timelapse/klipper_macro/timelapse.cfg"   || echo "❌  Faild copying timelapse.cfg"
-cp "$config_source""KlipperBackup env.cfg" "$HOME/KlipperBackup/.env"   || echo "❌  Faild copying KlipperBackup env.cfg"
+cp "$config_source""/KlipperBackup env.cfg" "$HOME/KlipperBackup/.env"   || echo "❌  Faild copying KlipperBackup env.cfg"
 
 
 ################################################################################################
@@ -152,12 +152,19 @@ sudo cp "$config_source""/x11cnv.service" "/lib/systemd/system/" || echo "❌  C
 ################################################################################################
 # Copy and isntall farm3d
 ################################################################################################
-echo "ℹ️  Installing Eryone farm3d ..."
-cp "$source_base""/farm3d/"  "$HOME""/"  -rf || echo "❌  Faild copying farm3d folder"
-chmod 777 "$HOME""/farm3d/*" || echo "❌  Faild chmod on farm3d fodler"
-cd "$source_base""/farm3d/" || echo "❌  Faild going into ""$source_base""/farm3d folder"
-chmod 777 *  || echo "❌  Faild chmod 777 *"
-./install.sh  || echo "❌  Faild starting the install.sh"
+echo "ℹ️  Copy Eryone farm3d ..."
+if [[ -d "$HOME""/farm3d/" ]]; then
+    rm -rf "$HOME/farm3d"
+fi
+cp -r "$source_base""/eryone-farm3d/" "$HOME""/farm3d/"  || echo "❌  Faild copying farm3d folder"
+chmod 777 "$HOME""/farm3d/*" || echo "❌  Faild chmod on farm3d folder"
+if cd "$HOME""/farm3d/"; then
+    echo "ℹ️  Starting Eryone farm3d installer ..."
+    ./install.sh  || echo "❌  Faild starting the install.sh"      # Calling the farm3d installer
+else
+    echo "❌  Faild going into ""$source_base""/farm3d folder"
+fi
+
 #pip3 install opencv-python || echo "! Faild pip3 install opencv-python"        # This is installed by /x400-software-pack/scripts/install_software.sh
 #pip3 install qrcode[pil] || echo "! Faild pip3 install qrcode"                 # This is installed by /x400-software-pack/scripts/install_software.sh
 
