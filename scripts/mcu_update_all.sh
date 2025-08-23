@@ -27,7 +27,7 @@ read -p "ℹ️  Shall Klipper be updated on the MCUs? [Y/n]" answer
 answer=${answer:-N}     # default to "N" if empty
 if [[ "$answer" =~ ^[Yy]$ ]]; then
     echo "Installing MCU updates ..."
-    cd "$HOME"
+    cd "$REPO_DIR/scripts"
     ./mcu_update.sh -x linux                 # Update Linux MCU
     ./mcu_update.sh -x baord_mcu             # Update SKIPR MCU
     .//mcu_update.sh -x toolhead_mcu         # Update RP2040 MCU
