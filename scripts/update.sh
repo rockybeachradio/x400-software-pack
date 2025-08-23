@@ -5,7 +5,9 @@ set -euo pipefail
 # File: update.sh
 # Author: Andreas
 # Date: 20250822
-# Purpose: Call the download and update scripts
+# Purpose:  Update the x400-software-pack
+#           Update Linux
+#           Call the download_x400-software-pack.sh, copy_config.sh, mcu_update.sh
 #
 ################################################################################################
 
@@ -44,24 +46,11 @@ if [[ $de -eq 50 ]]; then     # if exitcode of download-x400-software-pack.sh wa
   bash "$REPO_DIR/scripts/copy_config.sh"
 fi
 
-## if something was fownloaded
-#  if [[ -x "$REPO_DIR/scripts/copy_config.sh" ]]; then           # tests whether the file exists and has the executable permission
-#    echo "ℹ️  Starting printer update ..."
-#    "$REPO_DIR/scripts/copy_config.sh"
-#    echo "✅ Printer update completed."
-#  elif [[ -f "$REPO_DIR/scripts/copy_config.sh" ]]; then         # If file found but not executable
-#    echo "ℹ️  Start printer update via bash ..."                      # run explicity with bash
-#    bash "$REPO_DIR/scripts/copy_config.sh"
-#    echo "✅ Printer update completed."
-#  else
-#   echo "❌ copy_config.sh not found. Please try again."
-#  fi
-
 
 ################################################################################################
 # Update the MCUs
 ################################################################################################
-echo "Shall the MCUs be updated?"
+echo "ℹ️  Shall Klipper be updated on the MCUs?"
 answer=${answer:-N}     # default to "N" if empty
 if [[ "$answer" =~ ^[Yy]$ ]]; then
     echo "Installing MCU updates ..."
@@ -74,7 +63,6 @@ else
 fi
 
 echo "✅ Update complete"
-
 read -p "Restart required. Restart now? [Y/n]: " answer
 answer=${answer:-N}     # default to "N" if empty
 if [[ "$answer" =~ ^[Yy]$ ]]; then

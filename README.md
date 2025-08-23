@@ -232,13 +232,13 @@ https://gitcode.com/xpp012/KlipperScreen/ - last ceck 20250821
     - Language code: en
     - DHCP
 
-3) insert the SD-Card / EMMC into the Skipr voard and fire the printer up.
+3) Insert the SD-Card / EMMC into the Skipr voard and fire the printer up.
 
 4) Connect to the printer via SSH.
 
 
 ### Preparing the System
-1) check if sudo is installed an your user is part of the sudo usergroup \
+1) Check if sudo is installed an your user is part of the sudo usergroup \
 If not:
     ```bash
     su -
@@ -252,52 +252,85 @@ If not:
     sudo apt install git
     ```
 
-3) Download the x400-software-pack from the GitHub Repo
+3) Update the Linux system
     ```bash
-    cd ~/
-    ~~mkdir x400-software-pack/~~
-    git clone https://github.com/rockybeachradio/x400-software-pack.git
+    sudo apt update
+    sudo apt upgrade
     ```
 
-4) Install and update needed software
+### Install the software
+1) Install KIAUH
+    ```bash
+    cd ~/
+    git clone https://github.com/dw-0/kiauh.git
+    ```
+
+2) Install software using KIAUH
+    ```bash
+    cd ~/kiauh
+    ./kiauh
+    ```
+
+What to install: \
+    - 1) Install
+        - Klipper
+        - Moonraker
+        - Mainsail
+        - Msinsail-config
+        - KlipperScreen
+        - Crowsnest
+    - 4) Advances
+        - Input Shaper Dependencies
+    - E) Extension
+        - G-Code Shell Command
+        - Mobileraker
+        - Klipper-Backup (optional: Backup on boot, Cron, Backup on file changes)
+        - Obico for Klipper
+
+
+3) Install and update x400-software-pack includingneeded software
     ```bash
     cd ~/x400-software-pack/scripts
     ./install.sh
     ```
-    \
-    Wat it does:
-    - Linux updates
-    - sudo
-    - git (needed to download x400-software-pack)
-    - Armbian-config
-    - Clean up
+
+    What the installer does:
+    - sudo check
+    - git check
+
+    - Linux update
+    - Armbian-config installation
+    - fix DFU
     - fix for Python 3
 
-KIAUH, KAMP, moonraker-timelapse, Katapult, sonar
+    - Katapult
+    - KAMP
+    - moonraker-timelapse
+    - sonar
+    - x11vnc
+    - farm3d prerequisits
+    - install needed tools for backup script
 
-5) Make settings in linux \
+    - Clean up
+
+    - copy configurations
+    - install famr3d
+
+    - MCU Update \
+    On the first run, do not use the integrated "Update MCU firmware" function. Select NO when asked. \
+    MCUs need to be prepared befor MCU Update.
+
+
+4) Make settings in linux \
     eg with
     ```bash
+    cd ~/
     sudo armbian-config
     ```
 
+5) Install/update Katapult on your boards (MCU, toolhead)
 
-### Install printer related Software
-2) Install software using KIAUH \
-    Klipper, Moonraker, Mainsail, KlipperScreen, Crowsnest \
-    G-Code Shell Command, Input Shaper, Mobileraker, Obico for Klipper \
-    KlipperBackup (optional: Backup on boot, Cron, Backup on file changes)
-
-3) Install x-400-software-pack  
-    ```bash
-    cd ~/x400-software-pack/scripts
-    ./update.sh
-    ```
-    On the first run, do not use the integrated "Update MCU firmware" function. Select NO when asked.
-
-4) Install/update Katapult on your boards
-
-5) Install/update Firmware on your boards
+6) Install/update Firmware on your boards (MCU, toolehad)
 
 
 ### Needs to be dine maunal (for now)

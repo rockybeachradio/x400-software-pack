@@ -2,10 +2,11 @@
 set -euo pipefail
 
 ################################################################################################
-# File: update.sh
+# File: install.sh
 # Author: Andreas
 # Date: 20250822
-# Purpose: Call the download and update scripts
+# Purpose:  Downlaod and Installaiton of x400-software-pack
+#           Call the download_x400-software-pack.sh, install_software.sh, copy_config.sh, mcu_update.sh
 #
 ################################################################################################
 
@@ -41,21 +42,6 @@ cd "$REPO_DIR/scripts/"
 cd "$REPO_DIR/scripts/"
 ./copy_config.sh
 
-
-################################################################################################
-# Update the MCUs
-################################################################################################
-read -p "Shall the MCUs be updated? [Y/n]: " answer
-answer=${answer:-N}     # default to "N" if empty
-if [[ "$answer" =~ ^[Yy]$ ]]; then
-    echo "Installing MCU updates ..."
-    "./""$HOME""/x400-software-pack/scripts/mcu_update.sh -x linux"                 # Update Linux MCU
-    "./""$HOME""/x400-software-pack/scripts/mcu_update.sh -x baord_mcu"             # Update SKIPR MCU
-    "./""$HOME""/x400-software-pack/scripts/mcu_update.sh -x toolhead_mcu"          # Update RP2040 MCU
-    #"./""$HOME""/x400-software-pack/scripts/mcu_update.sh -x toolehad_sensor"       # Update Sensor on RP2040
-else
-    echo "Please do it later."
-fi
 
 echo "✅ Installation complete."
 read -p "Restart required. Restart now? [Y/n]: " answer

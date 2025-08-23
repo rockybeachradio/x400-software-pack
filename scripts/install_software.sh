@@ -18,15 +18,16 @@ set -euo pipefail
 # Pre check
 ################################################################################################
 echo "ℹ️  Checking prerequisits ..."
-if ! command -v sudo >/dev/null 2>&1; then
+
+if command -v sudo >/dev/null 2>&1; then
+    echo "✅ sudo ist installiert."
+else
     echo "❌ sudo is not installed. Please install sudo and add your user '$USER' to the sudo group before executing this script."
     echo "$ su -"
     echo "$ apt-get install sudo"
     echo "$ /sbin/adduser $USER sudo"
     echo "$ exit"
     exit 1
-else
-    echo "✅ sudo ist installiert."
 fi
 
 if id -nG "$USER" | grep -qw sudo; then
@@ -46,7 +47,6 @@ fi
 echo "ℹ️  Updating Linux, components and software ..."
 sudo apt update
 sudo apt upgrade
-sudo apt install
 
 
 ################################################################################################
@@ -61,18 +61,21 @@ if [[ -d "$TARGET_DIR/.git" ]]; then
 else
     echo "ℹ️  Installing Armbian-config ..."
     echo "⬇️  Cloning $REPO_URL ..."
-    sudo git clone "$REPO_URL" "$TARGET_DIR"
+    git clone "$REPO_URL"
     echo "✅ Clone completed."
 fi
 
 ################################################################################################
 # Install fixes
 ################################################################################################
+
+###################################################
 echo "ℹ️  Install fix for DFU utility ..."
 cd /etc/udev/rules.d
-sudo wget https://raw.githubusercontent.com/wiieva/dfu-util/refs/heads/master/doc/40-dfuse.rules -O 40-dfuse.rules
+wget https://raw.githubusercontent.com/wiieva/dfu-util/refs/heads/master/doc/40-dfuse.rules -O 40-dfuse.rules
 sudo usermod -aG plugdev $USER
 
+###################################################
 echo "ℹ️  Install fix for Python 3 ..."
 cd "$HOME"
 sudo apt install python3-pip python3-serial
@@ -81,18 +84,21 @@ sudo apt install python3-pip python3-serial
 ################################################################################################
 # Install printer software
 ################################################################################################
-TARGET_DIR="kiauh"
-REPO_URL="https://github.com/dw-0/kiauh.git"
+echo "ℹ️  Install Printer software ..."
 
-cd "$HOME"
-if [[ -d "$TARGET_DIR/.git" ]]; then
-    echo "✅ Repository '$TARGET_DIR' already exists."
-else
-    echo "ℹ️  Installing KIAUH ..."
-    echo "⬇️  Cloning $REPO_URL ..."
-    sudo git clone "$REPO_URL" "$TARGET_DIR"
-    echo "✅ Clone completed."
-fi
+###################################################
+#TARGET_DIR="kiauh"
+#REPO_URL="https://github.com/dw-0/kiauh.git"
+#
+#cd "$HOME"
+#if [[ -d "$TARGET_DIR/.git" ]]; then
+#    echo "✅ Repository '$TARGET_DIR' already exists."
+#else
+#    echo "ℹ️  Installing KIAUH ..."
+#    echo "⬇️  Cloning $REPO_URL ..."
+#    git clone "$REPO_URL"
+#    echo "✅ Clone completed."
+#fi
 
 ###################################################
 TARGET_DIR="katapult"
@@ -104,7 +110,7 @@ if [[ -d "$TARGET_DIR/.git" ]]; then
 else
     echo "ℹ️  Installing Katapult ..."
     echo "⬇️  Cloning $REPO_URL ..."
-    sudo git clone "$REPO_URL" "$TARGET_DIR"
+    git clone "$REPO_URL"
     echo "✅ Clone completed."
 fi
 
@@ -118,7 +124,7 @@ if [[ -d "$TARGET_DIR/.git" ]]; then
 else
     echo "ℹ️ Installing KAMP ..."
     echo "⬇️  Cloning $REPO_URL ..."
-    sudo git clone "$REPO_URL" "$TARGET_DIR"
+    git clone "$REPO_URL"
     echo "✅ Clone completed."
 fi
 
@@ -132,11 +138,36 @@ if [[ -d "$TARGET_DIR/.git" ]]; then
 else
     echo "ℹ️  Installing moonraker-timelapse ..."
     echo "⬇️  Cloning $REPO_URL ..."
-    sudo git clone "$REPO_URL" "$TARGET_DIR"
+    git clone "$REPO_URL"
     echo "✅ Clone completed."
     cd "$HOME""/moonraker-timelapse"
     make install 
 fi
+
+###################################################
+TARGET_DIR="sonar"
+REPO_URL="https://github.com/mainsail-crew/sonar.git"
+
+cd "$HOME"
+if [[ -d "$TARGET_DIR/.git" ]]; then
+    echo "✅ Repository '$TARGET_DIR' already exists."
+else
+    echo "ℹ️  Installing sonar ..."
+    echo "⬇️  Cloning $REPO_URL ..."
+    git clone "$REPO_URL"
+    echo "✅ Clone completed."
+    cd "$HOME""/sonar"
+    make install 
+fi
+
+###################################################
+# Klipper-backup tool
+# https://klipperbackup.xyz
+# --> USE KIAUH to install
+
+# cd "$HOME"
+# curl -fsSL get.klipperbackup.xyz | bash
+# $HOME/klipper-backup/install.sh
 
 
 ################################################################################################
@@ -174,17 +205,6 @@ echo "ℹ️  Installing needed tools for backup ..:"
 cd "$HOME"
 sudo apt install zip || echo "! Installation failed."
 mkdir "$HOME/printer_packup/"
-
-
-################################################################################################
-# Klipper-backup tool
-# https://klipperbackup.xyz
-################################################################################################
-# --> USE KIAUH to install
-#
-# cd "$HOME"
-# curl -fsSL get.klipperbackup.xyz | bash
-# $HOME/klipper-backup/install.sh
 
 
 ################################################################################################

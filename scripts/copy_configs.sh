@@ -40,17 +40,10 @@ config_destination="$HOME""/printer_data/config"
 ################################################################################################
 # Dobule check that all the preparation is done.
 ################################################################################################
-echo "Before we start, pelase doube check, that all needed preparations are comleted eg."
-echo "- Armbian is up to date"
-echo "- Armbian is set up"
-echo "- The folling tools are installed via KIAUH (v6+): klipper, moonraker, mainsail, mainsail-config, KlipperScreen, corwsnest, input shaper, G-Code Shell Command"
-echo "- Optional: Mobilemaker, Obico for Klipper is isntalled"
-echo "Furhter Information can be found in the documentation on GitHub"
-
-read -p "ℹ️  All preparations are done? [Y/n]: " answer
+read -p "ℹ️  This script will evetnually override existing files and fodlers. Contiue? [Y/n]: " answer
 answer=${answer:-N}     # default to "N" if empty
 if [[ "$answer" =~ ^[Yy]$ ]]; then
-    echo "Okay, letzt start with the installation routine ..."
+    echo "Okay, letzt start ..."
 else
     echo "See you later."
     exit 0;
@@ -174,30 +167,15 @@ fi
 ################################################################################################
 # Eryone script compatibility
 ################################################################################################
+#echo "ℹ️  Create symling to Eryone scripts ..."
 #ln -sfn "$source_base""/eryone-scripts-all/"   "$HOME""/mainsail/all/" || echo "! Faild setting symlink to eryone-all script in mainsail folder"
-
-
-################################################################################################
-# Update the MCUs
-################################################################################################
-#echo "Shall the MCUs be updated?"
-#answer=${answer:-N}     # default to "N" if empty
-#if [[ "$answer" =~ ^[Yy]$ ]]; then
-#    echo "Installing MCU updates ..."
-#    "./""$HOME""/x400-software-pack/scripts/mcu_update.sh -x linux"                 # Update Linux MCU
-#    "./""$HOME""/x400-software-pack/scripts/mcu_update.sh -x baord_mcu"             # Update SKIPR MCU
-#    "./""$HOME""/x400-software-pack/scripts/mcu_update.sh -x toolhead_mcu"          # Update RP2040 MCU
-#    #"./""$HOME""/x400-software-pack/scripts/mcu_update.sh -x toolehad_sensor"       # Update Sensor on RP2040
-#else
-#    echo "Please do it later."
-#fi
 
 
 ################################################################################################
 # replace PIN settings
 # not needed when SKIPR connections changed.
 ################################################################################################
-#echo "Replacing PIN declarations ..."
+#echo "ℹ️  Replacing PIN declarations ..."
 #read -p "Set PINs on SKIPR Board to Eryone setup? [Y/n]: " answer
 #answer=${answer:-N}     # default to "N" if empty
 #if [[ "$answer" =~ ^[Yy]$ ]]; then
