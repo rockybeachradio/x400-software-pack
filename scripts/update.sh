@@ -56,18 +56,14 @@ bash "$REPO_DIR/scripts/copy_configs.sh"
 ################################################################################################
 # Update the MCUs
 ################################################################################################
-read -p "ℹ️  Shall Klipper be updated on the MCUs?" answer
-answer=${answer:-N}     # default to "N" if empty
-if [[ "$answer" =~ ^[Yy]$ ]]; then
-    echo "Installing MCU updates ..."
-    "./""$HOME""/x400-software-pack/scripts/mcu_update.sh -x linux"                 # Update Linux MCU
-    "./""$HOME""/x400-software-pack/scripts/mcu_update.sh -x baord_mcu"             # Update SKIPR MCU
-    "./""$HOME""/x400-software-pack/scripts/mcu_update.sh -x toolhead_mcu"          # Update RP2040 MCU
-    #"./""$HOME""/x400-software-pack/scripts/mcu_update.sh -x toolehad_sensor"       # Update Sensor on RP2040
-else
-    echo "Please do it later."
-fi
+echo "ℹ️  Start script to update all MCUs (mcu_update_all.sh) ..."
+cd "$REPO_DIR/scripts/"
+bash "$REPO_DIR/scripts/mcu_update_all.sh"
 
+
+################################################################################################
+# End
+################################################################################################
 echo "✅ Update complete"
 read -p "Restart required. Restart now? [Y/n]: " answer
 answer=${answer:-N}     # default to "N" if empty
