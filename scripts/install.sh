@@ -13,7 +13,7 @@ set -euo pipefail
 ################################################################################################
 # Variables
 ################################################################################################
-rc =""      # Return code  Variable for exit code of a called shell script
+rc=""      # Return code  Variable for exit code of a called shell script
 
 #Resolve repo root (parent of this script), then cd into it
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

@@ -15,7 +15,7 @@ set -euo pipefail
 ################################################################################################
 # Variables
 ################################################################################################
-rc =""      # Return code  Variable for exit code of a called shell script
+rc=""      # Return code  Variable for exit code of a called shell script
 
 #Resolve repo root (parent of this script), then cd into it
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -49,7 +49,7 @@ fi
 ################################################################################################
 echo "ℹ️  Start configuration copy script (copy_configuration.sh) ..."
 cd "$REPO_DIR/scripts/"
-  bash "$REPO_DIR/scripts/copy_config.sh"
+bash "$REPO_DIR/scripts/copy_config.sh"
 
 
 ################################################################################################
