@@ -121,7 +121,7 @@ https://gitcode.com/xpp012/KlipperScreen/ - last ceck 20250821
 - [ ] Klipper-Backup is not backing up:
     - [ ] $HOME/KlipperBackup/.env
     - [ ] /etc/network/interfaces.d/can0
-- [ ] update.sh is overwriting: Klipper-Backup/.env & /configuration/uuid.cfg
+- [x] update.sh is overwriting: Klipper-Backup/.env & /configuration/uuid.cfg
 
 
 # Changelog
@@ -331,29 +331,42 @@ Open the ~/KlipperBackup/.env file and add your GitHub credentials.
     nano .env
     ```
 
-5) Make settings as you wish in linux. eg with: \
+5) Katpult: Install/update Katapult on your boards (MCU, toolhead)
+6) Firmware: Install/update Firmware on your boards (MCU, toolehad)
+
+### Settings
+1) Add Camera in mainsail
+
+2) Make settings as you wish in linux. eg with: \
     ```bash
     cd ~/
     sudo armbian-config
     ```
 
-6) Ktapult: Install/update Katapult on your boards (MCU, toolhead)
-7) Firmware: Install/update Firmware on your boards (MCU, toolehad)
-
-
 ### Check setup 
 1) Check all settings and printerbehaviour as descirped in Klipper, Mainsail, Moonraer documentation to avoid issues and damages.
 
-### Settings in Mainsail
-1) Add Camera
 
-
-## How to get new verison of x400-software-pack
-To check fopr updates, use git commands or the following script
+## How to update x400-software-pack
 ```bash
 cd ~/x400-software-pack
 ./update.sh
 ```
+
+## How to reset x400-software-pack
+x400-software-pack can be reinstalled.
+```bash
+cd ~/x400-software-pack
+./install.sh
+```
+
+## How uninstall x400-software-pack
+As it is a copy of a repo, just delet the local reopo folder.
+```bash
+rm -r ~/x400-software-pack"
+```
+Note: This will not uninstall software nor deleat any (config) files, folders, etc. which were created during installation.
+This need to be done manually.
 
 ## How to install flash MCUs
 ```bash

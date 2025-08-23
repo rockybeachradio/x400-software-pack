@@ -116,6 +116,7 @@ cp "$config_source""/timelapse.cfg" "$HOME""/moonraker-timelapse/klipper_macro/t
 # Copy only during installation
 ################################################################################################
 if $INSTALL=true; then
+    echo "ℹ️  Copy/override config files which were customised by users ..."
     cp "$config_source""/klipper-backup env.conf" "$HOME/klipper-backup/.env"   || echo "❌  Faild copying KlipperBackup env.cfg"
     cp "$config_source""/canuid.cfg" "$config_destination/"   || echo "❌  Faild copying canuid.cfg"
 fi
