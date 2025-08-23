@@ -118,7 +118,10 @@ https://gitcode.com/xpp012/KlipperScreen/ - last ceck 20250821
     - [ ] "KlipperBackup env.conf" not existing in /configurations/
     - [ ] "can0.conf" file not existing in /configurations/
     - [x] KlipperScreen panels copy not working
-
+- [ ] Klipper-Backup is not backing up:
+    - [ ] $HOME/KlipperBackup/.env
+    - [ ] /etc/network/interfaces.d/can0
+- [ ] update.sh is overwriting: Klipper-Backup/.env & /configuration/uuid.cfg
 
 
 # Changelog
@@ -297,12 +300,12 @@ What to install: \
     What the installer does:
     - sudo check
     - git check
-
+    \
     - Linux update
     - Armbian-config installation
     - fix DFU
     - fix for Python 3
-
+    \
     - Katapult
     - KAMP
     - moonraker-timelapse
@@ -310,32 +313,32 @@ What to install: \
     - x11vnc
     - farm3d prerequisits
     - install needed tools for backup script
-
+    \
     - Clean up
-
+    \
     - copy configurations
     - install famr3d
-
+    \
     - MCU Update \
     On the first run, do not use the integrated "Update MCU firmware" function. Select NO when asked. \
     MCUs need to be prepared befor MCU Update.
 
 
-4) Make settings in linux \
-    eg with
+4) Klipper Backup
+Open the ~/KlipperBackup/.env file and add your GitHub credentials.
+    ```bash
+    cd ~/KlipperBackup/
+    nano .env
+    ```
+
+5) Make settings as you wish in linux. eg with: \
     ```bash
     cd ~/
     sudo armbian-config
     ```
 
-5) Install/update Katapult on your boards (MCU, toolhead)
-
-6) Install/update Firmware on your boards (MCU, toolehad)
-
-
-### Needs to be dine maunal (for now)
-1) Klipper Backup
-Open the ~/KlipperBackup/.env file and copy in the backupPaths declaration from from ~/x400-software-pack/config/KlipperBackup env.cfg.
+6) Ktapult: Install/update Katapult on your boards (MCU, toolhead)
+7) Firmware: Install/update Firmware on your boards (MCU, toolehad)
 
 
 ### Check setup 

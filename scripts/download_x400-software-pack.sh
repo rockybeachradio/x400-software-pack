@@ -45,7 +45,7 @@ done
 ################################################################################################
 if $FORCE_PULL; then
   echo "ℹ️  You selected force_pull. All local changes will be reset to the GitHub version."
-  read -p "Do you want to run force_pull? [Y/n]: " answer
+  read -p "❓ Do you want to run force_pull? [Y/n]: " answer
   answer=${answer:-N}     # default to "N" if empty
   if [[ "$answer" =~ ^[Yy]$ ]]; then
     FORCE_PULL=true
@@ -80,7 +80,7 @@ if ! $FORCE_PULL; then
     git status --porcelain
     echo "ℹ️  Commit/stash them, or run: ./$(basename "$0") -force_pull"
     echo "force_pull will reset all local changes to the GitHub version."
-    read -p "Do you want to run: force_pull? [Y/n]: " answer
+    read -p "❓ Do you want to run: force_pull? [Y/n]: " answer
     answer=${answer:-N}     # default to "N" if empty
     if [[ "$answer" =~ ^[Yy]$ ]]; then
         FORCE_PULL=true

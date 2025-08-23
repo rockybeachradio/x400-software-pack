@@ -35,6 +35,25 @@
 source_base="$HOME""/x400-software-pack"
 config_source="$HOME""/x400-software-pack/configurations"
 config_destination="$HOME""/printer_data/config"
+INSTALL=false
+
+
+################################################################################################
+# Get parameters
+################################################################################################
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -i|--behavior)
+      INSTALL=true; shift ;;
+    -h|--help)
+      echo "Usage: $0 -i"
+      echo "i = install - Will override some files with customer settings. update not."
+      exit 2 ;;
+    *)
+      echo "Unknown option: $1" >&2
+      echo "Use --help for usage."; exit 2 ;;
+  esac
+done
 
 
 ################################################################################################
@@ -61,7 +80,6 @@ echo "Copy configurations ..."
 files=(
     printer.cfg
     motor_driver_v1_2.cfg
-    canuid.cfg
     EECAN.cfg
     calibration.cfg
     filament_mgmt.cfg
@@ -92,7 +110,15 @@ done
 echo "ℹ️  Copy config files to spezial folders ..."
 cp "$config_source""/mainsail-client.cfg" "$HOME""/mainsail-config/client.cfg"  || echo "❌  Faild copying mainsail-client.cfg"
 cp "$config_source""/timelapse.cfg" "$HOME""/moonraker-timelapse/klipper_macro/timelapse.cfg"   || echo "❌  Faild copying timelapse.cfg"
-cp "$config_source""/klipper-backup env.conf" "$HOME/klipper-backup/.env"   || echo "❌  Faild copying KlipperBackup env.cfg"
+
+
+################################################################################################
+# Copy only during installation
+################################################################################################
+if $INSTALL=true; then
+    cp "$config_source""/klipper-backup env.conf" "$HOME/klipper-backup/.env"   || echo "❌  Faild copying KlipperBackup env.cfg"
+    cp "$config_source""/canuid.cfg" "$config_destination/"   || echo "❌  Faild copying canuid.cfg"
+fi
 
 
 ################################################################################################
