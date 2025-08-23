@@ -72,7 +72,7 @@ fi
 ###################################################
 echo "ℹ️  Install fix for DFU utility ..."
 cd /etc/udev/rules.d
-wget https://raw.githubusercontent.com/wiieva/dfu-util/refs/heads/master/doc/40-dfuse.rules -O 40-dfuse.rules
+sudo wget https://raw.githubusercontent.com/wiieva/dfu-util/refs/heads/master/doc/40-dfuse.rules -O 40-dfuse.rules
 sudo usermod -aG plugdev $USER
 
 ###################################################

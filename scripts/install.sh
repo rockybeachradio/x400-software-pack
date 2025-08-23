@@ -38,7 +38,7 @@ fi
 ################################################################################################
 # install required software
 ################################################################################################
-echo "ℹ️  Start software isntaller (install_software.sh) ..."
+echo "ℹ️  Start software installer (install_software.sh) ..."
 cd "$REPO_DIR/scripts/"
 ./install_software.sh
 
