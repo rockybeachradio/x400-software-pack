@@ -157,7 +157,8 @@ if [[ -d "$HOME""/farm3d/" ]]; then
     rm -rf "$HOME/farm3d"
 fi
 cp -r "$source_base""/eryone-farm3d/" "$HOME""/farm3d/"  || echo "❌  Faild copying farm3d folder"
-chmod 777 "$HOME""/farm3d/*" || echo "❌  Faild chmod on farm3d folder"
+#chmod 777 "$HOME""/farm3d" || echo "❌  Faild chmod on farm3d folder"    # Eryone original: 777
+chmod +x "$HOME""/farm3d" || echo "❌  Faild chmod on farm3d folder"
 if cd "$HOME""/farm3d/"; then
     echo "ℹ️  Starting Eryone farm3d installer ..."
     ./install.sh  || echo "❌  Faild starting the install.sh"      # Calling the farm3d installer

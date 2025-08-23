@@ -31,4 +31,4 @@ pip3 install minio
 pip3 install eventlet
 
 echo "ℹ️  farm3d installer completed"
-exit 1
+exit 0
