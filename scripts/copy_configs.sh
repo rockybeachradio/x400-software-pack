@@ -58,7 +58,7 @@ fi
 
 
 ################################################################################################
-# Copy Configuration files
+# Copy Configuration files to /pinrter_data/config/
 ################################################################################################
 # printer_data - config
 echo "ℹ️  Preparing configuration folder ..."
@@ -94,7 +94,7 @@ done
 
 
 ################################################################################################
-# Copy to spezial destinations
+# Copy Configurations fiels to spezial destinations
 ################################################################################################
 echo "ℹ️  Copy config files to spezial folders ..."
 cp "$config_source""/mainsail-client.cfg" "$HOME""/mainsail-config/client.cfg"  || echo "❌  Faild copying mainsail-client.cfg"
@@ -115,7 +115,7 @@ ln -sfn "$HOME""/Klipper-Adaptive-Meshing-Purging/Configuration/"   "$config_des
 # Copy KlipperScreen panels
 ################################################################################################
 echo "ℹ️  Add KlipperScreen panels ..."
-cp "$source_base""/eryone-KlipperScreen-panels/*" "$HOME""/KlipperScreen/panels/" || echo "❌  Faild copying Klipper-panels."
+cp "$source_base""/eryone-KlipperScreen-panels/"* "$HOME""/KlipperScreen/panels/" || echo "❌  Faild copying Klipper-panels."
 
 
 ################################################################################################

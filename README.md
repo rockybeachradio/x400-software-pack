@@ -57,6 +57,8 @@ All rellevant Eryone documents, files are part are collected from all soruces an
 https://gitcode.com/xpp012/KlipperScreen/ - last ceck 20250821
 
 
+
+
 # Development log:
 #### To check why eryone has spezial versions and not using the original ones. (commands found in relink_conf.sh)
 - [ ] cp /home/mks/KlipperScreen/moonraker/moonraker/components/machine.py /home/mks/moonraker/moonraker/components/       - Check what is different in the Eryone version
@@ -110,12 +112,14 @@ https://gitcode.com/xpp012/KlipperScreen/ - last ceck 20250821
     - [ ] get-pip.py - not used. Why?
 
 #### known bugs
-- [ ] install_software
+- [ ] /scripts/install_software.sh
     - see farm3d
-- [ ] copy_configs
+- [ ] /scripts/copy_configs.sh
     - [ ] "KlipperBackup env.conf" not existing in /configurations/
     - [ ] "can0.conf" file not existing in /configurations/
-    - [ ] KlipperScreen panels copy issue
+    - [x] KlipperScreen panels copy not working
+
+
 
 # Changelog
 ### Hardware mods
