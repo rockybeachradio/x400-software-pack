@@ -19,7 +19,7 @@ FORCE_PULL=false    # script calle dwith -force_pull
 #Resolve repo root (parent of this script), then cd into it
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-cd "$REPO_DIR" || { echo "❌ x400-software-pack not found: $REPO_DIR"; exit 2; }
+cd "$REPO_DIR" || { echo "❌ x400-software-pack not found: $REPO_DIR"; exit 1; }
 
 
 ################################################################################################
@@ -32,10 +32,10 @@ while [[ $# -gt 0 ]]; do
     -h|--help)
       echo "Usage: $0 [--force_pull]"
       echo "  -f   Fetch remote and overwrite local changes (git reset --hard + clean)"
-      exit 0 ;;
+      exit 2 ;;
     *)
       echo "Unknown option: $1" >&2
-      echo "Use --help for usage."; exit 0 ;;
+      echo "Use --help for usage."; exit 2 ;;
   esac
 done
 
@@ -66,7 +66,7 @@ if ! git rev-parse --abbrev-ref --symbolic-full-name @{u} >/dev/null 2>&1; then
     git branch --set-upstream-to "origin/$CURR_BRANCH" >/dev/null
   else
     echo "❌ No upstream set and origin/$CURR_BRANCH doesn't exist. Aborting."
-    exit 2
+    exit 3
   fi
 fi
 
@@ -86,8 +86,8 @@ if ! $FORCE_PULL; then
         FORCE_PULL=true
         echo "ℹ️  okay, lets forde_pull the new version form GitHub."
     else
-        echo "ℹ️  Script willl exit now."
-        exit 0
+        echo "ℹ️  Script wil exit now."
+        exit 4
     fi
   fi
 fi
@@ -102,7 +102,7 @@ if $FORCE_PULL; then  # FORCE PULL: overwrite local changes with remote tracking
   git reset --hard @{u}       # Moves your current branch and your working directory to the upstream branch (@{u} = the configured upstream, e.g. origin/master).
   git clean -fd               # Deletes untracked files and directories (but leaves ignored ones).
   echo "✅ Repository was build up from scratch. Now in synce with GitHub Repo."
-  exit 50
+  exit 0
 fi
 
 ################################################################################################
@@ -119,16 +119,16 @@ BASE=$(git merge-base @ @{u})     # gemeinsamer Vorfahre
 
 if [[ "$LOCAL" == "$REMOTE" ]]; then
   echo "✅  Local Software Repo is up to date."
-  exit 0
+  exit 5                                        # 5 = no new version available
 elif [[ "$LOCAL" == "$BASE" ]]; then
   echo "ℹ️  New version available. Downloading ..."
   git pull --ff-only                              # Fast-forward only (safer, no merge commit)
-  exit 50                                         # 50 = Tells the calling script, that an download was performed.
+  exit 0                                         # 0 = everything is okay. update was performed.
 elif [[ "$REMOTE" == "$BASE" ]]; then
   echo "ℹ️  Your local version is ahead of the remote version. To go back to last stable version delet the current x400-software-pack and follow the installation instruction."
-  exit 3
+  exit 6
 else
   echo "❌ Local and remote have diverged. Resolve manually: $ $(basename "$0") -force_pull)."
-  exit 2
+  exit 7
 fi
-exit 0
+exit 8

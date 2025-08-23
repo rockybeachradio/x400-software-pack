@@ -13,7 +13,7 @@ set -euo pipefail
 ################################################################################################
 # Variables
 ################################################################################################
-dl=""      # Variable: (50 = new version was downloaded from GitHub)
+rc =""      # Return code  Variable for exit code of a called shell script
 
 #Resolve repo root (parent of this script), then cd into it
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -26,8 +26,14 @@ cd "$REPO_DIR" || { echo "❌ x400-software-pack not found: $REPO_DIR"; exit 1; 
 ################################################################################################
 echo "ℹ️  Start update check & download script (download_x400-software-pack) ..."
 cd "$REPO_DIR/scripts/"
-./download_x400-software-pack.sh
-dl=$?       #capture exit code from script above  (0 = new version was downloaded from GitHub, 1 = no newer verison on GitHub)
+./download_x400-software-pack.sh || rc=$?
+rc=$?       #capture exit code from script above (0 = new version was downloaded from GitHub, 5 = no newer verison on GitHub)
+
+if [[ $rc -ne 0 && $rc -ne 5 ]]; then
+  echo "❌  Stop update. (download_x400-software-pack exit with $rc)"
+  exit 1
+fi
+
 
 ################################################################################################
 # install required software

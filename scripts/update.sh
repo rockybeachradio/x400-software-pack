@@ -15,7 +15,7 @@ set -euo pipefail
 ################################################################################################
 # Variables
 ################################################################################################
-dl=""      # Variable: (50 = new version was downloaded from GitHub)
+rc =""      # Return code  Variable for exit code of a called shell script
 
 #Resolve repo root (parent of this script), then cd into it
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -36,17 +36,20 @@ sudo apt install
 ################################################################################################
 echo "ℹ️  Start update check & download script (download_x400-software-pack) ..."
 cd "$REPO_DIR/scripts/"
-./download_x400-software-pack.sh
-dl=$?       #capture exit code from script above (50 = new version was downloaded from GitHub)
+./download_x400-software-pack.sh || rc=$?
+rc=$?       #capture exit code from script above (0 = new version was downloaded from GitHub, 5 = no newer verison on GitHub)
+
+if [[ $rc -ne 0 && $rc -ne 5 ]]; then
+  echo "❌  Stop update. (download_x400-software-pack exit with $rc)"
+  exit 1
+fi
 
 ################################################################################################
 # copy config files
 ################################################################################################
-echo "ℹ️  Start confoguration copy script (copy_configuration.sh) ..."
+echo "ℹ️  Start configuration copy script (copy_configuration.sh) ..."
 cd "$REPO_DIR/scripts/"
-if [[ $de -eq 50 ]]; then     # if exitcode of download-x400-software-pack.sh was "50" = "something was downloaded"
   bash "$REPO_DIR/scripts/copy_config.sh"
-fi
 
 
 ################################################################################################
