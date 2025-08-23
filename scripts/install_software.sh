@@ -218,5 +218,5 @@ sudo apt autoremove -y modem* cups* pulse* avahi* triggerhappy*
 ################################################################################################
 # Ende
 ################################################################################################
-echo "ℹ️  Installation completed."
+echo "ℹ️  install_software.sh completed."
 exit 0;

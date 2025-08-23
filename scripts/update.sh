@@ -44,12 +44,13 @@ if [[ $rc -ne 0 && $rc -ne 5 ]]; then
   exit 1
 fi
 
+
 ################################################################################################
 # copy config files
 ################################################################################################
 echo "ℹ️  Start configuration copy script (copy_configuration.sh) ..."
 cd "$REPO_DIR/scripts/"
-bash "$REPO_DIR/scripts/copy_config.sh"
+bash "$REPO_DIR/scripts/copy_configs.sh"
 
 
 ################################################################################################
