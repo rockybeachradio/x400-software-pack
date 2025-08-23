@@ -175,22 +175,22 @@ fi
 ################################################################################################
 echo "ℹ️  Installing x11vnc ..."
 cd "$HOME"
-sudo apt install x11vnc || echo "! Installation failed."
+sudo apt install x11vnc || echo "❌  Installation failed."
 
 echo "ℹ️  Set password for remote access ..."
-sudo x11vnc -storepasswd /etc/x11vnc.pass || echo "! Setting password failed."
+sudo x11vnc -storepasswd /etc/x11vnc.pass || echo "❌  Setting password failed."
 
 #sudo cp "$config_source""/x11cnv.service" "/lib/systemd/system/" || echo "! Copying service failed."
 
-sudo systemctl enable x11vnc.service || echo "! Enabling service failed."
-sudo systemctl start x11vnc.service || echo "! Starting service failed."
+sudo systemctl enable x11vnc.service || echo "❌  Enabling service failed."
+sudo systemctl start x11vnc.service || echo "❌  Starting service failed."
 
 
 ################################################################################################
 # Install software needed for farm3d
 # The actual famr3d software is installed/updated by /x400-software-pack/scripts/copy_configs.sh 
 ################################################################################################
-echo "ℹ️  Installing needed tools for farm3d ...:"
+echo "ℹ️  Installing needed tools for farm3d ..."
 cd "$HOME"
 # ???
 #pip3 install opencv-python || echo "! Faild pip3 install opencv-python"
@@ -201,10 +201,10 @@ cd "$HOME"
 ################################################################################################
 # Backup script
 ################################################################################################
-echo "ℹ️  Installing needed tools for backup ..:"
+echo "ℹ️  Installing needed tools for backup .."
 cd "$HOME"
-sudo apt install zip || echo "! Installation failed."
-mkdir "$HOME/printer_packup/"
+sudo apt install zip || echo "❌  Installation failed."
+mkdir "$HOME/printer_packup"     || echo "✅  Backup folder already exists"
 
 
 ################################################################################################
