@@ -207,11 +207,6 @@ local_backup_folder_files="$local_backup_folder/files"      # When changing the 
 local_backup_folder_zip="$local_backup_folder/zip"
 github_repo=""
 
-
-read -p "❓ URL to your GitHub Repositoy in which teh backups shall be added: " answer
-github_repo=${answer:-N}     # default to "N" if empty
-
-
 mkdir "$local_backup_folder"        || echo "✅  backup folder already exists"
 mkdir "$local_backup_folder_files"  || echo "✅  files folder already exists"
 mkdir "$local_backup_folder_zip"    || echo "✅  zip folder already exists"
@@ -224,6 +219,10 @@ answer=${answer:-N}     # default to "N" if empty
 if [[ "$answer" =~ ^[Yy]$ ]]; then
     echo "ℹ️  Initialize GitHub folder for backup .."
 
+    read -p "❓ URL to your GitHub Repositoy in which teh backups shall be added: " answer
+    github_repo=${answer:-N}     # default to "N" if empty
+    echo "$github_repo"
+    
     git init -b main        # Initialize a repo in the empty folder and attach your (private) GitHub repo
 
     git config --global credential.helper manager           || echo "❌  git config - failed"      # USe Git Credential Manager (GCM) (or libsecret).
