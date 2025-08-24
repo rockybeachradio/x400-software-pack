@@ -184,7 +184,7 @@ cp "$source_base""/scripts/git_push.sh" "$HOME/printer_backup/files/" || echo "�
 echo "ℹ️  Copy Klipper-Backup ..."
 mkdir -p "$HOME/printer_data/symlinks_for_backup/"   || echo "❌  creating the /printer_data/symlink symlinks_for_backup/"
 sudo ln -sfn "/etc/hostname"                     "$HOME/printer_data/symlinks_for_backup/hostname"      || echo "❌  Faild setting symlink /printer_data/symlinks_for_backup/hostname"
-sudo ln -sdn "/etc/network/interfaces.d/can0"    "$HOME/printer_data/symlinks_for_backup/can0"          || echo "❌  Faild setting symlink /printer_data/symlinks_for_backup/can0"
+sudo ln -sfn "/etc/network/interfaces.d/can0"    "$HOME/printer_data/symlinks_for_backup/can0"          || echo "❌  Faild setting symlink /printer_data/symlinks_for_backup/can0"
 
 
 ################################################################################################
