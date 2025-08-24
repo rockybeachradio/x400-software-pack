@@ -203,8 +203,51 @@ cd "$HOME"
 ################################################################################################
 echo "ℹ️  Installing needed tools for backup .."
 cd "$HOME"
-sudo apt install zip || echo "❌  Installation failed."
-mkdir "$HOME/printer_packup"     || echo "✅  Backup folder already exists"
+
+sudo apt install zip                || echo "❌  Installation failed."
+
+local_backup_folder="$HOME/printer_backup"                  # select the path wisely. Backups may contain confidential informations like credentials.
+local_backup_folder_files="$local_backup_folder/files"      # When changing the content of local_backup_folder_files, also change the pathin copy_configs.sh and install_software.sh !
+local_backup_folder_zip="$local_backup_folder/zip"
+
+mkdir "$local_backup_folder"        || echo "✅  Backup folder already exists"
+mkdir "$local_backup_folder_files"  || echo "✅  files folder already exists"
+mkdir "$local_backup_folder_zip"    || echo "✅  zip folder already exists"
+
+cd "$local_backup_folder_files"     || { echo "❌  Could not go to files folder: $FILES_DIR" }
+
+
+read -p "❓ Do you want to setup GitHub as backup destination? [Y/n]: " answer
+answer=${answer:-N}     # default to "N" if empty
+if [[ "$answer" =~ ^[Yy]$ ]]; then
+    echo "ℹ️  Initialize GitHub folder for backup .."
+
+    git init -b main        # Initialize a repo in the empty folder and attach your (private) GitHub repo
+
+    git config --global credential.helper manager           # USe Git Credential Manager (GCM) (or libsecret).
+    #   or Linux libsecret helper (alternative): $ git config --global credential.helper libsecret
+    #   Avoid: git config --global credential.helper store
+    #   Username = your GitHub username
+    #   Password = your Personal Access Token (PAT), not your real password
+
+    git remote add origin https://github.com/<YOUR_USER>/x400-backup.git    # Set the remote to your repo (replace with your user if needed)
+
+    # Add a .gitignore file to exclude folders/files
+cat > .gitignore <<'EOF'
+.DS_Store
+__pycache__/
+git_push.sh
+EOF
+    #  "__pycache__/ is created by Python.
+
+    # Make an initial commit and push
+    git add .
+    git commit -m "Initial commit"
+    git push -u origin main     #The -u sets origin/main as the default upstream, so future git push can be just git push
+
+else
+    echo "Please set the variable github_upload in /x400-software-pack/scripts/backup.sh to FALES before using it."
+fi
 
 
 ################################################################################################

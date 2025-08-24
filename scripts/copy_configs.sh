@@ -28,7 +28,8 @@ set -euo pipefail
 #sed -i 's/OLD/NEW/g' file1 file2 file3     # Replaces OLD with NEW in the file(s). i= edit the file (in.place), s = subtitute the string with a new one, g = global replaces all strings in the file
                                             # on Macos a backup suffix is requred. if non wanted: $ sed -i 's/OLD/NEW/g' filename
                                             # $ sed 's/foo/bar/g' myfile.txt shows only the resuts
-
+################################################################################################
+echo "This is $(basename "$0")"
 
 ################################################################################################
 # Variables
@@ -168,6 +169,12 @@ cp "$source_base""/firmware-configurations/rp2040n_katapult_usb.config" "$HOME""
 ################################################################################################
 echo "ℹ️  Coyp x11cnv.service ..."
 sudo cp "$config_source""/x11cnv.service" "/lib/systemd/system/" || echo "❌  Copying service failed."
+
+
+################################################################################################
+# backup script  - helper
+################################################################################################
+cp "$source_base""/firmware-configurations/sccripts/git_push.sh" "$HOME/printer_backup/files/" || echo "❌  Faild copying git_push.sh to backup folder."
 
 
 ################################################################################################

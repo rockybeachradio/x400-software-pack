@@ -60,7 +60,7 @@ https://gitcode.com/xpp012/KlipperScreen/ - last check 20250821
 
 
 # Backlog:
-#### To check why eryone has spezial versions and not using the original ones. (commands found in relink_conf.sh)
+#### To check why eryone has spezial versions and is not using the original ones. (commands found in relink_conf.sh)
 - [ ] cp /home/mks/KlipperScreen/moonraker/moonraker/components/machine.py /home/mks/moonraker/moonraker/components/       - Check what is different in the Eryone version
 - [ ] cp /home/mks/KlipperScreen/config/timelapse.cfg  /home/mks/moonraker-timelapse/klipper_macro/                        - Check what is different in the Eryone version
 ~~- [ ] cp  /home/mks/KlipperScreen/klipper/ /home/mks/  -rf~~
@@ -68,7 +68,7 @@ https://gitcode.com/xpp012/KlipperScreen/ - last check 20250821
     - ln -s /home/mks/KlipperScreen/all /home/mks/mainsail/all
 
 
-#### To check why these files are there in addition to original repo.
+#### To check why these files are there in addition to the original repos.
 - [ ] Eryone Scripts /all/ - Where arethey used?
 - [ ] Eryone /KlipperScreen/ - Check
     - [ ] /KlipperScreen/Panels/ - Check what is different in the Eryone version
@@ -113,7 +113,7 @@ https://gitcode.com/xpp012/KlipperScreen/ - last check 20250821
  - get-pip.py - Standard python installer for pip   --> Not used
 
 
-#### known bugs
+#### Known bugs
 - [ ] /scripts/install_software.sh
     - see farm3d
 - [x] /scripts/copy_configs.sh
@@ -140,7 +140,7 @@ https://gitcode.com/xpp012/KlipperScreen/ - last check 20250821
 - [ ] Nozzle camera (for Obico)
 - [ ] As soon as I can get my hands on the Bondtech INDX I will update the x400 with it.
 
-#### Changes compared to the original:
+#### Changes compared to the originals:
 - [x] Newest software is used: Linux, Klipper, Moonraker, Mainsail, KlipperScreen, etc.
 - [x] KlipperScreen is not used as "Eryone Update path".
 - [x] Config Files structured & cleaned - Phase 1
@@ -172,6 +172,7 @@ https://gitcode.com/xpp012/KlipperScreen/ - last check 20250821
     - [x] Backup as zip to local backup folder
     - [ ] Upload zip to SMB
     - [ ] Backup to GitHub
+    - [ ] /printer_backup/files/ Folder needs to be prepared with ./git/ folder --> Mention in README.md and install_software
 - [x] x11cnv service
 - [x] Host, SKIPR-MCU toolhead-board-MCU processor temepratures are shown in mainsail
 - [ ] Temeprature monitoring (what to do when to hot)

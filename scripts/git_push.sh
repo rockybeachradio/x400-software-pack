@@ -23,7 +23,8 @@
 # Create a release
 #   GitHub → Repo → Releases → Draft a new release.
 #   Chosse the tag which will be the base for the realease
-
+################################################################################################
+echo "This is $(basename "$0")"
 
 ################################################################################################
 # Error handling
@@ -38,7 +39,7 @@ error_exit() { echo "! ERROR: $1" >&2; exit 1; }    # Funktion error_exit: Shows
 ################################################################################################
 # Varibale declaration
 ################################################################################################
-SOURCE="$HOME/OneDrive\ -\ privat/Heimwerken\ 3D\ druck/Eryone\ Thinker\ x400/6\ Firmware/x400-software-pack"                       # Name of the Service which will be stopped / started
+SOURCE="$HOME/OneDrive\ -\ privat/Heimwerken\ 3D\ druck/Eryone\ Thinker\ x400/6\ Firmware/x400-software-pack"     # not used
 REMOTE="origin"
 BRANCH=""
 COMMENT=""
@@ -54,6 +55,7 @@ usage() {
 This script uploads a local repo folder to the GitHub repo.
 
 Usage: $(basename "$0") -m|--comment "message" [-r|--remote origin] [-b|--branch current [-t|--tag "version_number"] [-T|--tag-message "message"]
+ 
   -m, --comment       Commit message (required)
   -r, --remote        Remote name (default: origin)
   -b, --branch        Branch name (default: current branch)
