@@ -236,8 +236,10 @@ if [[ "$answer" =~ ^[Yy]$ ]]; then
     #   Username = your GitHub username
     #   Password = your Personal Access Token (PAT), not your real password
 
-    git remote add origin "$github_repo""    || echo "❌  git remote - failed"       # Set the remote to your repo (replace with your user if needed)
+    echo "git remote ..."
+    git remote add origin "$github_repo"    || echo "❌  git remote - failed"       # Set the remote to your repo (replace with your user if needed)
 
+    echo "cat .gitignore ..."
     # Add a .gitignore file to exclude folders/files
 cat > .gitignore <<'EOF'
 .DS_Store
@@ -246,6 +248,7 @@ git_push.sh
 EOF
     #  "__pycache__/ is created by Python.
 
+    echo "git add ..."
     # Make an initial commit and push
     git add .                           || echo "❌  git add. - failed"
     git commit -m "Initial commit"      || echo "❌  git commit - failed"
