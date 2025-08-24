@@ -205,6 +205,12 @@ sudo apt install zip                || echo "❌  Installation failed."
 local_backup_folder="$HOME/printer_backup"                  # select the path wisely. Backups may contain confidential informations like credentials.
 local_backup_folder_files="$local_backup_folder/files"      # When changing the content of local_backup_folder_files, also change the pathin copy_configs.sh and install_software.sh !
 local_backup_folder_zip="$local_backup_folder/zip"
+github_repo=""
+
+
+read -p "❓ URL to your GitHub Repositoy in which teh backups shall be added: " answer
+github_repo=${answer:-N}     # default to "N" if empty
+
 
 mkdir "$local_backup_folder"        || echo "✅  backup folder already exists"
 mkdir "$local_backup_folder_files"  || echo "✅  files folder already exists"
@@ -226,7 +232,7 @@ if [[ "$answer" =~ ^[Yy]$ ]]; then
     #   Username = your GitHub username
     #   Password = your Personal Access Token (PAT), not your real password
 
-    git remote add origin https://github.com/rockybeachradio/x400-backup.git    || echo "❌  git remote - failed"       # Set the remote to your repo (replace with your user if needed)
+    git remote add origin "$github_repo""    || echo "❌  git remote - failed"       # Set the remote to your repo (replace with your user if needed)
 
     # Add a .gitignore file to exclude folders/files
 cat > .gitignore <<'EOF'
