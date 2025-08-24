@@ -198,14 +198,14 @@ cd "$HOME"
 # Backup script
 ################################################################################################
 echo "ℹ️  Installing needed tools for backup script.."
-cd "$HOME"
-
-sudo apt install zip                || echo "❌  Installation failed."
 
 local_backup_folder="$HOME/printer_backup"                  # select the path wisely. Backups may contain confidential informations like credentials.
 local_backup_folder_files="$local_backup_folder/files"      # When changing the content of local_backup_folder_files, also change the pathin copy_configs.sh and install_software.sh !
 local_backup_folder_zip="$local_backup_folder/zip"
 github_repo=""
+
+cd "$HOME"
+sudo apt install zip                || echo "❌  Installation failed."
 
 rm -rf "$local_backup_folder"       || echo "ℹ️   could not deleat $local_backup_folder"
 
@@ -226,8 +226,10 @@ if [[ "$answer" =~ ^[Yy]$ ]]; then
     github_repo=${answer:-N}     # default to "N" if empty
     echo "Repo will be: $github_repo"
 
+    echo "git init ..."
     git init -b main           || echo "❌  git init - failed"             # Initialize a repo in the empty folder and attach your (private) GitHub repo
 
+    echo "git config ..."
     git config --global credential.helper manager           || echo "❌  git config - failed"      # USe Git Credential Manager (GCM) (or libsecret).
     #   or Linux libsecret helper (alternative): $ git config --global credential.helper libsecret
     #   Avoid: git config --global credential.helper store
