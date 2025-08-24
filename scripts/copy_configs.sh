@@ -167,19 +167,21 @@ cp "$source_base""/firmware-configurations/rp2040n_katapult_usb.config" "$HOME""
 ################################################################################################
 # x11vnc - Copy
 ################################################################################################
-echo "ℹ️  Coyp x11cnv.service ..."
+echo "ℹ️  Copy x11cnv.service ..."
 sudo cp "$config_source""/x11cnv.service" "/lib/systemd/system/" || echo "❌  Copying service failed."
 
 
 ################################################################################################
 # backup script  - helper
 ################################################################################################
-cp "$source_base""/firmware-configurations/sccripts/git_push.sh" "$HOME/printer_backup/files/" || echo "❌  Faild copying git_push.sh to backup folder."
+echo "ℹ️  Copy Backup script - helper ..."
+cp "$source_base""/scripts/git_push.sh" "$HOME/printer_backup/files/" || echo "❌  Faild copying git_push.sh to backup folder."
 
 
 ################################################################################################
 # Klipper-Backup  - Create symlinks, to allow Klipper-Backup to backup files outside of the user`s folder
 ################################################################################################
+echo "ℹ️  Copy Klipper-Backup ..."
 mkdir -p "$HOME/printer_data/symlinks_for_backup/"   || echo "❌  creating the /printer_data/symlink symlinks_for_backup/"
 ln -s /etc/hostname                     "$HOME/printer_data/symlinks_for_backup/hostname"   || echo "❌  Faild setting symlink /printer_data/symlinks_for_backup/hostname"
 ln -s /etc/network/interfaces.d/can0    "$HOME/printer_data/symlinks_for_backup/can0"       || echo "❌  Faild setting symlink /printer_data/symlinks_for_backup/can0"
