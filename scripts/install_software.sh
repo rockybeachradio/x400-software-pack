@@ -207,9 +207,12 @@ local_backup_folder_files="$local_backup_folder/files"      # When changing the 
 local_backup_folder_zip="$local_backup_folder/zip"
 github_repo=""
 
+rm -rf "$local_backup_folder"       || echo "ℹ️   could not deleat $local_backup_folder"
+
 mkdir "$local_backup_folder"        || echo "✅  backup folder already exists"
 mkdir "$local_backup_folder_files"  || echo "✅  files folder already exists"
 mkdir "$local_backup_folder_zip"    || echo "✅  zip folder already exists"
+
 
 cd "$local_backup_folder_files"     || echo "❌  Could not go to files folder: $FILES_DIR"
 
@@ -219,11 +222,11 @@ answer=${answer:-N}     # default to "N" if empty
 if [[ "$answer" =~ ^[Yy]$ ]]; then
     echo "ℹ️  Initialize GitHub folder for backup .."
 
-    read -p "❓ URL to your GitHub Repositoy in which teh backups shall be added: " answer
+    read -p "❓ URL to your GitHub Repositoy in which teh backups shall be added (https://github.com/<SUERNAME>/<REPO>.git): " answer
     github_repo=${answer:-N}     # default to "N" if empty
-    echo "$github_repo"
-    
-    git init -b main        # Initialize a repo in the empty folder and attach your (private) GitHub repo
+    echo "Repo will be: $github_repo"
+
+    git init -b main           || echo "❌  git init - failed"             # Initialize a repo in the empty folder and attach your (private) GitHub repo
 
     git config --global credential.helper manager           || echo "❌  git config - failed"      # USe Git Credential Manager (GCM) (or libsecret).
     #   or Linux libsecret helper (alternative): $ git config --global credential.helper libsecret
