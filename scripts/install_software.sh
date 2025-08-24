@@ -226,20 +226,30 @@ if [[ "$answer" =~ ^[Yy]$ ]]; then
     github_repo=${answer:-N}     # default to "N" if empty
     echo "Repo will be: $github_repo"
 
-    echo "git init ..."
     git init -b main           || echo "❌  git init - failed"             # Initialize a repo in the empty folder and attach your (private) GitHub repo
 
-    echo "git config ..."
-    git config --global credential.helper manager           || echo "❌  git config - failed"      # USe Git Credential Manager (GCM) (or libsecret).
+    git config --global credential.helper manager           || echo "❌  git config - failed"      # Use Git Credential Manager (GCM) (or libsecret).
     #   or Linux libsecret helper (alternative): $ git config --global credential.helper libsecret
     #   Avoid: git config --global credential.helper store
     #   Username = your GitHub username
     #   Password = your Personal Access Token (PAT), not your real password
+    # git config --global user.email "you@example.com"
+    # git config --global user.name "Your Name"
 
-    echo "git remote ..."
+    # Set identity for THIS repo (recommended for scripts)
+    if ! git config user.email >/dev/null; then
+        read -p "❓ GitHub user email: " answer
+        github_user_email=${answer:-N}     # default to "N" if empty
+        git config user.email "$github_user_email"
+    fi
+    if ! git config user.name >/dev/null; then
+        read -p "❓ GitHub user name): " answer
+        github_user_name=${answer:-N}     # default to "N" if empty
+        git config user.name "$github_user_name"
+    fi
+
     git remote add origin "$github_repo"    || echo "❌  git remote - failed"       # Set the remote to your repo (replace with your user if needed)
 
-    echo "cat .gitignore ..."
     # Add a .gitignore file to exclude folders/files
 cat > .gitignore <<'EOF'
 .DS_Store
