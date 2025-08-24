@@ -183,8 +183,8 @@ cp "$source_base""/scripts/git_push.sh" "$HOME/printer_backup/files/" || echo "�
 ################################################################################################
 echo "ℹ️  Copy Klipper-Backup ..."
 mkdir -p "$HOME/printer_data/symlinks_for_backup/"   || echo "❌  creating the /printer_data/symlink symlinks_for_backup/"
-ln -s "$HOME/printer_data/symlinks_for_backup/hostname"     /etc/hostname                       || echo "❌  Faild setting symlink /printer_data/symlinks_for_backup/hostname"
-ln -s "$HOME/printer_data/symlinks_for_backup/can0"         /etc/network/interfaces.d/can0      || echo "❌  Faild setting symlink /printer_data/symlinks_for_backup/can0"
+sudo ln -s "/etc/hostname"                     "$HOME/printer_data/symlinks_for_backup/hostname"      || echo "❌  Faild setting symlink /printer_data/symlinks_for_backup/hostname"
+sudo ln -s "/etc/network/interfaces.d/can0"    "$HOME/printer_data/symlinks_for_backup/can0"          || echo "❌  Faild setting symlink /printer_data/symlinks_for_backup/can0"
 
 
 ################################################################################################
@@ -200,7 +200,7 @@ cp -r "$source_base""/eryone-farm3d/" "$HOME""/farm3d/"  || echo "❌  Faild cop
 chmod +x "$HOME""/farm3d" || echo "❌  Faild chmod on farm3d folder"
 if cd "$HOME""/farm3d/"; then
     echo "ℹ️  Starting Eryone farm3d installer ..."
-    ./install.sh  || echo "❌  Faild starting the install.sh"      # Calling the farm3d installer
+    ./install.sh  || echo "❌  Faild starting the /farm3d/install.sh. Or the script aborted due to an error."      # Calling the farm3d installer
 else
     echo "❌  Faild going into ""$source_base""/farm3d folder"
 fi
@@ -235,5 +235,5 @@ fi
 ################################################################################################
 # Ende
 ################################################################################################
-echo "ℹ️  Copy completed."
+echo "ℹ️  copy_configs.sh completed."
 exit 0;
