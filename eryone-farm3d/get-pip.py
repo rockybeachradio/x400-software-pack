@@ -1,5 +1,17 @@
 #!/usr/bin/env python
+
+#################################################################################################
+# File: get-pip.py
+# Author: Python
+# Date: -
+# Purpose: Official python installer for pip
 #
+# Waht is it doing?
+#   It downloads and installs pip into the Python environment.
+#
+# not called
+################################################################################################
+
 # Hi There!
 #
 # You may be wondering what this giant blob of binary data here is, you might

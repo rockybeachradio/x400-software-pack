@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
 ################################################################################################
 # File: install.sh
@@ -6,13 +7,15 @@
 # Date: 20250602 / 20250823
 # Purpose: Installs farm3d
 #
+# Called x400-software-pack/scripts/in copy_config.sh
 ################################################################################################
+echo "This is /farm3d/install.sh"
 
-## replace to local home dir
+# Get variables
 path=$(echo ${HOME} | sed 's/\//\\\//g')                # Prepares home directory üath for sed command. Needed, because / is interpreted in sed as separaor for search/replace pattern.
 #echo $path
 
-echo "ℹ️  Set farm3d.service variables ..."
+echo "ℹ️  Adapt farm3d.service file ..."
 sed -i 's/~/'"$path"'/g'  ./farm3d.service              # Replace "~" in the file with the home directory
 sed -i 's/User=pi/'User="$USER"'/g' ./farm3d.service
 
@@ -29,6 +32,12 @@ pip3 install tqdm
 pip3 install netifaces
 pip3 install minio
 pip3 install eventlet
+
+# Enable and start the farm3d.service - Code from repo https://github.com/Eryone/farm3d
+sudo cp $HOME/farm3d/farm3d.service    /etc/systemd/system/
+sudo systemctl  daemon-reload
+sudo systemctl  enable farm3d.service
+sudo systemctl  restart farm3d.service
 
 echo "ℹ️  farm3d installer completed"
 exit 0

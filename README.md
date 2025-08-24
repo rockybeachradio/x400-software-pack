@@ -53,13 +53,13 @@ Feel free to give me feedback and contribute ideas or code. \
 All rellevant Eryone documents, files are part are collected from all soruces and part of this Repository.
 
 
-#### Repo check for updates:
-https://gitcode.com/xpp012/KlipperScreen/ - last ceck 20250821
+## Repo check for updates:
+https://gitcode.com/xpp012/KlipperScreen/ - last check 20250821
 
 
 
 
-# Development backlog:
+# Backlog:
 #### To check why eryone has spezial versions and not using the original ones. (commands found in relink_conf.sh)
 - [ ] cp /home/mks/KlipperScreen/moonraker/moonraker/components/machine.py /home/mks/moonraker/moonraker/components/       - Check what is different in the Eryone version
 - [ ] cp /home/mks/KlipperScreen/config/timelapse.cfg  /home/mks/moonraker-timelapse/klipper_macro/                        - Check what is different in the Eryone version
@@ -69,15 +69,15 @@ https://gitcode.com/xpp012/KlipperScreen/ - last ceck 20250821
 
 
 #### To check why these files are there in addition to original repo.
-- [ ] Where are all the scripts in /eryone-scrits (all) used?
-- [ ] Check Eryone /KlipperScreen
+- [ ] Eryone Scripts /all/ - Where arethey used?
+- [ ] Eryone /KlipperScreen/ - Check
     - [ ] /KlipperScreen/Panels/ - Check what is different in the Eryone version
         - [ ] calibrate.py
         - [ ] change_name.py
         - [ ] chgfilament.py
     - [ ] /KlipperScreen/ks_includes/zh_TW/KlipperScreen2mo  - Check what is different in the Eryone version
     - [ ] /KlipperScreen/screen.py  - Check what is different in the Eryone version
-- [ ] Check Eryone /klipper
+- [ ] Eryone /klipper/ - Check
     - /klipper/klippy/extras/
         - [ ] as5600.py
         - [ ] at24c_eeprom.py
@@ -87,29 +87,31 @@ https://gitcode.com/xpp012/KlipperScreen/ - last ceck 20250821
     - [ ] /klipper/lib/rp2040_flash/
     - [ ] /klipper/src/rp2040/rp2040_link,lds.S --> ??? new: rpxxxx.lds.s
     - [ ] klipper/src/pressure_sensor.c
-- [ ] Check Eryone /moonraker/mooonrkaer/components/timelpase.py redirect to /moonrkaer-timelapse/components/timelpase.py
-- [x] Check Eryone /moonraker-timelapse
+- [ ] Eryone /moonraker/mooonrkaer/components/timelpase.py redirect to /moonrkaer-timelapse/components/timelpase.py - Why?
+- [x] Eryone /moonraker-timelapse/ - What was changed by eryone?
     - MKS path hardwired & sudo makerspace added
     - timelapse.py: MKS path hardwired 
 
-#### farm3d things
-- Eryone farm3d
-    - scripts/install_software.sh
-        - [ ] Uses "pip3 install" commands. Code from eryone-scripts-all/install_lib.sh
-    - eryone-farm3d/install.sh
-        - [ ] uses pip3 install \
-            Debian/Ubuntu-like system that implements PEP 668.  \
-            It marks the system Python as “externally managed,” so "pip3 install" to the system site-packages is blocked to avoid breaking OS packages. \
-        - [x] changes strings in farm3d.service which are not there --> fixed it in farm3d.service
-    - run.sh
-        - [ ] Uses /eryone-scripts-all/monitor.sh which is doing nothing
-        - [ ] Uses fixed pathes "/home/mks/"  --> Extend install.sh to change it like in farm3d.service file
-        - [ ] Uses: "echo makerbase | sudo -S service crowsnest restart"  --> the makerbase password fix coded does not make sens.
-        - Calls mq.py
-    - [ ] update.sh - executes git fetch. but there is no /.git/. Calls mq.py
-    - [ ] mq.py - what is it doing?
-    - [ ] klipper_config.cfg - not used. Why?
-    - [ ] get-pip.py - not used. Why?
+#### Eryone farm3d - About farm3d
+- /scripts/install_software.sh
+    - [ ] "pip3 install" commands used. Code is from /eryone-scripts-all/install_lib.sh. Not working on Debuan systems. See next install.sh topic.
+- install.sh
+    - [ ] "pip3 install" command used. \
+        Debian/Ubuntu-like system that implements PEP 668. Which marks the system Python as “externally managed,” so "pip3 install" to the system site-packages is blocked to avoid breaking OS packages.
+    - [x] --> changed strings in farm3d.service that the replacement works
+    - [x] --> Added farm3d.service installation
+- [x] update.sh: Executes git fetch. but there is no /.git/config. Calls mq.py --> only works when orioginaly cloned from github.com/eryone/farm3d repo. --> use x400-software-pack/scripts/update.sh instead
+- run.sh
+    - Calls: ./mq.py
+    - Calls: /eryone-scripts-all/monitor.sh which is doing nothing
+    - [x] Uses hardcoded paths (/home/mks/") and "~"    --> changed to $HOME
+    - [x] Uses "echo makerbase | sudo -S service crowsnest restart"  --> removed "echo makerbase" part
+ - mq.py - is the MQTT Handler which takes care of the communication between klipper and farm3d server
+    - Loads: ./klipper_config.cfg
+ - klipper_config.cfg   --> Loaded in mq.py
+ - farm3d.service   --> calls run.sh
+ - get-pip.py - Standard python installer for pip   --> Not used
+
 
 #### known bugs
 - [ ] /scripts/install_software.sh
@@ -118,20 +120,22 @@ https://gitcode.com/xpp012/KlipperScreen/ - last ceck 20250821
     - [x] "KlipperBackup env.conf" not existing in /configurations/
     - [x] "can0.conf" file not existing in /configurations/
     - [x] KlipperScreen panels copy not working
-- [x] update.sh is overwriting: Klipper-Backup/.env & /configuration/uuid.cfg
+- [x] update.sh is overwriting: Klipper-Backup/.env & /configuration/uuid.cfg --> fixed
 
 
 # Changelog
 ### Hardware modifications
-~~- [ ] Hardware connections used as intended by Makerspace MKS Skipr.~~
-~~- [ ] DIAGS aktivated~~
 - [ ] Poop bin
 - [ ] Nozzle wiper
 - [ ] Printer sealing
 - [ ] Chamber (exhaust) fan: add bigger coal filter and HEPA filter
 - [ ] Chamber (exhaust) fan: lid which closes and opens
 - [ ] Chamber filtration unit: Coal Filter and HEPA filter (recirculation air)
-- [ ] Filament storage and feed unit with electric dehumidifier
+- [ ] Auxilliary part cooling fan (G-Code M106, M107)
+- [ ] Filament storage unit. With feeder and electric dehumidifier
+        - Automatic filament loader (Feeder)
+        - electric dehumidifier
+        - for <amount> spools
 - [ ] RBG Status LED (Neopicel pin:PC5)
 - [ ] Nozzle camera (for Obico)
 - [ ] As soon as I can get my hands on the Bondtech INDX I will update the x400 with it.
@@ -165,16 +169,16 @@ https://gitcode.com/xpp012/KlipperScreen/ - last ceck 20250821
 - [x] x400-software-pack installer
 - [x] MCU Update function
 - Backup script function
-    - [x] local backup folder
-    - [ ] Backup script function: GitHub
+    - [x] Backup as zip to local backup folder
+    - [ ] Upload zip to SMB
+    - [ ] Backup to GitHub
 - [x] x11cnv service
 - [x] Host, SKIPR-MCU toolhead-board-MCU processor temepratures are shown in mainsail
 - [ ] Temeprature monitoring (what to do when to hot)
 - [x] MCU UUID update
-~~- [ ] Nozzle wiping~~
 - [ ] dynamic electronic bay fan control based on temperature
 - [ ] Endstoop calibration [endstop_phase]
-- [x] protection that chamber hfan is not extracting heat while chamber heater is heating the chamber up.
+- [x] protection that chamber fan is not extracting heat while chamber heater is heating the chamber up.
 - [x] chamber fan only runs when temperature is above set chamber temperature.
 - [x] chamber fan protects chamber from overheating
 - Update functionality in Moonraker.conf [update_manager] add update for:
@@ -199,37 +203,33 @@ https://gitcode.com/xpp012/KlipperScreen/ - last ceck 20250821
         https://github.com/Clon1998/mobileraker_companion
     - [x] installation
     - [ ] setup
+    - [ ] in backup included (backup script & klipper-backup)
 - [ ] Obico support for local AI server \
     https://www.obico.io/docs/user-guides/klipper-setup/
     https://www.obico.io/docs/server-guides/
     - [x] installation
     - [ ] setup
-
+    - [ ] in backup included (backup script & klipper-backup)
 
 #### What is kept from Eryone:
 - [x] farm3d by Eryone
 - [x] Scripts by Eryone (for backward compatibility. in case famr3d needs them)
-- [ ] KlipperScreen panels by Eryone preserved
+- [ ] KlipperScreen panels by Eryone are preserved
 
 
-# Before installing
-#### Reconnect the following things on the Skipr Board
-~~- driver: from E0 slot to Z4 slot~~
-~~- Z4 stopper motor from E0 to Z4~~
-~~- change Y- to ??? EXP1/2 ???~~
-~~- change Z- to ??? EXP1/2???~~
 
-#### optional:
-~~- SET all DIAG pins~~
-- Use a EMMC (remove SD-Card)
-- Add RGB light and connect it to NeoPixel port.
 
 # How Tos
+## Before installing
+#### optional:
+- Upgrade from sd-card to EMMC card
+- Add RGB light and connect it to NeoPixel port.
+
 ## How to Install?
 > [!NOTE]
-> Read all the documentation for Klipper, Mainsail, Moonraker, XOur printer etc.
+> Read all the documentation: Eryone, Klipper, Mainsail, Moonraker, etc.
 > [!CAUTION]
-> Be aware that every modification on the devide and software may void the garanty and may damage your devide.
+> Be aware that every modification on the devide and software may void the garanty and may damage the devide.
 
 ### Preparing the first boot
 1) "Install" Armbian Linux for Skipr \
@@ -244,14 +244,13 @@ https://gitcode.com/xpp012/KlipperScreen/ - last ceck 20250821
     - Language code: en
     - DHCP
 
-3) Insert the SD-Card / EMMC into the Skipr voard and fire the printer up.
+3) Insert the SD-Card / EMMC into the Skipr board and start the printer.
 
 4) Connect to the printer via SSH.
 
 
 ### Preparing the System
-1) Check if sudo is installed an your user is part of the sudo usergroup \
-If not:
+1) Check if sudo is installed an your user is part of the sudo usergroup. If not:
     ```bash
     su -
     apt-get install sudo
@@ -259,7 +258,7 @@ If not:
     exit
     ```
 
-2) Check if git is installed. If not install it \
+2) Check if git is installed. If not install it
     ```bash
     sudo apt install git
     ```
@@ -300,7 +299,7 @@ What to install: \
         - Obico for Klipper
 
 
-3) Install and update x400-software-pack includingneeded software
+3) Install and update x400-software-pack including needed software
     ```bash
     cd ~/x400-software-pack/scripts
     ./install.sh
@@ -336,7 +335,7 @@ What to install: \
 4) Klipper Backup
 Open the ~/KlipperBackup/.env file and add your GitHub credentials.
     ```bash
-    cd ~/KlipperBackup/
+    cd ~/klipper-backup/
     nano .env
     ```
 
@@ -355,12 +354,6 @@ Open the ~/KlipperBackup/.env file and add your GitHub credentials.
 ### Check setup 
 1) Check all settings and printerbehaviour as descirped in Klipper, Mainsail, Moonraer documentation to avoid issues and damages.
 
-
-## How to install/update (flash) the MCUs
-```bash
-cd ~/x400-software-pack/script/
-./mcu-update_all.sh
-```
 
 ## How to update x400-software-pack
 ```bash
@@ -382,3 +375,10 @@ rm -r ~/x400-software-pack"
 ```
 Note: This will not uninstall software nor deleat any (config) files, folders, etc. which were created during installation.
 This need to be done manually.
+
+
+## How to flash the MCUs
+```bash
+cd ~/x400-software-pack/script/
+./mcu-update_all.sh
+```

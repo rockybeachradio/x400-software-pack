@@ -6,16 +6,19 @@
 # Date: 20250711
 # purpose: !!! it is doing nothing
 #
-# Hat coud di if there is no "exit 0" in the first line
-#   It waits 5 seconds, sets 777 permissions on /home/mks/mainsail/all/*, then loops forever checking CPU idle every 3 seconds.
-#   If idle stays below 25% for over 10 checks (~30s), it pauses the printer via a local HTTP call and logs CPU stats; otherwise it just keeps monitoring (printing “checking” about every two minutes).
+# What it could do if there is no "exit 0" in the first line
+#   - It waits 5 seconds, sets 777 permissions on /home/mks/mainsail/all/*, then loops forever checking CPU idle every 3 seconds.
+#   - If idle stays below 25% for over 10 checks (~30s), it pauses the printer via a local HTTP call and logs CPU stats; otherwise it just keeps monitoring (printing “checking” about every two minutes).
+# WHY ???
 #
-# How to call: ???
-# Called in ???
+# Called in /farm3d/run.sh
 ################################################################################################
 
-exit 0
+################################################################################################
+exit 0      # (by eryone)
 
+
+################################################################################################
 function log_cpu(){
     cpu_user=`top -b -n 1 | grep Cpu | awk '{print $2}' | cut -f 1 -d "%"`
     cpu_system=`top -b -n 1 | grep Cpu | awk '{print $4}' | cut -f 1 -d "%"`

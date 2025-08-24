@@ -1,3 +1,23 @@
+################################################################################################
+# File: mq.py
+# Author: Eryone
+# Date: 20250602
+# Purpose: Farm3D agent that links each printer (running Klipper) into your farm management system via MQTT + REST + Websockets + Minio.
+#
+# What it does:
+#   - Loads ./klipper_config.cfg
+#   - Create printer_name: <hostname>:<mac-adresse(only numbers)>
+#   - Talks to:
+#       - Klipper locally (via API on 127.0.0.1).
+#       - MQTT broker (for status updates / commands).
+#       - Minio/S3 (for file syncing).
+#   - Publishes printer identity, status, and maybe uploads logs/timelapses.
+#   - Can receive messages from the farm controller via MQTT.
+# 
+# 
+# Called in run.sh
+################################################################################################
+
 import time
 import random
 import requests
