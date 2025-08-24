@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 ################################################################################################
 # File: install_software.sh
@@ -7,11 +8,6 @@
 # Purpose: Installs software that is needed by x400-software-pack
 #
 ################################################################################################
-
-################################################################################################
-# Error handling
-################################################################################################
-set -euo pipefail
 
 
 ################################################################################################
@@ -201,7 +197,7 @@ cd "$HOME"
 ################################################################################################
 # Backup script
 ################################################################################################
-echo "ℹ️  Installing needed tools for backup .."
+echo "ℹ️  Installing needed tools for backup script.."
 cd "$HOME"
 
 sudo apt install zip                || echo "❌  Installation failed."
@@ -210,11 +206,11 @@ local_backup_folder="$HOME/printer_backup"                  # select the path wi
 local_backup_folder_files="$local_backup_folder/files"      # When changing the content of local_backup_folder_files, also change the pathin copy_configs.sh and install_software.sh !
 local_backup_folder_zip="$local_backup_folder/zip"
 
-mkdir "$local_backup_folder"        || echo "✅  Backup folder already exists"
+mkdir "$local_backup_folder"        || echo "✅  backup folder already exists"
 mkdir "$local_backup_folder_files"  || echo "✅  files folder already exists"
 mkdir "$local_backup_folder_zip"    || echo "✅  zip folder already exists"
 
-cd "$local_backup_folder_files"     || { echo "❌  Could not go to files folder: $FILES_DIR" }
+cd "$local_backup_folder_files"     || echo "❌  Could not go to files folder: $FILES_DIR"
 
 
 read -p "❓ Do you want to setup GitHub as backup destination? [Y/n]: " answer
