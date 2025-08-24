@@ -220,13 +220,13 @@ if [[ "$answer" =~ ^[Yy]$ ]]; then
 
     git init -b main        # Initialize a repo in the empty folder and attach your (private) GitHub repo
 
-    git config --global credential.helper manager           # USe Git Credential Manager (GCM) (or libsecret).
+    git config --global credential.helper manager           || echo "❌  git config - failed"      # USe Git Credential Manager (GCM) (or libsecret).
     #   or Linux libsecret helper (alternative): $ git config --global credential.helper libsecret
     #   Avoid: git config --global credential.helper store
     #   Username = your GitHub username
     #   Password = your Personal Access Token (PAT), not your real password
 
-    git remote add origin https://github.com/<YOUR_USER>/x400-backup.git    # Set the remote to your repo (replace with your user if needed)
+    git remote add origin https://github.com/rockybeachradio/x400-backup.git    || echo "❌  git remote - failed"       # Set the remote to your repo (replace with your user if needed)
 
     # Add a .gitignore file to exclude folders/files
 cat > .gitignore <<'EOF'
@@ -237,9 +237,9 @@ EOF
     #  "__pycache__/ is created by Python.
 
     # Make an initial commit and push
-    git add .
-    git commit -m "Initial commit"
-    git push -u origin main     #The -u sets origin/main as the default upstream, so future git push can be just git push
+    git add .                           || echo "❌  git add. - failed"
+    git commit -m "Initial commit"      || echo "❌  git commit - failed"
+    git push -u origin main             || echo "❌  git push - failed"       # The -u sets origin/main as the default upstream, so future git push can be just git push
 
 else
     echo "Please set the variable github_upload in /x400-software-pack/scripts/backup.sh to FALES before using it."
