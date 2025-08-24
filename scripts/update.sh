@@ -64,7 +64,7 @@ bash "$REPO_DIR/scripts/mcu_update_all.sh"
 ################################################################################################
 # End
 ################################################################################################
-echo "✅ Update complete"
+echo "✅ update.sh complete"
 read -p "❓ Restart required. Restart now? [Y/n]: " answer
 answer=${answer:-N}     # default to "N" if empty
 if [[ "$answer" =~ ^[Yy]$ ]]; then
