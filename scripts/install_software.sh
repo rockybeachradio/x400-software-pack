@@ -244,6 +244,46 @@ initiate_github() {
             #   ~/.ssh/x400_backup_ed25519.pub (public key — safe to share)
     fi
 
+    # Append host alias to SSH config (only once)
+    if ! grep -q "^Host ""$github_ssh_host_name""$" "$HOME/.ssh/config" 2>/dev/null; then
+
+cat >> $HOME/.ssh/config <<EOF
+Host ${github_ssh_host_name}
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/${github_ssh_key_name}
+    IdentitiesOnly yes
+EOF
+        chmod 600 $HOME/.ssh/config
+    fi
+
+    echo
+    echo "Prepare GitHub"
+    echo "👉 Add this public key as a Deploy Key (with write access) to:"
+    echo "   https://github.com/${github_user_name}/${github_repo_name}"
+    echo "   Repo → Settings → Deploy keys → Add deploy key (Allow write access)"
+    echo "------------------------------------------------------------"
+    cat "$HOME/.ssh/$github_ssh_key_name.pub"
+    echo "------------------------------------------------------------"
+    read -p "Press ENTER after you have added the deploy key..." _
+    echo
+
+    #echo "-----------------------------------------------------------------"
+    #echo "Option A: Deploy Key (per repo)"
+    #echo "Go to your repo → Settings → Deploy keys → Add deploy key"
+    #echo "Paste the contents of ~/.ssh/x400-backup_ed25519.pub"
+    #echo "Give it a title (e.g., Backup Key)"
+    #echo "Enable Allow write access"
+    #echo "✅ Scope: only this repo → very safe for backups."
+    #echo "-----------------------------------------------------------------"
+    #echo "Option B: Account SSH Key"
+    #echo "GitHub → Settings → SSH and GPG keys → New SSH key"
+    #echo "Paste your .pub file"
+    #echo "✅ Scope: your whole account (all repos you have rights to)."
+    #echo "⚠️ Bigger blast radius if the private key leaks."
+    #echo "-----------------------------------------------------------------"
+
+  
 }   # End of initiate_github()
 ##############################################################
 ##############################################################
