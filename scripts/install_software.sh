@@ -217,6 +217,7 @@ initiate_github() {
     echo "ℹ️  Initialize GitHub folder for backup ..."
     
     read -p "❓ GitHub user name: " github_user_name
+    read -p "❓ GitHub user eMail: " github_user_email
     read -p "❓ GitHub repo name (eg. x400-backup): " github_repo_name
 
     # Define variables
@@ -239,6 +240,7 @@ initiate_github() {
             # -C "..." --> A label (shows up in GitHub)
             # -f ~/.ssh/x400-backup_ed25519 --> Filename for the private key
             # -N --> Creates the SSH key with an empty passphrase (no password).
+            # -a 100
             # This creates:
             #   ~/.ssh/x400_backup_ed25519 (private key — keep secret!)
             #   ~/.ssh/x400_backup_ed25519.pub (public key — safe to share)
@@ -305,11 +307,18 @@ EOF
     git remote remove origin 2>/dev/null || true
     git remote add origin "git@${github_ssh_host_name}:${github_user_name}/${github_repo_name}.git"    # use github.com-x400 (from your ~/.ssh/config). USERNAME/x400-backup.git is your repo path.
 
+    # set identity for this repo (no --global needed)
+    git config user.name  "${github_user_name}"
+    git config user.email "${github_user_name}@users.noreply.github.com"        # users.noreply.github.com is GitHubs privacy eMsil domain. So the real eMail adress does not need to be in the code.
+
     echo "Initial add, git and push ..."
     git add -A                          || echo "❌  git add. - failed"
     git commit -m "Initial commit"      || echo "ℹ️  Nothing new to commit"
+    git branch -M main      # ensure branch is 'main' (in case git init didn’t use -b main)
+
+    ssh -o StrictHostKeyChecking=accept-new -T "git@${github_ssh_host_name}" || true        # accept GitHub host key the first time (non-interactive)
+
     git push -u origin main             || echo "❌  git push - failed"       # The -u sets origin/main as the default upstream, so future git push can be just git push
-    ssh -T git@$github_ssh_host_name || true
 
 }   # End of initiate_github()
 ##############################################################
