@@ -283,14 +283,21 @@ EOF
     #echo "⚠️ Bigger blast radius if the private key leaks."
     #echo "-----------------------------------------------------------------"
 
-
+    ##############################################################
+    cd "$local_backup_folder_files"     || { echo "❌  Could not go to files folder: $local_backup_folder_files"; return 1 }
+  
+    # Add a .gitignore file to exclude folders/files
+cat > .gitignore <<'EOF'
+.DS_Store
+__pycache__/
+git_push.sh
+EOF
+    #  __pycache__/ is created by Python.
 
     ##############################################################
     cd "$local_backup_folder_files"     || { echo "❌  Could not go to files folder: $local_backup_folder_files"; return 1 }
     
-    if [[ ! -d .git ]]; then    #Is repo not initialized
-        git init -b main    || echo "❌  git init - failed"     # Initialize a repo in the empty folder and attach your (private) GitHub repo
-    fi
+
 
     # Point origin to SSH using the host alias
     git remote remove origin 2>/dev/null || true
