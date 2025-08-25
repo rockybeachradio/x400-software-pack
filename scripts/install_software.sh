@@ -228,7 +228,22 @@ initiate_github() {
     mkdir -p "$HOME/.ssh"
     chmod 700 "$HOME/.ssh"
 
-  
+    ##############################################################
+    # Generate SSH Key
+    if [[ -f "$HOME/.ssh/$github_ssh_key_name" ]]; then
+        echo "ℹ️  SSH key already exists, skipping generation."
+    else
+        ssh-keygen -t "$github_encryption" -C "$github_ssh_key_label" -f "$HOME/.ssh/$github_ssh_key_name"  -N ""       
+            # Generate a dedicated SSH key and adds it tp ~/.sh/config
+            # -t ed25519 --> modern, secure, short key
+            # -C "..." --> A label (shows up in GitHub)
+            # -f ~/.ssh/x400-backup_ed25519 --> Filename for the private key
+            # -N --> Creates the SSH key with an empty passphrase (no password).
+            # This creates:
+            #   ~/.ssh/x400_backup_ed25519 (private key — keep secret!)
+            #   ~/.ssh/x400_backup_ed25519.pub (public key — safe to share)
+    fi
+
 }   # End of initiate_github()
 ##############################################################
 ##############################################################
