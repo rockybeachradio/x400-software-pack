@@ -214,6 +214,8 @@ github_ssh_host_name=""         # --> github.com_x400-backup
 ##############################################################
 # Function initiate_github
 initiate_github() {
+    echo "ℹ️  Initialize GitHub folder for backup ..."
+    
 
 }   # End of initiate_github()
 ##############################################################
@@ -237,7 +239,7 @@ mkdir -p "$local_backup_folder_zip"    || echo "✅  zip folder already exists"
 read -p "❓ Do you want to setup GitHub as backup destination? [Y/n]: " answer
 answer=${answer:-N}     # default to "N" if empty
 if [[ "$answer" =~ ^[Yy]$ ]]; then
-#    initiate_github       || echo "❌ GitHub setup failed"
+    initiate_github       || echo "❌ GitHub setup failed"
     echo "Setting variable github_backup=true in /x400-software-pack/scripts/backup.sh ..."
     sed -i 's/github_backup=false/github_backup=true/g' ./backup.sh   || echo "❌ Fail setting variable"    # Set the variable github_backup=true in /x400-software-pack/scripts/backup.sh
 else
