@@ -284,7 +284,7 @@ EOF
     #echo "-----------------------------------------------------------------"
 
     ##############################################################
-    cd "$local_backup_folder_files"     || { echo "❌  Could not go to files folder: $local_backup_folder_files"; return 1 }
+#    cd "$local_backup_folder_files"     || { echo "❌  Could not go to files folder: $local_backup_folder_files"; return 1 }
 
     # Add a .gitignore file to exclude folders/files
 cat > .gitignore <<'EOF'
@@ -294,7 +294,22 @@ git_push.sh
 EOF
     #  __pycache__/ is created by Python.
 
+    ##############################################################
+#    cd "$local_backup_folder_files"     || { echo "❌  Could not go to files folder: $local_backup_folder_files"; return 1 }
+    
+    if [[ ! -d .git ]]; then    #Is repo not initialized
+        git init -b main    || echo "❌  git init - failed"     # Initialize a repo in the empty folder and attach your (private) GitHub repo
+    fi
 
+    # Point origin to SSH using the host alias
+    git remote remove origin 2>/dev/null || true
+    git remote add origin "git@${github_ssh_host_name}:${github_user_name}/${github_repo_name}.git"    # use github.com-x400 (from your ~/.ssh/config). USERNAME/x400-backup.git is your repo path.
+
+    echo "Initial add, git and push ..."
+    git add -A                          || echo "❌  git add. - failed"
+    git commit -m "Initial commit"      || echo "ℹ️  Nothing new to commit"
+    git push -u origin main             || echo "❌  git push - failed"       # The -u sets origin/main as the default upstream, so future git push can be just git push
+    ssh -T git@$github_ssh_host_name || true
 
 }   # End of initiate_github()
 ##############################################################
