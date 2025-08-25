@@ -294,9 +294,7 @@ git_push.sh
 EOF
     #  __pycache__/ is created by Python.
 
-    ##############################################################
-    cd "$local_backup_folder_files"     || { echo "❌  Could not go to files folder: $local_backup_folder_files"; return 1 }
-    
+
 
 }   # End of initiate_github()
 ##############################################################
