@@ -246,7 +246,7 @@ initiate_github() {
 
     # Append host alias to SSH config (only once)
     if ! grep -q "^Host ""$github_ssh_host_name""$" "$HOME/.ssh/config" 2>/dev/null; then
-cat >> $HOME/.ssh/config <<'EOF'
+cat >> $HOME/.ssh/config <<EOF
 Host ${github_ssh_host_name}
     HostName github.com
     User git
@@ -286,7 +286,7 @@ EOF
     cd "$local_backup_folder_files"     || { echo "❌  Could not go to files folder: $local_backup_folder_files"; return 1 }
   
     # Add a .gitignore file to exclude folders/files
-cat > .gitignore <<'EOF'
+cat >> .gitignore <<'EOF'
 .DS_Store
 __pycache__/
 git_push.sh
