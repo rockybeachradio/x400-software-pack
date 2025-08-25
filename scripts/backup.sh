@@ -32,6 +32,7 @@ local_backup_folder_zip="$local_backup_folder/zip"
 #   file: $HOME/mainsail-config/client.cfg
 TO_BACKUP=(
   $HOME/printer_data/config/
+  $HOME/printer_data/database/
   $HOME/mainsail-config/client.cfg
   $HOME/moonraker-timelapse/klipper_macro/timelapse.cfg
   $HOME/Klipper-Adaptive-Meshing-Purging/Configuration

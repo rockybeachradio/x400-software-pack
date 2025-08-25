@@ -119,7 +119,7 @@ cp "$config_source""/timelapse.cfg" "$HOME""/moonraker-timelapse/klipper_macro/t
 ################################################################################################
 if $INSTALL=true; then
     echo "ℹ️  Copy/override config files which were customised by users ..."
-    cp "$config_source""/klipper-backup env.conf" "$HOME/klipper-backup/.env"   || echo "❌  Faild copying KlipperBackup env.cfg"
+    #cp "$config_source""/klipper-backup env.conf" "$HOME/klipper-backup/.env"   || echo "❌  Faild copying KlipperBackup env.cfg"
     cp "$config_source""/canuid.cfg" "$config_destination/"   || echo "❌  Faild copying canuid.cfg"
 fi
 
@@ -185,6 +185,101 @@ echo "ℹ️  Copy Klipper-Backup ..."
 mkdir -p "$HOME/printer_data/symlinks_for_backup/"   || echo "❌  creating the /printer_data/symlink symlinks_for_backup/"
 sudo ln -sfn "/etc/hostname"                     "$HOME/printer_data/symlinks_for_backup/hostname"      || echo "❌  Faild setting symlink /printer_data/symlinks_for_backup/hostname"
 sudo ln -sfn "/etc/network/interfaces.d/can0"    "$HOME/printer_data/symlinks_for_backup/can0"          || echo "❌  Faild setting symlink /printer_data/symlinks_for_backup/can0"
+
+# Auslesen aus klipper-backup/.env
+github_username=USERNAME
+github_repository=REPOSITORY
+github_token=ghp_xxxxxxxxxxxxxxxx
+
+cd "$HOME/klipper-backup/"
+cp "$config_source""/klipper-backup env.conf" "$HOME/klipper-backup/.env"   || echo "❌  Faild copying KlipperBackup env.cfg"
+
+########################################
+########################################
+
+# Call: set_var_in_conf <file: $HOME/klipper-backup/env.conf> <key: {CFG[github_repository]}> <value: x400-backup>
+set_var_in_conf() {
+  local file=$1 key=$2 val=$3
+  # Escape \, /, & for sed replacement      # escape chars that confuse sed
+   local esc=${val//\\/\\\\}; esc=${esc//\//\\/}; esc=${esc//&/\\&}
+  if grep -Eq "^[[:space:]]*${key}=" "$file"; then
+    sed -i -E "s|^[[:space:]]*${key}=.*|${key}=${esc}|" "$file"
+  else
+    printf '%s=%s\n' "$key" "$val" >> "$file"
+  fi
+}
+set_var_in_conf $HOME/klipper-backup/.env github_username   "$github_username"
+set_var_in_conf .env github_repository "$github_repository"
+set_var_in_conf .env github_token      "$github_token"
+
+########################################
+read_conf_from_file(){
+    while IFS='=' read -r key value; do
+        case "$key" in
+            github_token|github_username|github_repository)
+            value="${value%%#*}"                                # strip inline comments
+                value="${value#"${value%%[![:space:]]*}"}"      # trim surrounding whitespace
+                value="${value%"${value##*[![:space:]]}"}"      # trim surrounding whitespace
+            value="${value%\"}"; value="${value#\"}"            # strip optional surrounding quotes
+            printf -v "$key" '%s' "$value"
+            ;;
+        esac
+    done < "$ENV_FILE"  
+}
+read_conf_from_file
+
+read_array_from_conf() {
+  local file="$1" name="$2"
+  awk -v name="$name" '
+    $0 ~ "^"name"=\\(" { in=1; next }
+    in {
+      if ($0 ~ /^ *\)/) { in=0; exit }                  # stop at closing parenthesis
+      sub(/#.*/, "", $0)                                # strip comments   
+      sub(/\\[[:space:]]*$/, "", $0)                    # remove trailing backslash continuation
+      gsub(/^[[:space:]]+|[[:space:]]+$/, "", $0)       # trim
+      if ($0 == "") next
+      sub(/^"/, "", $0); sub(/"$/, "", $0)              # remove surrounding quotes if present
+      print
+    }
+  ' "$file"
+}
+
+
+
+read_array_from_conf() {
+  local file="$1" name="$2"
+  awk -v name="$name" '
+    # enter on:  [spaces]name[spaces]=([spaces][optional \ at end]
+    $0 ~ "^[[:space:]]*"name"[[:space:]]*=\\([[:space:]]*\\\\?$" { in=1; next }
+
+    in {
+      # strip CR (Windows line endings)
+      sub(/\r$/, "", $0)
+
+      line=$0
+      # if whole item is quoted, don’t treat # as comment
+      q = (line ~ /^[[:space:]]*".*"[[:space:]]*\\?[[:space:]]*$/ || line ~ /^[[:space:]]*'\''.*'\''[[:space:]]*\\?[[:space:]]*$/)
+
+      if (!q) sub(/#.*/, "", line)                 # drop comments outside quotes
+      sub(/\\[[:space:]]*$/, "", line)             # drop trailing backslash
+      gsub(/^[[:space:]]+|[[:space:]]+$/, "", line)
+
+      # allow ")  # end"
+      if (line ~ /^[[:space:]]*\)[[:space:]]*$/) { in=0; exit }
+
+      if (line == "") next
+
+      # unquote single or double
+      sub(/^"/, "", line);  sub(/"$/, "", line)
+      sub(/^'\''/, "", line); sub(/'\''$/, "", line)
+
+      print line
+    }
+  ' "$file"
+}
+
+
+read_array_from_conf klipper-backup/.env github_token
 
 
 ################################################################################################

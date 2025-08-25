@@ -122,6 +122,10 @@ https://gitcode.com/xpp012/KlipperScreen/ - last check 20250821
     - [x] KlipperScreen panels copy not working
 - [x] update.sh is overwriting: Klipper-Backup/.env & /configuration/uuid.cfg --> fixed
 
+#### Cechk out:
+- SimplyPrint: https://simplyprint.io
+- PrettyGCode: https://github.com/Kragrathea/pgcode
+
 
 # Changelog
 ### Hardware modifications
@@ -171,8 +175,8 @@ https://gitcode.com/xpp012/KlipperScreen/ - last check 20250821
 - Backup script function
     - [x] Backup as zip to local backup folder
     - [ ] Upload zip to SMB
-    - [ ] Backup to GitHub
-    - [ ] /printer_backup/files/ Folder needs to be prepared with ./git/ folder --> Mention in README.md and install_software
+    - [x] Backup to GitHub
+    - [ ] GitHub: Initial setup local fodler (/printer_backup/files/) in install_software.sh
 - [x] x11cnv service
 - [x] Host, SKIPR-MCU toolhead-board-MCU processor temepratures are shown in mainsail
 - [ ] Temeprature monitoring (what to do when to hot)
@@ -195,6 +199,8 @@ https://gitcode.com/xpp012/KlipperScreen/ - last check 20250821
 - [x] sonar - Keep alife daemon \
         https://github.com/mainsail-crew/sonar
 - [x] KlipperBackup
+        https://klipperbackup.xyz
+        https://github.com/Staubgeborener/Klipper-Backup
     - Backup on Boot
     - Backup on file changes
     - [x] KlipperBackup can now backup files outside of users home folder via using symlinks. symlinks are created in copy_configs.sh
