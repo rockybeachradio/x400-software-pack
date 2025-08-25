@@ -246,13 +246,14 @@ initiate_github() {
 
     # Append host alias to SSH config (only once)
     if ! grep -q "^Host ""$github_ssh_host_name""$" "$HOME/.ssh/config" 2>/dev/null; then
-cat >> $HOME/.ssh/config <<EOF
-Host ${github_ssh_host_name}
-    HostName github.com
-    User git
-    IdentityFile ~/.ssh/${github_ssh_key_name}
-    IdentitiesOnly yes
-EOF
+
+#cat >> $HOME/.ssh/config <<EOF
+#Host ${github_ssh_host_name}
+#    HostName github.com
+#    User git
+#    IdentityFile ~/.ssh/${github_ssh_key_name}
+#    IdentitiesOnly yes
+#EOF
         chmod 600 $HOME/.ssh/config
     fi
 
@@ -286,11 +287,11 @@ EOF
     cd "$local_backup_folder_files"     || { echo "❌  Could not go to files folder: $local_backup_folder_files"; return 1 }
   
     # Add a .gitignore file to exclude folders/files
-cat >> .gitignore <<'EOF'
-.DS_Store
-__pycache__/
-git_push.sh
-EOF
+#cat > .gitignore <<'EOF'
+#.DS_Store
+#__pycache__/
+#git_push.sh
+#EOF
     #  __pycache__/ is created by Python.
 
     ##############################################################
