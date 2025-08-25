@@ -290,6 +290,11 @@ EOF
     #echo "⚠️ Bigger blast radius if the private key leaks."
     #echo "-----------------------------------------------------------------"
 
+
+    ##############################################################
+    rm-rf local_backup_folder    || echo "✅  nothing to deleat" 
+
+
     ##############################################################
     cd "$local_backup_folder_files"     || { echo "❌  Could not go to files folder: $local_backup_folder_files"; return 1; }
 
@@ -303,10 +308,7 @@ EOF
 
     ##############################################################
     cd "$local_backup_folder_files"     || { echo "❌  Could not go to files folder: $local_backup_folder_files"; return 1; }
-    
-    if [[ ! -d .git ]]; then    #Is repo not initialized
-        git init -b main    || echo "❌  git init - failed"     # Initialize a repo in the empty folder and attach your (private) GitHub repo
-    fi
+    git init -b main    || echo "❌  git init - failed"     # Initialize a repo in the empty folder and attach your (private) GitHub repo
 
     # Point origin to SSH using the host alias
     git remote remove origin 2>/dev/null || true
@@ -319,7 +321,7 @@ EOF
     echo "Initial add, git and push ..."
     git add -A                          || echo "❌  git add. - failed"
     git commit -m "Initial commit"      || echo "ℹ️  Nothing new to commit"
-    git branch -M main      # ensure branch is 'main' (in case git init didn’t use -b main)
+    #git branch -M main      # ensure branch is 'main' (in case git init didn’t use -b main)
 
     ssh -o StrictHostKeyChecking=accept-new -T "git@${github_ssh_host_name}" || true        # accept GitHub host key the first time (non-interactive)
 
