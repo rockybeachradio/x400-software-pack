@@ -216,7 +216,19 @@ github_ssh_host_name=""         # --> github.com_x400-backup
 initiate_github() {
     echo "ℹ️  Initialize GitHub folder for backup ..."
     
+    read -p "❓ GitHub user name: " github_user_name
+    read -p "❓ GitHub repo name (eg. x400-backup): " github_repo_name
 
+    # Define variables
+    github_ssh_key_name="$github_repo_name""_""$github_encryption"
+    github_ssh_key_label="key_for_""$github_user_name""_""$github_repo_name"
+    github_ssh_host_name="github.com_$github_repo_name"
+
+    # SSH dir + perms
+    mkdir -p "$HOME/.ssh"
+    chmod 700 "$HOME/.ssh"
+
+  
 }   # End of initiate_github()
 ##############################################################
 ##############################################################
