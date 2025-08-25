@@ -323,7 +323,14 @@ EOF
 
     ssh -o StrictHostKeyChecking=accept-new -T "git@${github_ssh_host_name}" || true        # accept GitHub host key the first time (non-interactive)
 
-    git push -u origin main             || echo "❌  git push - failed"       # The -u sets origin/main as the default upstream, so future git push can be just git push
+    if git ls-remote --exit-code --heads origin main >/dev/null 2>&1; then
+        # Normal Push - My run into error, of there is already a commit on GitHub
+        git push -u origin main  || echo "❌  git push failed"       # The -u sets origin/main as the default upstream, so future git push can be just git pu
+    else
+        # Overwrite the remote
+        git push --force-with-lease origin main  || echo "❌  git push  force-with-lease failed"       # The -u sets origin/main as the default upstream, so future git push can be just git pu
+    fi
+    # Alternative: git pull --rebase origin main       # bring remote main in, replay your commits on top
 
 }   # End of initiate_github()
 ##############################################################
