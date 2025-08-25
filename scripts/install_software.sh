@@ -297,9 +297,9 @@ EOF
     ##############################################################
 #    cd "$local_backup_folder_files"     || { echo "❌  Could not go to files folder: $local_backup_folder_files"; return 1 }
     
-    if [[ ! -d .git ]]; then    #Is repo not initialized
-        git init -b main    || echo "❌  git init - failed"     # Initialize a repo in the empty folder and attach your (private) GitHub repo
-    fi
+#    if [[ ! -d .git ]]; then    #Is repo not initialized
+#        git init -b main    || echo "❌  git init - failed"     # Initialize a repo in the empty folder and attach your (private) GitHub repo
+#    fi
 
     # Point origin to SSH using the host alias
 #    git remote remove origin 2>/dev/null || true
