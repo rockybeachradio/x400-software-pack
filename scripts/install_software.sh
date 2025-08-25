@@ -230,7 +230,32 @@ initiate_github() {
 
     ##############################################################
     # Generate SSH Key
+    if [[ -f "$HOME/.ssh/$github_ssh_key_name" ]]; then
+        echo "ℹ️  SSH key already exists, skipping generation."
+    else
+        ssh-keygen -t "$github_encryption" -C "$github_ssh_key_label" -f "$HOME/.ssh/$github_ssh_key_name"  -N ""       
+            # Generate a dedicated SSH key and adds it tp ~/.sh/config
+            # -t ed25519 --> modern, secure, short key
+            # -C "..." --> A label (shows up in GitHub)
+            # -f ~/.ssh/x400-backup_ed25519 --> Filename for the private key
+            # -N --> Creates the SSH key with an empty passphrase (no password).
+            # This creates:
+            #   ~/.ssh/x400_backup_ed25519 (private key — keep secret!)
+            #   ~/.ssh/x400_backup_ed25519.pub (public key — safe to share)
+    fi
 
+    # Append host alias to SSH config (only once)
+    if ! grep -q "^Host ""$github_ssh_host_name""$" "$HOME/.ssh/config" 2>/dev/null; then
+
+cat >> $HOME/.ssh/config <<EOF
+Host ${github_ssh_host_name}
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/${github_ssh_key_name}
+    IdentitiesOnly yes
+EOF
+        chmod 600 $HOME/.ssh/config
+    fi
 
     echo
     echo "Prepare GitHub"
@@ -267,24 +292,7 @@ cat > .gitignore <<'EOF'
 __pycache__/
 git_push.sh
 EOF
-    #  __pycache__/ is created by Python.
 
-    ##############################################################
-    cd "$local_backup_folder_files"     || { echo "❌  Could not go to files folder: $local_backup_folder_files"; return 1 }
-    
-    if [[ ! -d .git ]]; then    #Is repo not initialized
-        git init -b main    || echo "❌  git init - failed"     # Initialize a repo in the empty folder and attach your (private) GitHub repo
-    fi
-
-    # Point origin to SSH using the host alias
-    git remote remove origin 2>/dev/null || true
-    git remote add origin "git@${github_ssh_host_name}:${github_user_name}/${github_repo_name}.git"    # use github.com-x400 (from your ~/.ssh/config). USERNAME/x400-backup.git is your repo path.
-
-    echo "Initial add, git and push ..."
-    git add -A                          || echo "❌  git add. - failed"
-    git commit -m "Initial commit"      || echo "ℹ️  Nothing new to commit"
-    git push -u origin main             || echo "❌  git push - failed"       # The -u sets origin/main as the default upstream, so future git push can be just git push
-    ssh -T git@$github_ssh_host_name || true
 }   # End of initiate_github()
 ##############################################################
 ##############################################################
