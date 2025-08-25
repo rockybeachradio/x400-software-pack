@@ -319,7 +319,7 @@ sudo apt-get install -y openssh-client     || echo "❌  Installation of openssh
 
 ##############################################################
 # Create folders
-rm -rf "$local_backup_folder"       || echo "ℹ️   could not deleat $local_backup_folder"
+rm -rf "$local_backup_folder"           || echo "ℹ️   could not deleat $local_backup_folder"
 
 mkdir -p "$local_backup_folder"        || echo "✅  backup folder already exists"
 mkdir -p "$local_backup_folder_files"  || echo "✅  files folder already exists"
@@ -332,9 +332,9 @@ answer=${answer:-N}     # default to "N" if empty
 if [[ "$answer" =~ ^[Yy]$ ]]; then
     initiate_github       || echo "❌ GitHub setup failed"
     echo "Setting variable github_backup=true in /x400-software-pack/scripts/backup.sh ..."
-    sed -i 's/github_backup=false/github_backup=true/g' ./backup.sh   # Set the variable github_backup=true in /x400-software-pack/scripts/backup.sh
+    sed -i 's/github_backup=false/github_backup=true/g' ./backup.sh   || echo "❌ Fail setting variable"    # Set the variable github_backup=true in /x400-software-pack/scripts/backup.sh
 else
-    sed -i 's/github_backup=true/github_backup=false/g' ./backup.sh   # Set the variable github_backup=false in /x400-software-pack/scripts/backup.sh
+    sed -i 's/github_backup=true/github_backup=false/g' ./backup.sh   || echo "❌ Fail setting variable"    # Set the variable github_backup=false in /x400-software-pack/scripts/backup.sh
 fi
 
 
