@@ -283,6 +283,17 @@ EOF
     #echo "⚠️ Bigger blast radius if the private key leaks."
     #echo "-----------------------------------------------------------------"
 
+    ##############################################################
+    cd "$local_backup_folder_files"     || { echo "❌  Could not go to files folder: $local_backup_folder_files"; return 1 }
+  
+    # Add a .gitignore file to exclude folders/files
+cat > .gitignore <<'EOF'
+.DS_Store
+__pycache__/
+git_push.sh
+EOF
+    #  __pycache__/ is created by Python.
+
   
 }   # End of initiate_github()
 ##############################################################
