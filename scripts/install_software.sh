@@ -352,13 +352,13 @@ if [[ "$answer" =~ ^[Yy]$ ]]; then
     if cd $folder_of_script; then
         sed -i 's/github_backup=false/github_backup=true/g' ./backup.sh   || echo "❌ Failed setting variable"    # Set the variable github_backup=true in /x400-software-pack/scripts/backup.sh
     else 
-         || echo "❌ Could not go to folder: $folder_of_script"
+        echo "❌ Could not go to folder: $folder_of_script"
     fi
 else
     if cd $folder_of_script; then
         sed -i 's/github_backup=true/github_backup=false/g' ./backup.sh   || echo "❌ Failed setting variable"    # Set the variable github_backup=false in /x400-software-pack/scripts/backup.sh
      else 
-         || echo "❌ Could not go to folder: $folder_of_script"
+        echo "❌ Could not go to folder: $folder_of_script"
     fi
 fi
 
