@@ -230,32 +230,7 @@ initiate_github() {
 
     ##############################################################
     # Generate SSH Key
-    if [[ -f "$HOME/.ssh/$github_ssh_key_name" ]]; then
-        echo "ℹ️  SSH key already exists, skipping generation."
-    else
-        ssh-keygen -t "$github_encryption" -C "$github_ssh_key_label" -f "$HOME/.ssh/$github_ssh_key_name"  -N ""       
-            # Generate a dedicated SSH key and adds it tp ~/.sh/config
-            # -t ed25519 --> modern, secure, short key
-            # -C "..." --> A label (shows up in GitHub)
-            # -f ~/.ssh/x400-backup_ed25519 --> Filename for the private key
-            # -N --> Creates the SSH key with an empty passphrase (no password).
-            # This creates:
-            #   ~/.ssh/x400_backup_ed25519 (private key — keep secret!)
-            #   ~/.ssh/x400_backup_ed25519.pub (public key — safe to share)
-    fi
 
-    # Append host alias to SSH config (only once)
-    if ! grep -q "^Host ""$github_ssh_host_name""$" "$HOME/.ssh/config" 2>/dev/null; then
-
-#cat >> $HOME/.ssh/config <<EOF
-#Host ${github_ssh_host_name}
-#    HostName github.com
-#    User git
-#    IdentityFile ~/.ssh/${github_ssh_key_name}
-#    IdentitiesOnly yes
-#EOF
-        chmod 600 $HOME/.ssh/config
-    fi
 
     echo
     echo "Prepare GitHub"
@@ -287,11 +262,11 @@ initiate_github() {
     cd "$local_backup_folder_files"     || { echo "❌  Could not go to files folder: $local_backup_folder_files"; return 1 }
   
     # Add a .gitignore file to exclude folders/files
-#cat > .gitignore <<'EOF'
-#.DS_Store
-#__pycache__/
-#git_push.sh
-#EOF
+cat > .gitignore <<'EOF'
+.DS_Store
+__pycache__/
+git_push.sh
+EOF
     #  __pycache__/ is created by Python.
 
     ##############################################################
