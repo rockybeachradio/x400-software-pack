@@ -291,7 +291,7 @@ cat > .gitignore <<'EOF'
 __pycache__/
 git_push.sh
 EOF
-    #  "__pycache__/ is created by Python.
+    #  __pycache__/ is created by Python.
 
     ##############################################################
     cd "$local_backup_folder_files"     || { echo "❌  Could not go to files folder: $local_backup_folder_files"; return 1 }
@@ -330,13 +330,13 @@ mkdir -p "$local_backup_folder_zip"    || echo "✅  zip folder already exists"
 # Ask if GitHub shall be set up.
 read -p "❓ Do you want to setup GitHub as backup destination? [Y/n]: " answer
 answer=${answer:-N}     # default to "N" if empty
-if [[ "$answer" =~ ^[Yy]$ ]]; then
-    initiate_github       || echo "❌ GitHub setup failed"
-    echo "Setting variable github_backup=true in /x400-software-pack/scripts/backup.sh ..."
-    sed -i 's/github_backup=false/github_backup=true/g' ./backup.sh   || echo "❌ Fail setting variable"    # Set the variable github_backup=true in /x400-software-pack/scripts/backup.sh
-else
-    sed -i 's/github_backup=true/github_backup=false/g' ./backup.sh   || echo "❌ Fail setting variable"    # Set the variable github_backup=false in /x400-software-pack/scripts/backup.sh
-fi
+#if [[ "$answer" =~ ^[Yy]$ ]]; then
+#    initiate_github       || echo "❌ GitHub setup failed"
+#    echo "Setting variable github_backup=true in /x400-software-pack/scripts/backup.sh ..."
+#    sed -i 's/github_backup=false/github_backup=true/g' ./backup.sh   || echo "❌ Fail setting variable"    # Set the variable github_backup=true in /x400-software-pack/scripts/backup.sh
+#else
+#    sed -i 's/github_backup=true/github_backup=false/g' ./backup.sh   || echo "❌ Fail setting variable"    # Set the variable github_backup=false in /x400-software-pack/scripts/backup.sh
+#fi
 
 
 ################################################################################################
