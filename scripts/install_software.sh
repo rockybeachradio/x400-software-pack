@@ -243,7 +243,7 @@ initiate_github() {
             #   ~/.ssh/x400_backup_ed25519 (private key — keep secret!)
             #   ~/.ssh/x400_backup_ed25519.pub (public key — safe to share)
     fi
-    
+
     # Append host alias to SSH config (only once)
     if ! grep -q "^Host ""$github_ssh_host_name""$" "$HOME/.ssh/config" 2>/dev/null; then
         cat >> $HOME/.ssh/config <<EOF
