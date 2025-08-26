@@ -6,8 +6,8 @@ set -euo pipefail
 # Author: Andreas
 # Date: 20250826
 # Purpose:
-# - Read variables from file
-# - Wrtie varibales to file
+# - read_var_from_file() - Read variable from file
+# - write_var_to_file() - Write varibale to file
 #
 # Variable examples:
 #  - github_repository=x400-backup
@@ -21,43 +21,101 @@ set -euo pipefail
 ################################################################################################
 
 ################################################################################################
+# Calls Examples Read variables from file & write variable to file
+################################################################################################
+call_examples_read_variables_from_files(){
+  # Call: Read variables/arrays from file
+  
+  ## put this to the callsing bash script to include this file --> needed to access the functions
+  #source read_write_config_files.sh      # Include shell script file where the functions are included
+
+  # Variable declaration
+  local source_file="env.conf"                  # Name and path to the configuration file
+
+  local backupPaths                 # name of the variable in the source file
+  local backupPaths_from_file       # name of the variable in the script. If not given, source_var_name_in_file is uesd.
+
+  # Array -> read backupPaths from file and store it in backupPaths_from_file
+  read_var_from_file "$source_file" backupPaths backupPaths_from_file
+    echo "type: $__last_type"        # array
+    declare -p backupPaths_from_file
+
+    if is_array backupPaths_from_file; then    # iterate using nameref
+      declare -n arr_ref=backupPaths_from_file
+      for p in "${arr_ref[@]}"; do
+        echo "→ $p"
+      done 
+    fi
+
+  # Scalar -> read github_repository from file and store it in github_repository_from_file
+  read_var_from_file "$source_file" github_repository github_repository_from_file
+    echo "type: $__last_type"        # string
+    echo "$github_repository_from_file"
+
+  # Default: The variable_name used in the file is the variable_name used to store the value(s) in.
+  read_var_from_file "$source_file" github_repository
+    echo "type: $__last_type"        # string
+    echo "$github_repository"
+
+} ##Ende function: call_examples_read_variables_from_files()
+
+
+########################################
+# Helper: is the given NAME an array?
+########################################
+is_array() {
+  local name="$1"
+  local decl
+  decl="$(declare -p "$name" 2>/dev/null || true)"
+  [[ "$decl" == "declare -a"* ]]
+}
+
+######################################################
+check_if_var_is_array(){
+  local source_var_name_in_file=backupPaths
+# Check if variable is string/scalar or array
+  declare -p "$source_var_name_in_file" 2>/dev/null | grep -q 'declare \-a'
+  if [[ $? -eq 0 ]]; then
+      echo "$source_var_name_in_file is an array"
+  else
+      echo "$source_var_name_in_file is a string"
+  fi
+} # Ende function: check_if_var_is_array()
+
+
+######################################################
+call_examples_write_variable_to_files(){
+  # Call: Write variables/arrays to file
+
+  ## put this to the callsing bash script to include this file --> needed to access the functions
+  #source read_write_config_files.sh      # Include shell script file where the functions are included
+
+  # Variables declaration
+  local destination_file=env.conf   # Name and path to the configuration file
+
+  github_token=ghp_xxxxxx
+  branch_name="main"
+  commit_email="andreas@klipper-74e8755"
+  backupPaths=( "printer_data/config/*" "mainsail-config/client.cfg" )
+  backupPaths_2=( \
+  "printer_data/config/*" \
+  "printer_data/database/" \
+  )
+
+  # Write varibales back to destination_file
+  write_var_to_file $destination_file github_token
+  write_var_to_file $destination_file branch_name
+  write_var_to_file $destination_file commit_email
+  write_var_to_file $destination_file backupPaths   # writes as multiline block
+  write_var_to_file $destination_file backupPaths_2
+} # Ende function: call_examples_write_variable_to_files()
+
+
+################################################################################################
 # Read variables/arrays from file
 ################################################################################################
-######################################################
-# --- Example usage --> load_var_from_file()) ---
-source parse_env.sh
-
-# Array -> store as "paths"
-load_var_from_file env.conf backupPaths paths
-echo "type: $__last_type"        # array
-declare -p paths
-for p in "${paths[@]}"; do echo "→ $p"; done
-
-# Scalar -> store as "EMAIL"
-load_var_from_file env.conf commit_email EMAIL
-echo "type: $__last_type"        # string
-echo "$EMAIL"
-
-# Default: destination = source
-load_var_from_file env.conf branch_name
-echo "type: $__last_type"        # string
-echo "$branch_name"
-
-# Type check helper
-if is_array paths; then echo "paths is array"; fi
-
-## Check if variable or array
-#declare -p backupPaths 2>/dev/null | grep -q 'declare \-a'
-#if [[ $? -eq 0 ]]; then
-#    echo "backupPaths is an array"
-#else
-#    echo "backupPaths is a string"
-#fi
-
-
-######################################################
-load_var_from_file() {
-  # load_var_from_file <config-file> <source-var-in-file> [dest-var-in-shell]
+read_var_from_file() {
+  # read_var_from_file <config-file> <source-var-in-file> [dest-var-in-shell]
   # After calling, the value from <source-var-in-file> in the <config-file> is stored into <dest-var-in-shell> (or the same name if omitted).
   # Gives back a variable or an array.
   # Sets __last_type to "array" or "string".
@@ -66,7 +124,7 @@ load_var_from_file() {
     local dest_var="${3:-$2}"
 
     if [[ -z "$conf_file" || -z "$source_var" ]]; then
-        echo "Usage: load_var_from_file <config-file> <source-var> [dest-var]"
+        echo "Usage: read_var_from_file <config-file> <source-var> [dest-var]"
         return 1
     fi
     if [[ ! -f "$conf_file" ]]; then
@@ -84,8 +142,8 @@ load_var_from_file() {
     __last_type=""
 
     # temp array buffer
-    unset __tmp_array__ 2>/dev/null
-    declare -ag __tmp_array__=()
+    local -a __tmp_array__=()
+    local entry
 
     while IFS= read -r raw; do
         # trim
@@ -103,7 +161,7 @@ load_var_from_file() {
                 current_var=""
                 # if we were collecting the target, finalize now
                 if [[ ${#__tmp_array__[@]} -gt 0 ]]; then
-                    unset "$dest_var" 2>/dev/null
+                    unset "$dest_var" 2>/dev/null  || true
                     declare -g -a "$dest_var=()"
                     eval "$dest_var+=(\"\${__tmp_array__[@]}\")"
                     __last_type="array"
@@ -158,7 +216,7 @@ load_var_from_file() {
                 # parse remaining unquoted tokens (split on spaces)
                 # shellcheck disable=SC2206
                 local rest_tokens=()
-                read -r -a rest_tokens <<<"$inner"
+                read -r -a rest_tokens <<<"$inner" || true
                 if ((${#rest_tokens[@]})); then
                     __tmp_array__+=("${rest_tokens[@]}")
                 fi
@@ -218,32 +276,10 @@ load_var_from_file() {
     return 2
 }
 
-# optional helper to test type
-is_array() {
-    local name="$1"
-    declare -p "$name" 2>/dev/null | grep -q 'declare \-a'
-}
-
 
 ################################################################################################
 # Write variables/arrays to file
 ################################################################################################
-######################################################
-# Call
-source ./config_io.sh  # the file where you saved the functions
-
-# Example: set or modify variables in your shell
-branch_name="main"
-commit_email="andreas@klipper-74e8755"
-backupPaths=( "printer_data/config/*" "mainsail-config/client.cfg" )
-
-# Write them back to env.conf
-write_var_to_file env.conf branch_name
-write_var_to_file env.conf commit_email
-write_var_to_file env.conf backupPaths   # writes as multiline block
-
-
-######################################################
 write_var_to_file() {
   # write_var_to_file <config-file> <varname>
   # - Reads the value of <varname> from the current shell (string or array)
@@ -253,6 +289,7 @@ write_var_to_file() {
     local conf_file="$1"
     local name="$2"
 
+    ## pre checks
     if [[ -z "$conf_file" || -z "$name" ]]; then
         echo "Usage: write_var_to_file <config-file> <varname>"
         return 1
@@ -266,14 +303,15 @@ write_var_to_file() {
         return 1
     fi
 
-    # Build replacement text (safe, quoted)
+    ## Build replacement text (safe, quoted)
     local repl type
     if declare -p "$name" 2>/dev/null | grep -q 'declare \-a'; then
         type="array"
-        # Read array values
-        eval "local _vals=(\"\${$name[@]}\")"
+        local -a _vals
+        eval '_vals=(\"\${$name[@]}\")'   # Read array values
 
         repl="$name=( \\"
+        local v
         for v in "${_vals[@]}"; do
             # Escape backslashes and double quotes
             v="${v//\\/\\\\}"
@@ -283,20 +321,20 @@ write_var_to_file() {
         repl+=$'\n'")"
     else
         type="string"
-        # Read scalar
-        eval "local _val=\${$name}"
+        local _val esc
+        eval "_val=\${$name}"     # Read scalar
         # Escape backslashes and double quotes
-        local esc="${_val//\\/\\\\}"
+        esc="${_val//\\/\\\\}"
         esc="${esc//\"/\\\"}"
         repl="$name=\"$esc\""
     fi
 
-    # Create a backup
+    ## Create a backup
     cp -p -- "$conf_file" "$conf_file.bak" || {
         echo "Warning: could not create backup ${conf_file}.bak"
     }
 
-    # Replace or append using awk (handles scalar, one-line array, multi-line array)
+    ## Replace or append using awk (handles scalar, one-line array, multi-line array)
     awk -v var="$name" -v repl="$repl" '
         BEGIN {
             in_block = 0; replaced = 0;
@@ -327,7 +365,7 @@ write_var_to_file() {
                 }
             } else {
                 # We are in a multi-line array block; look for closing ')'
-                if ($0 ~ /^\\)$/) {
+                if ($0 ~ /^\)$/) {
                     # End of block: emit replacement once
                     if (!replaced) { print repl; replaced = 1; }
                     in_block = 0;
@@ -345,34 +383,4 @@ write_var_to_file() {
             }
         }
     ' "$conf_file" > "${conf_file}.tmp" && mv "${conf_file}.tmp" "$conf_file"
-}
-
-# --- Optional helper for compact (one-line) array formatting ---
-# write_var_compact <config-file> <array-varname>
-# Writes array as: name=("a" "b" "c")
-write_var_compact() {
-    local conf_file="$1" name="$2"
-    if [[ -z "$conf_file" || -z "$name" ]]; then
-        echo "Usage: write_var_compact <config-file> <array-varname>"
-        return 1
-    fi
-    if ! declare -p "$name" 2>/dev/null | grep -q "declare \-a"; then
-        echo "'$name' is not an array"
-        return 1
-    fi
-    eval "local _vals=(\"\${$name[@]}\")"
-    local inner=""
-    for v in "${_vals[@]}"; do
-        v="${v//\\/\\\\}"; v="${v//\"/\\\"}"
-        inner+="\"$v\" "
-    done
-    local saved="$name=(${inner% })"
-    # Temporarily export as a string and call write_var using the same function:
-    local __old_decl
-    __old_decl="$(declare -p "$name" 2>/dev/null)"
-    eval "unset $name; $name=\"${saved//\"/\\\"}\""
-    write_var "$conf_file" "$name"
-    # restore original var
-    eval "$__old_decl"
-}
-
+} # End function: write_var_to_file()
