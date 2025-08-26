@@ -65,6 +65,7 @@ set -euo pipefail
 #   write_var_to_file "$destination_file" branch_name
 #   write_var_to_file "$destination_file" commit_email
 #   write_var_to_file "$destination_file" backupPaths   # writes as multiline block
+#   write_var_to_file "$destination_file" backupPaths_2   # writes as multiline block
 
 
 ################################################################################################

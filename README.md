@@ -122,7 +122,7 @@ https://gitcode.com/xpp012/KlipperScreen/ - last check 20250821
     - [x] KlipperScreen panels copy not working
 - [x] update.sh is overwriting: Klipper-Backup/.env & /configuration/uuid.cfg --> fixed
 
-#### Cechk out:
+#### Research on the following tools, if thex should be part of x400-software-pack:
 - SimplyPrint: https://simplyprint.io
 - PrettyGCode: https://github.com/Kragrathea/pgcode
 

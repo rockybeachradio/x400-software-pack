@@ -13,6 +13,11 @@ set -euo pipefail
 # Variables
 ################################################################################################
 folder_of_script="$(dirname -- "$(readlink -f -- "${BASH_SOURCE[0]}")")"
+config_source="$HOME""/x400-software-pack/configurations"
+
+github_username=""
+github_repository=""
+github_token=""
 
 
 ################################################################################################
@@ -166,42 +171,25 @@ fi
 # https://klipperbackup.xyz
 # --> USE KIAUH to install
 
-# cd "$HOME"
+# Installation gem klipperbackup.xyz
 # curl -fsSL get.klipperbackup.xyz | bash
-# $HOME/klipper-backup/install.sh
+# ~/klipper-backup/install.sh
+
+
+cp "$config_source""/klipper-backup env.conf" "$HOME/klipper-backup/.env"   || echo "❌  Faild copying KlipperBackup env.cfg"
 
 # Add settings from /configurations/klipper-backup.conf to klipper-backup/.env
 read -p "❓ GitHub user name: " github_username
 read -p "❓ GitHub repo name (eg. x400-backup): " github_repository
-read -p "❓ GitHub repo name (eg. ssh-ed25519 112345): " github_token
+read -p "❓ GitHub repo ssh token (eg. ssh-ed25519): " github_token
 
 cd "$HOME/klipper-backup/"
 
-set_var_in_conf() {
-  local file=$1 key=$2 val=$3
-  # Escape \, /, & for sed replacement      # escape chars that confuse sed
-   local esc=${val//\\/\\\\}; esc=${esc//\//\\/}; esc=${esc//&/\\&}
-  if grep -Eq "^[[:space:]]*${key}=" "$file"; then
-    sed -i -E "s|^[[:space:]]*${key}=.*|${key}=${esc}|" "$file"
-  else
-    printf '%s=%s\n' "$key" "$val" >> "$file"
-  fi
-}
+# Write to klipper-backup/.env
+write_var_to_file ".env" github_username
+write_var_to_file ".env" github_repository
+write_var_to_file ".env" github_token
 
-set_var_in_conf .env github_username   "rockybeachradio"
-set_var_in_conf .env github_repository "x400-backup"
-set_var_in_conf .env github_token      "ghp_xxx_your_token_here"
-
-branch_name=main
-commit_username="x400 klipper-backup"
-commit_email=""
-
-allow_empty_commits="true"
-git_protocol="ssh"
-git_host="github.com"
-ssh_user="git"
-
-use_filenames_as_commit_msg="false"
 
 ################################################################################################
 # Install x11vnc
