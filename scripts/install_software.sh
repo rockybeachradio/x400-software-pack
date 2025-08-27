@@ -87,6 +87,7 @@ else
     echo "✅ Clone completed."
 fi
 
+
 ################################################################################################
 # Install fixes
 ################################################################################################
@@ -201,8 +202,6 @@ read -p "❓ GitHub user name: " github_username
 read -p "❓ GitHub repo name (eg. x400-backup): " github_repository
 read -p "❓ GitHub repo ssh token (eg. ssh-ed25519): " github_token
 
-cp "$config_source""/klipper-backup env.conf" "$klipperbackup_file"   || echo "❌  Faild copying KlipperBackup env.cfg"
-
 # Write to klipper-backup/.env
 write_var_to_file "$klipperbackup_file" github_username
 write_var_to_file "$klipperbackup_file" github_repository
@@ -231,10 +230,11 @@ sudo systemctl start x11vnc.service || echo "❌  Starting service failed."
 ################################################################################################
 echo "ℹ️  Installing needed tools for farm3d ..."
 cd "$HOME"
+
 # ???
-#pip3 install opencv-python || echo "! Faild pip3 install opencv-python"
+pip3 install opencv-python || echo "! Faild pip3 install opencv-python"
 # ???
-#pip3 install qrcode[pil] || echo "! Faild pip3 install qrcode"
+pip3 install qrcode[pil] || echo "! Faild pip3 install qrcode"
 
 
 ################################################################################################
@@ -243,7 +243,10 @@ cd "$HOME"
 echo "ℹ️  Installing needed tools for backup script.."
 
 # Declare variables
-local_backup_folder="$HOME/printer_backup"                  # select the path wisely. Backups may contain confidential informations like credentials.
+TARGET_DIR="printer_backup"
+REPO_URL="x400-software-pack"                 #local script. No repo.
+
+local_backup_folder="$HOME/$TARGET_DIR"                     # select the path wisely. Backups may contain confidential informations like credentials.
 local_backup_folder_files="$local_backup_folder/files"      # When changing the content of local_backup_folder_files, also change the pathin copy_configs.sh and install_software.sh !
 local_backup_folder_zip="$local_backup_folder/zip"
 
@@ -251,7 +254,7 @@ github_user_name=""             # rockybeachradio
 github_repo_name=""             # x400-backup
 github_ssh_key_name=""          # --> x400-backup_ed25519
 github_ssh_key_label=""         # --> rockybeachradio_x400-backup
-github_encryption="ed25519"
+github_encryption="ed25519"     # --> Encryption type
 github_ssh_host_name=""         # --> github.com_x400-backup
 
 ##############################################################
@@ -273,6 +276,7 @@ read -p "❓ Do you want to setup GitHub as backup destination? [Y/n]: " answer
 answer=${answer:-N}     # default to "N" if empty
 if [[ "$answer" =~ ^[Yy]$ ]]; then
     initiate_github       || echo "❌ GitHub setup failed"      # in git_initiate.sh
+
     echo "Setting variable github_repo_name=true in /x400-software-pack/scripts/backup.sh ..."
     if cd $folder_of_script; then
         sed -i 's/github_backup=false/github_backup=true/g' ./backup.sh   || echo "❌ Failed setting variable"    # Set the variable github_backup=true in /x400-software-pack/scripts/backup.sh

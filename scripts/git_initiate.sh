@@ -13,16 +13,37 @@ set -euo pipefail
 initiate_github() {
     echo "ℹ️  Initialize GitHub folder for backup ..."
     
+    ##############################################################
+    # Declare variables
+    local TARGET_DIR="printer_backup"
+    #REPO_URL="x400-software-pack"                 #local script. No repo.
+
+    local local_backup_folder="$HOME/$TARGET_DIR"                     # select the path wisely. Backups may contain confidential informations like credentials.
+    local local_backup_folder_files="$local_backup_folder/files"      # When changing the content of local_backup_folder_files, also change the pathin copy_configs.sh and install_software.sh !
+    #local_backup_folder_zip="$local_backup_folder/zip"
+
+    local github_user_name=""             # rockybeachradio
+    local github_repo_name=""             # x400-backup
+    local github_ssh_key_name=""          # --> x400-backup_ed25519
+    local github_ssh_key_label=""         # --> rockybeachradio_x400-backup
+    local github_encryption=ed25519""     # --> Encryption type
+    local github_ssh_host_name=""         # --> github.com_x400-backup
+
+    
+    ##############################################################
+    # Ask for user input
     read -p "❓ GitHub user name: " github_user_name
     # read -p "❓ GitHub user eMail: " github_user_email
     read -p "❓ GitHub repo name (eg. x400-backup): " github_repo_name
 
-    # Define variables
+    # Generate variables based on input
     github_ssh_key_name="$github_repo_name""_""$github_encryption"
     github_ssh_key_label="key_for_""$github_user_name""_""$github_repo_name"
     github_ssh_host_name="github.com_$github_repo_name"
 
-    # SSH dir + perms
+
+    ##############################################################
+    # Generate the .ssh file
     mkdir -p "$HOME/.ssh"
     chmod 700 "$HOME/.ssh"
 
@@ -46,8 +67,7 @@ initiate_github() {
 
     # Append host alias to SSH config (only once)
     if ! grep -q "^Host ""$github_ssh_host_name""$" "$HOME/.ssh/config" 2>/dev/null; then
-
-cat >> $HOME/.ssh/config <<EOF
+cat >> "$HOME/.ssh/config" <<EOF
 Host ${github_ssh_host_name}
     HostName github.com
     User git
@@ -84,22 +104,18 @@ EOF
     #echo "-----------------------------------------------------------------"
 
 
-
     ##############################################################
-    rm -rf local_backup_folder    || echo "✅  nothing to deleat" 
-
-    ##############################################################
-    cd "$local_backup_folder_files"     || { echo "❌  Could not go to files folder: $local_backup_folder_files"; return 1; }
-
     # Add a .gitignore file to exclude folders/files
-cat > .gitignore <<'EOF'
+cat > "$local_backup_folder_files/.gitignore" <<'EOF'
 .DS_Store
 __pycache__/
 git_push.sh
 EOF
     #  __pycache__/ is created by Python.
 
+
     ##############################################################
+    # Git commands
     git init -b main    || echo "❌  git init - failed"     # Initialize a repo in the empty folder and attach your (private) GitHub repo
 
     # Point origin to SSH using the host alias

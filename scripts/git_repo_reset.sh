@@ -19,10 +19,12 @@ set -euo pipefail
 #   The git push fails with repository not found. Create the repository on GitHub without initializing files, then rerun the script.
 
 git_repo_reset() {
+    # Get parameters handed over
     local repo_name="$1"
     local local_dir="$2"
     local gh_user="$3"
 
+    # define variables
     local branch="${4:-main}"
     local gh_ssh_host="github.com"
     local gh_ssh_user="git"
@@ -33,43 +35,45 @@ git_repo_reset() {
     # Check if Git is installed
     if ! command -v git &> /dev/null; then
         echo "Error: Git is not installed. Please install Git and try again."
-        exit 1
+        return 1
     fi
 
     # Verify SSH authentication with GitHub
     echo "Verifying SSH authentication with GitHub..."
     if ! ssh -T "$gh_ssh_user@$gh_ssh_host" > /dev/null 2>&1; then
         echo "Error: SSH authentication failed. Please ensure your SSH key is added to GitHub and test with 'ssh -T $gh_ssh_user@$gh_ssh_host'."
-        exit 1
+        return 1
     fi
     echo "SSH authentication successful."
 
     # Validate input parameters
     if [ -z "$gh_user" ]; then
         echo "Error: GitHub username is required."
-        exit 1
+        return 1
     fi
     if [ -z "$repo_name" ]; then
         echo "Error: Repository name is required."
-        exit 1
+        return 1
     fi
     if [ -z "$local_dir" ]; then
         echo "Error: Local directory path is required."
-        exit 1
+        return 1
     fi
 
+    ##############################################################
     # Confirm with user before proceeding
     echo "This script will reset the local Git repository in '$local_dir' and overwrite the GitHub repository '$gh_user/$repo_name' via SSH."
     echo "WARNING: This will delete ALL existing history and branches in the GitHub repository if it contains data."
     read -p "Are you sure you want to proceed? (y/N): " confirm
     if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
         echo "Aborted."
-        exit 1
+        return 1
     fi
 
+    ##############################################################
     # Reset local repository
     echo "Resetting local repository in '$local_dir'..."
-    cd "$local_dir" || { echo "Error: Cannot access directory '$local_dir'"; exit 1; }
+    cd "$local_dir" || { echo "Error: Cannot access directory '$local_dir'"; return 1; }
     rm -rf .git
     git init
     echo "Local repository initialized."
@@ -90,9 +94,10 @@ git_repo_reset() {
         echo "Error: Failed to push to GitHub. Ensure the repository exists and you have push access."
         echo "Check SSH configuration and verify the repository URL: '$remote_url'."
         echo "If the repository does not exist, create it on GitHub (https://github.com/new) without initializing files."
-        exit 1
+        return 1
     fi
 
+    ##############################################################
     # Info to user
     echo "Setup complete! The GitHub repository '$remote_url' has been overridden with the new local repository."
     echo "To upload files to GitHub, use:"

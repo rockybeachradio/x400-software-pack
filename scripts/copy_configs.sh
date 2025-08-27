@@ -35,7 +35,7 @@ echo "This is $(basename "$0")"
 # Include helper scripts
 ################################################################################################
 source read_write_config_files.sh      # Include shell script with the read and write function for configuratin files.
-
+source git_initiate.sh
 
 ################################################################################################
 # Variables
