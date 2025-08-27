@@ -246,7 +246,7 @@ echo "ℹ️  Installing needed tools for backup script.."
 TARGET_DIR="printer_backup"
 REPO_URL="x400-software-pack"                 #local script. No repo.
 
-local_backup_folder="$HOME/$TARGET_DIR"                     # select the path wisely. Backups may contain confidential informations like credentials.
+local_backup_folder="$HOME/$TARGET_DIR"                     # Choose the path wisely. Backups may contain confidential informations like credentials.
 local_backup_folder_files="$local_backup_folder/files"      # When changing the content of local_backup_folder_files, also change the pathin copy_configs.sh and install_software.sh !
 local_backup_folder_zip="$local_backup_folder/zip"
 
@@ -275,8 +275,7 @@ mkdir -p "$local_backup_folder_zip"    || echo "✅  zip folder already exists"
 read -p "❓ Do you want to setup GitHub as backup destination? [Y/n]: " answer
 answer=${answer:-N}     # default to "N" if empty
 if [[ "$answer" =~ ^[Yy]$ ]]; then
-    initiate_github       || echo "❌ GitHub setup failed"      # in git_initiate.sh
-
+    initate_github "local_backup_folder_files"        || echo "❌ GitHub setup failed"      # in git_initiate.sh
     echo "Setting variable github_repo_name=true in /x400-software-pack/scripts/backup.sh ..."
     if cd $folder_of_script; then
         sed -i 's/github_backup=false/github_backup=true/g' ./backup.sh   || echo "❌ Failed setting variable"    # Set the variable github_backup=true in /x400-software-pack/scripts/backup.sh

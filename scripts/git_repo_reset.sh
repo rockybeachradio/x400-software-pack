@@ -48,15 +48,15 @@ git_repo_reset() {
 
     # Validate input parameters
     if [ -z "$gh_user" ]; then
-        echo "Error: GitHub username is required."
+        echo "❌  GitHub username was not handed over to the script."
         return 1
     fi
     if [ -z "$repo_name" ]; then
-        echo "Error: Repository name is required."
+        echo "❌  Repository name was not handed over to the script."
         return 1
     fi
     if [ -z "$local_dir" ]; then
-        echo "Error: Local directory path is required."
+        echo "❌  Local directory path was not handed over to the script."
         return 1
     fi
 

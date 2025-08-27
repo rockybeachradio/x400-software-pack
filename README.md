@@ -180,6 +180,7 @@ https://gitcode.com/xpp012/KlipperScreen/ - last check 20250825
     - [ ] Upload zip to SMB
     - [x] Backup to GitHub
     - [ ] GitHub: Initial setup local fodler (/printer_backup/files/) in install_software.sh
+        --> git_initiate.sh: Test "Git commands" section. 
 - [x] x11cnv service
 - [x] Host, SKIPR-MCU toolhead-board-MCU processor temepratures are shown in mainsail
 - [ ] Temeprature monitoring (what to do when to hot)
