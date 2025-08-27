@@ -32,6 +32,12 @@ echo "This is $(basename "$0")"
 
 
 ################################################################################################
+# Include helper scripts
+################################################################################################
+source read_write_config_files.sh      # Include shell script with the read and write function for configuratin files.
+
+
+################################################################################################
 # Variables
 ################################################################################################
 source_base="$HOME""/x400-software-pack"
@@ -42,12 +48,6 @@ INSTALL=false
 github_username=""
 github_repository=""
 github_token=""
-
-
-################################################################################################
-# Include helper scripts
-################################################################################################
-source read_write_config_files.sh      # Include shell script with the read and write function for configuratin files.
 
 
 ################################################################################################
@@ -191,23 +191,29 @@ cp "$source_base""/scripts/git_push.sh" "$HOME/printer_backup/files/" || echo "�
 ################################################################################################
 # Klipper-Backup  - Create symlinks, to allow Klipper-Backup to backup files outside of the user`s folder
 ################################################################################################
+TARGET_DIR="klipper-backup"
+REPO_URL="get.klipperbackup.xyz"
+
+klipperbackup_dir="$HOME/$TARGET_DIR"
+klipperbackup_file="$klipperbackup_dir/.env"
+
 echo "ℹ️  Copy Klipper-Backup ..."
 mkdir -p "$HOME/printer_data/symlinks_for_backup/"   || echo "❌  creating the /printer_data/symlink symlinks_for_backup/"
 sudo ln -sfn "/etc/hostname"                     "$HOME/printer_data/symlinks_for_backup/hostname"      || echo "❌  Faild setting symlink /printer_data/symlinks_for_backup/hostname"
 sudo ln -sfn "/etc/network/interfaces.d/can0"    "$HOME/printer_data/symlinks_for_backup/can0"          || echo "❌  Faild setting symlink /printer_data/symlinks_for_backup/can0"
 
-cd "$HOME/klipper-backup/"
+cd "$klipperbackup_dir"
   # Read from klipper-backup/.env
-  read_var_from_file ".env" github_username
-  read_var_from_file ".env" github_repository
-  read_var_from_file ".env" github_token
+  read_var_from_file "$klipperbackup_file" github_username
+  read_var_from_file "$klipperbackup_file" github_repository
+  read_var_from_file "$klipperbackup_file" github_token
 
-cp "$config_source""/klipper-backup env.conf" "$HOME/klipper-backup/.env"   || echo "❌  Faild copying KlipperBackup env.cfg"
+cp "$config_source""/klipper-backup env.conf" "$klipperbackup_file"   || echo "❌  Faild copying KlipperBackup env.cfg"
 
 # Write to klipper-backup/.env
-write_var_to_file ".env" github_username
-write_var_to_file ".env" github_repository
-write_var_to_file ".env" github_token
+write_var_to_file "$klipperbackup_file" github_username
+write_var_to_file "$klipperbackup_file" github_repository
+write_var_to_file "$klipperbackup_file" github_token
 
 
 ################################################################################################

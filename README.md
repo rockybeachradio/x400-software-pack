@@ -54,7 +54,7 @@ All rellevant Eryone documents, files are part are collected from all soruces an
 
 
 ## Repo check for updates:
-https://gitcode.com/xpp012/KlipperScreen/ - last check 20250821
+https://gitcode.com/xpp012/KlipperScreen/ - last check 20250825
 
 
 
@@ -69,15 +69,15 @@ https://gitcode.com/xpp012/KlipperScreen/ - last check 20250821
 
 
 #### To check why these files are there in addition to the original repos.
-- [ ] Eryone Scripts /all/ - Where arethey used?
-- [ ] Eryone /KlipperScreen/ - Check
-    - [ ] /KlipperScreen/Panels/ - Check what is different in the Eryone version
+- [ ] Eryone Scripts /all/ --> Where arethey used?
+- [ ] Eryone /KlipperScreen/ --> Check
+    - /KlipperScreen/Panels/ - What are they doing?
         - [ ] calibrate.py
         - [ ] change_name.py
         - [ ] chgfilament.py
     - [ ] /KlipperScreen/ks_includes/zh_TW/KlipperScreen2mo  - Check what is different in the Eryone version
     - [ ] /KlipperScreen/screen.py  - Check what is different in the Eryone version
-- [ ] Eryone /klipper/ - Check
+- Eryone /klipper/ --> Check
     - /klipper/klippy/extras/
         - [ ] as5600.py
         - [ ] at24c_eeprom.py
@@ -86,9 +86,9 @@ https://gitcode.com/xpp012/KlipperScreen/ - last check 20250821
     - [ ] /klipper/lib/rp2040/
     - [ ] /klipper/lib/rp2040_flash/
     - [ ] /klipper/src/rp2040/rp2040_link,lds.S --> ??? new: rpxxxx.lds.s
-    - [ ] klipper/src/pressure_sensor.c
-- [ ] Eryone /moonraker/mooonrkaer/components/timelpase.py redirect to /moonrkaer-timelapse/components/timelpase.py - Why?
-- [x] Eryone /moonraker-timelapse/ - What was changed by eryone?
+    - [ ] /klipper/src/pressure_sensor.c --> deleated on 20250825 (by eryone)
+- [ ] Eryone /moonraker/mooonrkaer/components/timelpase.py redirect to /moonrkaer-timelapse/components/timelpase.py --> Why?
+- [x] Eryone /moonraker-timelapse/ --> What was changed by eryone?
     - MKS path hardwired & sudo makerspace added
     - timelapse.py: MKS path hardwired 
 
@@ -142,7 +142,10 @@ https://gitcode.com/xpp012/KlipperScreen/ - last check 20250821
         - for <amount> spools
 - [ ] RBG Status LED (Neopicel pin:PC5)
 - [ ] Nozzle camera (for Obico)
+    https://www.obico.io/blog/nozzle-camera-stealthburner/
+    https://www.bondtech.se/product/stealthburner-camera-kit
 - [ ] As soon as I can get my hands on the Bondtech INDX I will update the x400 with it.
+    https://www.bondtech.se/indx-by-bondtech/
 
 #### Changes compared to the originals:
 - [x] Newest software is used: Linux, Klipper, Moonraker, Mainsail, KlipperScreen, etc.

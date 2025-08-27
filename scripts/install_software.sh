@@ -8,6 +8,14 @@ set -euo pipefail
 # Purpose: Installs software that is needed by x400-software-pack
 #
 ################################################################################################
+echo "This is $(basename "$0")"
+
+
+################################################################################################
+# Include helper scripts
+################################################################################################
+source read_write_config_files.sh      # Include shell script with the read and write function for configuratin files.
+
 
 ################################################################################################
 # Variables
@@ -15,9 +23,17 @@ set -euo pipefail
 folder_of_script="$(dirname -- "$(readlink -f -- "${BASH_SOURCE[0]}")")"
 config_source="$HOME""/x400-software-pack/configurations"
 
-github_username=""
-github_repository=""
-github_token=""
+# Installation variables
+    TARGET_DIR=""
+    REPO_URL=""
+
+# KLipper-Backup
+    klipperbackup_dir=""
+    klipperbackup_file=""
+
+    github_username=""
+    github_repository=""
+    github_token=""
 
 
 ################################################################################################
@@ -170,25 +186,27 @@ fi
 # Klipper-backup tool
 # https://klipperbackup.xyz
 # --> USE KIAUH to install
+TARGET_DIR="klipper-backup"
+REPO_URL="get.klipperbackup.xyz"
+
+klipperbackup_dir="$HOME/$TARGET_DIR"
+klipperbackup_file="$klipperbackup_dir/.env"
 
 # Installation gem klipperbackup.xyz
-# curl -fsSL get.klipperbackup.xyz | bash
-# ~/klipper-backup/install.sh
-
-
-cp "$config_source""/klipper-backup env.conf" "$HOME/klipper-backup/.env"   || echo "❌  Faild copying KlipperBackup env.cfg"
+curl -fsSL $REPO_URL | bash
+$klipperbackup_dir/install.sh
 
 # Add settings from /configurations/klipper-backup.conf to klipper-backup/.env
 read -p "❓ GitHub user name: " github_username
 read -p "❓ GitHub repo name (eg. x400-backup): " github_repository
 read -p "❓ GitHub repo ssh token (eg. ssh-ed25519): " github_token
 
-cd "$HOME/klipper-backup/"
+cp "$config_source""/klipper-backup env.conf" "$klipperbackup_file"   || echo "❌  Faild copying KlipperBackup env.cfg"
 
 # Write to klipper-backup/.env
-write_var_to_file ".env" github_username
-write_var_to_file ".env" github_repository
-write_var_to_file ".env" github_token
+write_var_to_file "$klipperbackup_file" github_username
+write_var_to_file "$klipperbackup_file" github_repository
+write_var_to_file "$klipperbackup_file" github_token
 
 
 ################################################################################################
@@ -228,6 +246,7 @@ echo "ℹ️  Installing needed tools for backup script.."
 local_backup_folder="$HOME/printer_backup"                  # select the path wisely. Backups may contain confidential informations like credentials.
 local_backup_folder_files="$local_backup_folder/files"      # When changing the content of local_backup_folder_files, also change the pathin copy_configs.sh and install_software.sh !
 local_backup_folder_zip="$local_backup_folder/zip"
+
 github_user_name=""             # rockybeachradio
 github_repo_name=""             # x400-backup
 github_ssh_key_name=""          # --> x400-backup_ed25519
@@ -236,132 +255,9 @@ github_encryption="ed25519"
 github_ssh_host_name=""         # --> github.com_x400-backup
 
 ##############################################################
-##############################################################
-# Function initiate_github
-initiate_github() {
-    echo "ℹ️  Initialize GitHub folder for backup ..."
-    
-    read -p "❓ GitHub user name: " github_user_name
-    # read -p "❓ GitHub user eMail: " github_user_email
-    read -p "❓ GitHub repo name (eg. x400-backup): " github_repo_name
-
-    # Define variables
-    github_ssh_key_name="$github_repo_name""_""$github_encryption"
-    github_ssh_key_label="key_for_""$github_user_name""_""$github_repo_name"
-    github_ssh_host_name="github.com_$github_repo_name"
-
-    # SSH dir + perms
-    mkdir -p "$HOME/.ssh"
-    chmod 700 "$HOME/.ssh"
-
-    ##############################################################
-    # Generate SSH Key
-    if [[ -f "$HOME/.ssh/$github_ssh_key_name" ]]; then
-        echo "ℹ️  SSH key already exists, skipping generation."
-    else
-        ssh-keygen -t "$github_encryption" -C "$github_ssh_key_label" -f "$HOME/.ssh/$github_ssh_key_name"  -N ""       
-            # Generate a dedicated SSH key and adds it tp ~/.sh/config
-            # -t ed25519 --> modern, secure, short key
-            # -C "..." --> A label (shows up in GitHub)
-            # -f ~/.ssh/x400-backup_ed25519 --> Filename for the private key
-            # -N --> Creates the SSH key with an empty passphrase (no password).
-            # -a 100
-            # This creates:
-            #   ~/.ssh/x400_backup_ed25519 (private key — keep secret!)
-            #   ~/.ssh/x400_backup_ed25519.pub (public key — safe to share)
-    fi
-
-    # Append host alias to SSH config (only once)
-    if ! grep -q "^Host ""$github_ssh_host_name""$" "$HOME/.ssh/config" 2>/dev/null; then
-
-cat >> $HOME/.ssh/config <<EOF
-Host ${github_ssh_host_name}
-    HostName github.com
-    User git
-    IdentityFile ~/.ssh/${github_ssh_key_name}
-    IdentitiesOnly yes
-EOF
-        chmod 600 $HOME/.ssh/config
-    fi
-
-    echo
-    echo "Prepare GitHub"
-    echo "👉 Add this public key as a Deploy Key (with write access) to:"
-    echo "   https://github.com/${github_user_name}/${github_repo_name}"
-    echo "   Repo → Settings → Deploy keys → Add deploy key (Allow write access)"
-    echo "------------------------------------------------------------"
-    cat "$HOME/.ssh/$github_ssh_key_name.pub"
-    echo "------------------------------------------------------------"
-    read -p "Press ENTER after you have added the deploy key..." _
-    echo
-
-    #echo "-----------------------------------------------------------------"
-    #echo "Option A: Deploy Key (per repo)"
-    #echo "Go to your repo → Settings → Deploy keys → Add deploy key"
-    #echo "Paste the contents of ~/.ssh/x400-backup_ed25519.pub"
-    #echo "Give it a title (e.g., Backup Key)"
-    #echo "Enable Allow write access"
-    #echo "✅ Scope: only this repo → very safe for backups."
-    #echo "-----------------------------------------------------------------"
-    #echo "Option B: Account SSH Key"
-    #echo "GitHub → Settings → SSH and GPG keys → New SSH key"
-    #echo "Paste your .pub file"
-    #echo "✅ Scope: your whole account (all repos you have rights to)."
-    #echo "⚠️ Bigger blast radius if the private key leaks."
-    #echo "-----------------------------------------------------------------"
-
-
-    ##############################################################
-    rm-rf local_backup_folder    || echo "✅  nothing to deleat" 
-
-
-    ##############################################################
-    cd "$local_backup_folder_files"     || { echo "❌  Could not go to files folder: $local_backup_folder_files"; return 1; }
-
-    # Add a .gitignore file to exclude folders/files
-cat > .gitignore <<'EOF'
-.DS_Store
-__pycache__/
-git_push.sh
-EOF
-    #  __pycache__/ is created by Python.
-
-    ##############################################################
-    cd "$local_backup_folder_files"     || { echo "❌  Could not go to files folder: $local_backup_folder_files"; return 1; }
-    git init -b main    || echo "❌  git init - failed"     # Initialize a repo in the empty folder and attach your (private) GitHub repo
-
-    # Point origin to SSH using the host alias
-    git remote remove origin 2>/dev/null || true
-    git remote add origin "git@${github_ssh_host_name}:${github_user_name}/${github_repo_name}.git"    # use github.com-x400 (from your ~/.ssh/config). USERNAME/x400-backup.git is your repo path.
-
-    # set identity for this repo (no --global needed)
-    git config user.name  "${github_user_name}"
-    git config user.email "${github_user_name}@users.noreply.github.com"        # users.noreply.github.com is GitHubs privacy eMsil domain. So the real eMail adress does not need to be in the code.
-
-    echo "Initial add, git and push ..."
-    git add -A                          || echo "❌  git add. - failed"
-    git commit -m "Initial commit"      || echo "ℹ️  Nothing new to commit"
-    #git branch -M main      # ensure branch is 'main' (in case git init didn’t use -b main)
-
-    ssh -o StrictHostKeyChecking=accept-new -T "git@${github_ssh_host_name}" || true        # accept GitHub host key the first time (non-interactive)
-
-    #if git ls-remote --exit-code --heads origin main >/dev/null 2>&1; then
-    #    # Overwrite the remote
-    #    git push --force-with-lease origin main  || echo "❌  git push  force-with-lease failed"       # The -u sets origin/main as the default upstream, so future git push can be just git pu
-    #else
-        # Normal Push - My run into error, of there is already a commit on GitHub
-        git push -u origin main  || echo "❌  git push failed"       # The -u sets origin/main as the default upstream, so future git push can be just git pu
-    #fi
-    # Alternative: git pull --rebase origin main       # bring remote main in, replay your commits on top
-
-}   # End of initiate_github()
-##############################################################
-##############################################################
-
 # Install software
 sudo apt-get install -y zip                || echo "❌  Installation of zip failed."
 sudo apt-get install -y openssh-client     || echo "❌  Installation of openssh-client failed."
-
 
 ##############################################################
 # Create folders
@@ -376,8 +272,8 @@ mkdir -p "$local_backup_folder_zip"    || echo "✅  zip folder already exists"
 read -p "❓ Do you want to setup GitHub as backup destination? [Y/n]: " answer
 answer=${answer:-N}     # default to "N" if empty
 if [[ "$answer" =~ ^[Yy]$ ]]; then
-    initiate_github       || echo "❌ GitHub setup failed"
-    echo "Setting variable github_backup=true in /x400-software-pack/scripts/backup.sh ..."
+    initiate_github       || echo "❌ GitHub setup failed"      # in git_initiate.sh
+    echo "Setting variable github_repo_name=true in /x400-software-pack/scripts/backup.sh ..."
     if cd $folder_of_script; then
         sed -i 's/github_backup=false/github_backup=true/g' ./backup.sh   || echo "❌ Failed setting variable"    # Set the variable github_backup=true in /x400-software-pack/scripts/backup.sh
     else 
