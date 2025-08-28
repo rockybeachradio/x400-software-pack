@@ -110,6 +110,11 @@ read_var_from_file() {
   # After calling, the value from <source-var-in-file> in the <config-file> is stored into <dest-var-in-shell> (or the same name if omitted).
   # Gives back a variable or an array.
   # Sets __last_type to "array" or "string".
+read_var_from_file() {
+  # read_var_from_file <config-file> <source-var-in-file> [dest-var-in-shell]
+  # After calling, the value from <source-var-in-file> in the <config-file> is stored into <dest-var-in-shell> (or the same name if omitted).
+  # Supports variables or arrays.
+  # Sets __last_type to "array" or "string".
 
   local conf_file="$1"
   local source_var="$2"
@@ -133,56 +138,51 @@ read_var_from_file() {
   local current_var=""
   local storing_array=0
   __last_type=""
-
-  # temp array buffer
   local -a __tmp_array__=()
-  local entry
+  local line raw
 
   while IFS= read -r raw; do
-    # trim
-    local line="${raw#"${raw%%[![:space:]]*}"}"
+    # Trim whitespace
+    line="${raw#"${raw%%[![:space:]]*}"}"
     line="${line%"${line##*[![:space:]]}"}"
 
-    [[ -z "$line" || "$line" =~ ^# ]] && continue       # skip empty & comments
+    [[ -z "$line" || "$line" =~ ^# ]] && continue  # Skip empty lines and comments
 
-    if (( storing_array )); then      # collecting multi-line array?
-      if [[ $line =~ ^\)$ ]]; then    # end of array
-        storing_array=0
-        current_var=""
+    # Debug: Log the line being processed
+    # echo "DEBUG: Processing line: '$line'" >&2
 
-        # if we were collecting the target, finalize now
-        if [[ ${#__tmp_array__[@]} -gt 0 ]]; then
-          unset "$dest_var" 2>/dev/null || true   
-          declare -g -a "$dest_var" # declare the destination as a *global array* by name
-          declare -n __dst="$dest_var"  # create a nameref so we can write to it without eval
-          __dst=()
-          __dst+=("${__tmp_array__[@]}")
+    if (( storing_array )); then
+      # Check for end of array
+      if [[ $line == ")" ]]; then
+        if [[ $current_var == "$source_var" && ${#__tmp_array__[@]} -gt 0 ]]; then
+          unset "$dest_var" 2>/dev/null || true
+          declare -g -a "$dest_var"
+          declare -n __dst="$dest_var"
+          __dst=("${__tmp_array__[@]}")
           unset -n __dst
           __last_type="array"
           unset __tmp_array__
           return 0
         fi
+        storing_array=0
+        current_var=""
         continue
       fi
 
-      # Array entry (quoted or unquoted), allow trailing backslash
+      # Handle array entry (quoted or unquoted)
       if [[ $line =~ ^\"(.*)\"\s*\\?$ ]]; then
         __tmp_array__+=("${BASH_REMATCH[1]}")
-        continue
       elif [[ $line =~ ^\'(.*)\'\s*\\?$ ]]; then
         __tmp_array__+=("${BASH_REMATCH[1]}")
-        continue
-      elif [[ -n "$line" ]]; then
-        entry="${line%\\}"
-        __tmp_array__+=("$entry")
-        continue
+      elif [[ $line =~ ^(.*[^\\])\s*\\?$ ]]; then
+        __tmp_array__+=("${BASH_REMATCH[1]}")
       else
-        # ignore anything unexpected
-        continue
+        echo "Warning: Skipping malformed array entry: '$line'" >&2
       fi
+      continue
     fi
 
-    # start of multi-line array: name=( \   or   name=(
+    # Start of multi-line array: name=( or name=( \
     if [[ $line =~ ^([a-zA-Z_][a-zA-Z0-9_]*)=\(\s*\\?$ ]]; then
       current_var="${BASH_REMATCH[1]}"
       if [[ $current_var == "$source_var" ]]; then
@@ -192,37 +192,29 @@ read_var_from_file() {
       continue
     fi
 
-    # one-line array: name=( "a" 'b' c )
+    # One-line array: name=( "a" 'b' c )
     if [[ $line =~ ^([a-zA-Z_][a-zA-Z0-9_]*)=\(\s*(.*)\s*\)$ ]]; then
       local varname="${BASH_REMATCH[1]}"
       local inner="${BASH_REMATCH[2]}"
       if [[ $varname == "$source_var" ]]; then
         __tmp_array__=()
 
-        # parse quoted tokens
-        while [[ $inner =~ ^[[:space:]]*\"([^\"]*)\"[[:space:]]*(.*)$ ]]; do
-          __tmp_array__+=("${BASH_REMATCH[1]}")
+        # Parse quoted and unquoted tokens
+        while [[ $inner =~ ^[[:space:]]*(\"[^\"]*\"|\'[^\']*\'|[^[:space:]]+)[[:space:]]*(.*)$ ]]; do
+          local token="${BASH_REMATCH[1]}"
           inner="${BASH_REMATCH[2]}"
-        done
-        while [[ $inner =~ ^[[:space:]]*\'([^\']*)\'[[:space:]]*(.*)$ ]]; do
-          __tmp_array__+=("${BASH_REMATCH[1]}")
-          inner="${BASH_REMATCH[2]}"
+          if [[ $token =~ ^\"(.*)\"$ || $token =~ ^\'(.*)\'$ ]]; then
+            __tmp_array__+=("${BASH_REMATCH[1]}")
+          else
+            __tmp_array__+=("$token")
+          fi
         done
 
-        # parse remaining unquoted tokens (split on spaces)
-        # shellcheck disable=SC2206
-        local rest_tokens=()
-        read -r -a rest_tokens <<<"$inner" || true
-        if ((${#rest_tokens[@]})); then
-          __tmp_array__+=("${rest_tokens[@]}")
-        fi
-
-          unset "$dest_var" 2>/dev/null || true   
-          declare -g -a "$dest_var" # declare the destination as a *global array* by name
-          declare -n __dst="$dest_var"  # create a nameref so we can write to it without eval
-          __dst=()
-          __dst+=("${__tmp_array__[@]}")
-          unset -n __dst
+        unset "$dest_var" 2>/dev/null || true
+        declare -g -a "$dest_var"
+        declare -n __dst="$dest_var"
+        __dst=("${__tmp_array__[@]}")
+        unset -n __dst
         __last_type="array"
         unset __tmp_array__
         return 0
@@ -230,7 +222,7 @@ read_var_from_file() {
       continue
     fi
 
-    # scalar: name=value  (value may be quoted or unquoted)
+    # Scalar: name=value
     if [[ $line =~ ^([a-zA-Z_][a-zA-Z0-9_]*)=(.*)$ ]]; then
       local varname="${BASH_REMATCH[1]}"
       local val="${BASH_REMATCH[2]}"
@@ -239,34 +231,30 @@ read_var_from_file() {
         continue
       fi
 
-      # trim trailing comments if not quoted
+      # Trim trailing comments if not quoted
       if [[ ! $val =~ ^[\"\'] ]]; then
         val="${val%%#*}"
         val="${val%"${val##*[![:space:]]}"}"
       fi
 
-      # strip matching quotes
-      if [[ $val =~ ^\"(.*)\"$ ]]; then
-        val="${BASH_REMATCH[1]}"
-      elif [[ $val =~ ^\'(.*)\'$ ]]; then
+      # Strip matching quotes
+      if [[ $val =~ ^\"(.*)\"$ || $val =~ ^\'(.*)\'$ ]]; then
         val="${BASH_REMATCH[1]}"
       fi
 
-      # assign to destination (global in caller)
       printf -v "$dest_var" '%s' "$val"
       __last_type="string"
       return 0
     fi
-  done < "$conf_file" # otherwise ignore
-  
-  # If EOF while collecting target array (missing ')' but entries gathered)
-  if (( storing_array )) && [[ ${#__tmp_array__[@]} -gt 0 ]]; then
-          unset "$dest_var" 2>/dev/null || true   
-          declare -g -a "$dest_var" # declare the destination as a *global array* by name
-          declare -n __dst="$dest_var"  # create a nameref so we can write to it without eval
-          __dst=()
-          __dst+=("${__tmp_array__[@]}")
-          unset -n __dst
+  done < "$conf_file"
+
+  # Handle incomplete array at EOF
+  if (( storing_array )) && [[ $current_var == "$source_var" && ${#__tmp_array__[@]} -gt 0 ]]; then
+    unset "$dest_var" 2>/dev/null || true
+    declare -g -a "$dest_var"
+    declare -n __dst="$dest_var"
+    __dst=("${__tmp_array__[@]}")
+    unset -n __dst
     __last_type="array"
     unset __tmp_array__
     return 0
@@ -274,6 +262,7 @@ read_var_from_file() {
 
   echo "Variable '$source_var' not found in $conf_file"
   return 2
+
 } # End of function: read_var_from_file()
 
 
