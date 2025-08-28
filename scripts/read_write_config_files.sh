@@ -152,8 +152,9 @@ read_var_from_file() {
 
         # if we were collecting the target, finalize now
         if [[ ${#__tmp_array__[@]} -gt 0 ]]; then
-          unset "$dest_var" 2>/dev/null  || true
-          declare -g -a "$dest_var=()"
+          unset "$dest_var" 2>/dev/null || true
+          declare -g -a "$dest_var"   # 1) declare the name as a global array
+          eval "$dest_var=()"         # 2) then assign to it
           eval "$dest_var+=(\"\${__tmp_array__[@]}\")"
           __last_type="array"
           unset __tmp_array__
@@ -214,8 +215,9 @@ read_var_from_file() {
           __tmp_array__+=("${rest_tokens[@]}")
         fi
 
-        unset "$dest_var" 2>/dev/null
-        declare -g -a "$dest_var=()"
+        unset "$dest_var" 2>/dev/null || true
+        declare -g -a "$dest_var"   # 1) declare the name as a global array
+        eval "$dest_var=()"         # 2) then assign to it
         eval "$dest_var+=(\"\${__tmp_array__[@]}\")"
         __last_type="array"
         unset __tmp_array__
@@ -255,8 +257,9 @@ read_var_from_file() {
   
   # If EOF while collecting target array (missing ')' but entries gathered)
   if (( storing_array )) && [[ ${#__tmp_array__[@]} -gt 0 ]]; then
-    unset "$dest_var" 2>/dev/null
-    declare -g -a "$dest_var=()"
+    unset "$dest_var" 2>/dev/null || true
+    declare -g -a "$dest_var"   # 1) declare the name as a global array
+    eval "$dest_var=()"         # 2) then assign to it
     eval "$dest_var+=(\"\${__tmp_array__[@]}\")"
     __last_type="array"
     unset __tmp_array__
