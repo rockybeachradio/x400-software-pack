@@ -195,7 +195,8 @@ klipperbackup_file="$klipperbackup_dir/.env"
 
 # Installation gem klipperbackup.xyz
 curl -fsSL $REPO_URL | bash
-$klipperbackup_dir/install.sh
+
+#$klipperbackup_dir/install.sh
 
 # Add settings from /configurations/klipper-backup.conf to klipper-backup/.env
 read -p "❓ GitHub user name: " github_username
