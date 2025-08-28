@@ -49,7 +49,7 @@ cd "$REPO_DIR/scripts/"
 ################################################################################################
 echo "ℹ️  Start confoguration copy script (copy_configs.sh) ..."
 cd "$REPO_DIR/scripts/"
-./copy_configs.sh
+./copy_configs.sh -i
 
 
 echo "✅ Installation complete."
