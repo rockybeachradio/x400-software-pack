@@ -8,7 +8,7 @@ set -euo pipefail
 # Purpose: Download the x400-software-pack form GitHub and start the installer
 #
 ################################################################################################
-
+echo "This is $(basename "$0")"
 
 ################################################################################################
 ## Variables

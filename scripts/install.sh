@@ -9,6 +9,7 @@ set -euo pipefail
 #           Call the download_x400-software-pack.sh, install_software.sh, copy_config.sh, mcu_update.sh
 #
 ################################################################################################
+echo "This is $(basename "$0")"
 
 ################################################################################################
 # Variables
@@ -39,7 +40,7 @@ fi
 # install required software
 ################################################################################################
 echo "ℹ️  Start software installer (install_software.sh) ..."
-cd "$REPO_DIR/scripts/"
+cd "$REPO_DIR/scripts/" 
 ./install_software.sh
 
 

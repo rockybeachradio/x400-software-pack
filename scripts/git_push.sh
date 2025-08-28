@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 ################################################################################################
 # File: git_push.sh
@@ -143,7 +144,7 @@ git add -A      # Staging files: locaklWorkingDir --> StagingArea.
 if git diff --cached --quiet; then
   echo "No staged changes to commit; will pull/push anyway."
 else
-  git commit -m "$COMMENT"    # StagingArea --> Local Repository
+  git commit -m "$COMMENT"    || echo "❌  git commit --> failed"  # StagingArea --> Local Repository
 fi
 
 
@@ -151,7 +152,7 @@ fi
 # Rebase on remote (if upstream exists)
 ################################################################################################
 if git rev-parse --abbrev-ref --symbolic-full-name "@{u}" >/dev/null 2>&1; then
-  git pull --rebase --autostash   # Rebase local branch on its upstream and autostash uncommitted changes
+  git pull --rebase --autostash   || echo "❌  git pull --rebase --autostash --> failed"  # Rebase local branch on its upstream and autostash uncommitted changes
                                   # Brings the local branch to the remote version.
 else
   echo "No upstream set for '$BRANCH'. Will set upstream on first push."
@@ -173,7 +174,7 @@ if [[ -n "$TAG" ]]; then
         TAG_MESSAGE="Release $TAG"
       fi
     fi
-    git tag -a "$TAG" -m "$TAG_MESSAGE"     # Creats a tag
+    git tag -a "$TAG" -m "$TAG_MESSAGE"     || echo "❌  git tag ---> failed"   # Creats a tag
     echo "Created annotated tag '$TAG'."
   fi
 fi
@@ -184,10 +185,10 @@ fi
 ################################################################################################
 set +e      # Turn off Bash’s “exit on error” mode
 if git rev-parse --abbrev-ref --symbolic-full-name "@{u}" >/dev/null 2>&1; then
-  git push      # Uploads the Lcal Repository content to Remote Repository (GitHub)
+  git push      || echo "❌  git push --> failed"   # Uploads the Lcal Repository content to Remote Repository (GitHub)
   PUSH_RC=$?
 else
-  git push -u "$REMOTE" "$BRANCH"
+  git push -u "$REMOTE" "$BRANCH"   || echo "❌  git push -u --> failed" 
   PUSH_RC=$?
 fi
 set -e      # Turn on Bash’s “exit on error” mode
@@ -201,7 +202,7 @@ if [[ $PUSH_RC -ne 0 ]]; then
   # Fallback: push the same commit to a new feature branch so you can open a PR
   FB="feature/auto-$(date +%Y%m%d%H%M%S)"     # timestamped to avoid collisions
   echo "Creating and pushing fallback branch: $FB"
-  git branch "$FB"
+  git branch "$FB"    || echo "❌  git branch --> failed" 
   git push -u "$REMOTE" "$FB" || {
     echo "❌ Fallback push also failed. Check your permissions or authentication (PAT/SSH)."
     exit 1

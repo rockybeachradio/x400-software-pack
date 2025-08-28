@@ -14,6 +14,7 @@ set -euo pipefail
 #   source read_write_config_files.sh      # Include shell script with the read and write function for configuratin files.
 #
 ################################################################################################
+echo "This is $(basename "$0")"
 
 ################################################################################################
 # How to call
@@ -339,7 +340,7 @@ write_var_to_file() {
             return (line ~ ("^" var "=\\("));
         }
 
-        {
+       {
             if (in_block == 0) {
                 if (starts_var($0)) {
                     # If this is an array block, consume until the closing ')'
