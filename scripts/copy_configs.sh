@@ -131,8 +131,6 @@ if [[ $INSTALL == "true" ]]; then
     echo "ℹ️  Copy/override config files which were customised by users ..."
     #cp "$config_source""/klipper-backup env.conf" "$HOME/klipper-backup/.env"   || echo "❌  Faild copying KlipperBackup env.cfg"  # --> Initial copy in install_software.sh. And here in "Klipper-Backup"
     cp "$config_source""/canuid.cfg" "$config_destination/"   || echo "❌  Faild copying canuid.cfg"
-else 
-  echo "Update mode. no override."
 fi
 
 
@@ -209,6 +207,10 @@ cd "$klipperbackup_dir"
   read_var_from_file "$klipperbackup_file" github_username
   read_var_from_file "$klipperbackup_file" github_repository
   read_var_from_file "$klipperbackup_file" github_token
+
+echo "$github_username"
+echo "$github_repository"
+echo "$github_token"
 
 cp "$config_source""/klipper-backup env.conf" "$klipperbackup_file"   || echo "❌  Faild copying KlipperBackup env.cfg"
 
