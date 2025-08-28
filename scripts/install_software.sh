@@ -202,7 +202,7 @@ read -p "❓ GitHub user name: " github_username
 read -p "❓ GitHub repo name (eg. x400-backup): " github_repository
 read -p "❓ GitHub repo ssh token (eg. ssh-ed25519): " github_token
 
-# Write to klipper-backup/.env
+# Write to klipper-backup/.env      # Writes in the .env file which is created during the klipper-backup/install.sh. Will later be replaced by the x400-software-pack version.
 write_var_to_file "$klipperbackup_file" github_username
 write_var_to_file "$klipperbackup_file" github_repository
 write_var_to_file "$klipperbackup_file" github_token
@@ -275,7 +275,7 @@ mkdir -p "$local_backup_folder_zip"    || echo "✅  zip folder already exists"
 read -p "❓ Do you want to setup GitHub as backup destination? [Y/n]: " answer
 answer=${answer:-N}     # default to "N" if empty
 if [[ "$answer" =~ ^[Yy]$ ]]; then
-    initate_github "local_backup_folder_files"        || echo "❌ GitHub setup failed"      # in git_initiate.sh
+    initiate_github "$local_backup_folder_files"        || echo "❌ GitHub setup failed"      # in git_initiate.sh
     echo "Setting variable github_repo_name=true in /x400-software-pack/scripts/backup.sh ..."
     if cd $folder_of_script; then
         sed -i 's/github_backup=false/github_backup=true/g' ./backup.sh   || echo "❌ Failed setting variable"    # Set the variable github_backup=true in /x400-software-pack/scripts/backup.sh
