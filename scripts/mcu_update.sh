@@ -68,9 +68,9 @@ while getopts "m:c:d:u:h" opt; do
       echo "  -d   Flash device (e.g. ttyACM0, 2e8a:0003)"
       echo " "
       echo "Examples:"
-      echo "./mcu_update.sh -m usb -c stm32f407_klipper_firmware.config -u e718d4677a2f -d /dev/ttyN0"
-      echo "./mcu_update.sh -m can -c rp2040_klipper_firmware.config -u 972e3df7498c"
-      echo "./mcu_update.sh -m linux -c ~/klipper/linux_mcu_klipper_firmware.config"
+      echo "./mcu_update.sh -m usb -c ~/x400-software-pack/mcu-firmware-configurations/stm32f407_klipper_firmware.config -u e718d4677a2f -d /dev/ttyN0"
+      echo "./mcu_update.sh -m can -c ~/x400-software-pack/mcu-firmware-configurations/rp2040_klipper_firmware.config -u 972e3df7498c"
+      echo "./mcu_update.sh -m linux -c ~/x400-software-pack/mcu-firmware-configurations/linux_mcu_klipper_firmware.config"
       echo "./mcu_update.sh -m dfu -c configuration_file.config - d 0x0800000"
       exit 0       # Exit the Script, when -h was called
       ;;
@@ -310,18 +310,18 @@ if [[ "$MODE" = "linux" ]]; then
   cd ~/klipper   || error_exit "❌  lipper folder not found." 
 
   echo "Stop Klipper.service"
-  stop_klipper
+  stop_klipper || echo "❌  Stopping stop_klipper failed."
 
-  echo "ℹ️  Stopping linux_mcu ..:"
-  sudo systemctl stop linux_mcu || echo "❌  Stopping failed."
+  echo "ℹ️  Stopping klipper-mcu ...:"
+  sudo systemctl stop klipper-mcu || echo "❌  Stopping linux_mcu failed."
 
   echo "ℹ️  Copy klipper-mcu.service ..."
-  sudo cp ~/klipper/scripts/klipper-mcu.service /etc/systemd/system/ || error_exit "❌  Copying Klipper-mcu.servicefailed."
+  sudo cp ~/klipper/scripts/klipper-mcu.service /etc/systemd/system/ || error_exit "❌  Copying Klipper-mcu.service failed."
 
   echo "ℹ️  Enable klipper-mcu service ..."
-  sudo systemctl enable klipper-mcu.service || error_exit "❌  Enabling Klipper-mcu-.service failed."
+  sudo systemctl enable klipper-mcu.service || error_exit "❌  Enabling Klipper-mcu.service failed."
 
-  echo "ℹ️  Grant user acces to tty"
+  echo "ℹ️  Grant current user acces to tty"
   sudo usermod -a -G tty $USER || error_exit "❌  Granting access failed."
 
   echo "ℹ️  Compiling and flashing of the firmware ..."
@@ -329,7 +329,7 @@ if [[ "$MODE" = "linux" ]]; then
   make flash -j"$(nproc)" KCONFIG_CONFIG="$CONFIG_FILE" || error_exit "❌  Building firmware failed."
 
   echo "ℹ️  Starting klipper_mcu and klipper..."
-  sudo systemctl start klipper-mcu klipper || error_exit "❌  Starting failed."
+  sudo systemctl start klipper-mcu klipper || error_exit "❌  Starting klipper-mcu failed."
 
   echo "Start Klipper.service"
   start_klipper

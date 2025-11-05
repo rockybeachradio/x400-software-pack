@@ -124,8 +124,8 @@ echo " "
 # Install fixes
 ################################################################################################
 ###################################################
-read -p "❓Install fix: python3-serial? [Y/n]: " answer
-answer=${answer:-Y}     # default to "N" if empty
+read -p "❓Install fix: python3-serial? [y/N]: " answer
+answer=${answer:-N}     # default to "N" if empty
 if [[ "$answer" =~ ^[Yy]$ ]]; then
     echo "ℹ️  Install fix for Python 3 ..."
     cd "$HOME"
@@ -136,8 +136,8 @@ fi
 echo " "
 
 ###################################################
-read -p "❓Install fix: dfu utility? [Y/n]: " answer
-answer=${answer:-Y}     # default to "N" if empty
+read -p "❓Install fix: dfu utility? [y/N]: " answer
+answer=${answer:-N}     # default to "N" if empty
 if [[ "$answer" =~ ^[Yy]$ ]]; then
     echo "ℹ️  Install fix for DFU utility ..."
     cd /etc/udev/rules.d
