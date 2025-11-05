@@ -190,7 +190,7 @@ echo " "
 # Klipper Extensions
 ################################################################################################
 echo "ℹ️  Add Klipper extensions (eg. at24c_eeprrom.py)..."
-cp "$source_base""/eryone-klipper-klippy-extras/"* "$HOME""/klipper/klippy/extras/" || echo "❌  Faild copying Klipper extensions."
+cp "$source_base""/klipper-klippy-extras/"* "$HOME""/klipper/klippy/extras/" || echo "❌  Faild copying Klipper extensions."
 echo " "
 
 

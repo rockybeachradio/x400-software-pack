@@ -343,7 +343,9 @@ if [[ "$MODE" = "linux" ]]; then
   start_klipper
   sleep 1
 
-  echo "ℹ️  Please reboot the system"
+  echo " "
+  echo "ℹ️ Further information regarding the Klipper/Linux MCU: https://www.klipper3d.org/RPi_microcontroller.html"
+  echo " "
 fi
 
 ################################################################
