@@ -1,0 +1,2 @@
+mainsail.cfg -> /home/andreas/mainsail-config/mainsail.cfg
+/home/andreas/mainsail-config/mainsail.cfg -> cleint.cfg
