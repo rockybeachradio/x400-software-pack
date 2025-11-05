@@ -191,7 +191,7 @@ EOF
 
     # Point origin to SSH using the host alias
     git remote remove origin 2>/dev/null || true
-    git remote add origin "git@${github_ssh_host_name}:${github_user_name}/${github_repo_name}.git"    # use github.com-x400 (from your ~/.ssh/config). USERNAME/x400-backup.git is your repo path.
+       git config user.name  "${github_user_name}""git@${github_ssh_host_name}:${github_user_name}/${github_repo_name}.git"    # use github.com-x400 (from your ~/.ssh/config). USERNAME/x400-backup.git is your repo path.
 
     # set identity for this repo (no --global needed)
     git config user.name  "${github_user_name}"

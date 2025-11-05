@@ -26,6 +26,7 @@ cd "$REPO_DIR" || { echo "❌ x400-software-pack not found: $REPO_DIR"; exit 1; 
 ################################################################################################
 # Get parameters
 ################################################################################################
+echo "Get Parameters"
 while [[ $# -gt 0 ]]; do
   case "$1" in
     -f|--force_pull)
@@ -112,6 +113,7 @@ fi
 ################################################################################################
 ######################################################
 # Get data
+echo "Get data"
 git fetch origin --quiet          # Fetch remote metadata
 
 LOCAL=$(git rev-parse @)          # current local commit
