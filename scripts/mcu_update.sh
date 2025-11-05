@@ -253,7 +253,7 @@ if [[ "$MODE" = "usb" ]]; then
   make -j"$(nproc)" KCONFIG_CONFIG="$CONFIG_FILE" flash FLASH_DEVICE="$FLASH_DEVICE" || error_exit "❌  Failed: Building or flashing firmware"
   # nproc is a linux command line utility that prints the number of processing units (CPU cores)
 
-  echo "Start Klipper.service"
+  echo "ℹ️  Start Klipper.service ..."
   start_klipper  || error_exit "❌  Starting klipper.service failed."
   sleep 1
 
@@ -303,7 +303,7 @@ if [[ "$MODE" = "can" ]]; then
   echo "ℹ️  Check (after flashing)"
   $HOME/klippy-env/bin/python $HOME/klipper/scripts/canbus_query.py can0
 
-  echo "Start Klipper.service"
+  echo "ℹ️  Start Klipper.service ..."
   start_klipper  || error_exit "❌  Starting klipper.service failed."
   sleep 1
 fi
@@ -338,7 +338,7 @@ if [[ "$MODE" = "linux" ]]; then
   sudo systemctl start klipper-mcu klipper || error_exit "❌  Starting klipper-mcu failed."
   sleep 1
 
-  echo "Start Klipper service"
+  echo "ℹ️  Start Klipper service ..."
   start_klipper || error_exit "❌  Starting klipper.service failed."
   sleep 1
 
@@ -368,7 +368,7 @@ if [[ "$MODE" = "dfu" ]]; then
   echo "ℹ️  Reset Controller ..."
   echo "ℹ️  ... press the RESET button."
 
-  echo "Start Klipper.service"
+  echo "ℹ️  Start Klipper.service ..."
   start_klipper  || error_exit "❌  Starting klipper.service failed."
   sleep 1
 fi
