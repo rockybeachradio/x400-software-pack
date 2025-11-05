@@ -185,24 +185,63 @@ echo " "
 
 
 ################################################################################################
-# Rotation: Display for terminal
+# Rotate Display
 ################################################################################################
+# source: https://klipperscreen.readthedocs.io/en/latest/Troubleshooting/Rotation/
+#         https://klipperscreen.readthedocs.io/en/latest/Troubleshooting/Touch_issues/?h=cali#touch-rotation-and-matrix
+#         https://klipperscreen.readthedocs.io/en/latest/Troubleshooting/Touch_issues/?h=cali#save-touch-calibration
+
 ################################################################################################
-read -p "❓Rotate Display for Console (RPIos)? [Y/n]: " answer
+read -p "❓ Rotate Display (Raspberry 5)? [Y/n]: " answer
 answer=${answer:-Y}     # default to "Y" if empty
 if [[ "$answer" =~ ^[Yy]$ ]]; then
-    echo "ℹ️  Display invertion for terminal  ..."
-    # Write only if line not existing:
-#    grep -Fx "extraargs=fbcon=rotate:2" /boot/armbianEnv.txt || { echo "extraargs=fbcon=rotate:2" | sudo tee -a /boot/armbianEnv.txt || echo "❌ Failed: writing to armbianEnv.txt"; }
-# sudo nano /boot/firmware/cmdline.txt  -->  video=HDMI-1:800x480@60,rotate=180
-# sudo reboot  # needed to take effect
+    echo "ℹ️  Display invertion for RPI5  ..."
+
+    ### NOT working:
+    #sudo nano /boot/firmware/config.txt    --> dtoverlay=vc4-kms-v3d,rotate=180
+    #sudo nano /boot/firmware/config.txt    --> display_rotate=180
+    #sudo nano /boot/firmware/config.txt    --> display_rotate=2
+    #sudo nano /boot/firmware/cmdline.txt  --> video=HDMI-1:800x480@60,rotate=180
+    #$ sudo nano /boot/firmware/config.txt --> video=HDMI-A-1:800x480M@60,rotate=180
+
+    ### X11 only
+    #$ DISPLAY=:0 xrandr --output HDMI-1 --rotate inverted
+    #$ DISPLAY=:0 xrandr
+
+    CMDLINE_FILE="/boot/firmware/cmdline.txt"
+    ROTATION_PARAM="video=HDMI-A-1:800x480@60D,rotate=180"
+
+    CURRENT_FILE_CONTENT=$(cat "$CMDLINE_FILE")
+
+    # Check if any video= for HDMI-A-1 or HDMI-1 already exists
+        #if echo "$CURRENT_FILE_CONTENT" | grep -qE "video=HDMI-(A-1|1):[^ ]*rotate=" || \
+        #echo "$CURRENT_FILE_CONTENT" | grep -qE "video=HDMI-(A-1|1):"; then
+    if echo "$CURRENT_FILE_CONTENT" | grep -qE 'video=(HDMI-A-1|HDMI-1):'; then
+        # Check if the exact rotation param already exists
+        if echo "$CURRENT_FILE_CONTENT" | grep -qF "$ROTATION_PARAM"; then
+            echo "ℹ️ Rotation parameter already present. Nothing to do."
+        else
+            echo "❌ A 'video=' parameter for HDMI-A-1 or HDMI-1 already exists:"
+            echo "   $(echo "$CURRENT_FILE_CONTENT" | grep -oE 'video=HDMI-(A-1|1):[^ ]*')"
+            echo "ℹ️ No changes made. Edit cmdline.txt manually if needed."
+        fi
+    else
+        # If no HDMI parameter exists
+        NEW_CMDLINE=$(echo "$CURRENT_FILE_CONTENT" | sed -E 's/([^\s]+)\s*$/\1 '"$ROTATION_PARAM"'/')
+        echo "$NEW_CMDLINE" > "$CMDLINE_FILE"
+
+        echo "ℹ️ Added rotation parameter to cmdline.txt."
+        echo "Reboot is required that the change take effect"
+    fi
+
 else
     echo "... no rotation."
 fi
 echo " "
 
+
 ################################################################################################
-read -p "❓Rotate Display for Console (Armbian OS)? [y/N]: " answer
+read -p "❓ Rotate display for Console (Armbian OS)? [y/N]: " answer
 answer=${answer:-N}     # default to "N" if empty
 if [[ "$answer" =~ ^[Yy]$ ]]; then
     echo "ℹ️  Display invertion for terminal  ..."
@@ -216,37 +255,16 @@ echo " "
 
 
 ################################################################################################
-# Rotation: Display and touch for X11 (KlipperScreen)
-################################################################################################
-# source: https://klipperscreen.readthedocs.io/en/latest/Troubleshooting/Rotation/
-#         https://klipperscreen.readthedocs.io/en/latest/Troubleshooting/Touch_issues/?h=cali#touch-rotation-and-matrix
-#         https://klipperscreen.readthedocs.io/en/latest/Troubleshooting/Touch_issues/?h=cali#save-touch-calibration
-read -p "❓Install display & touch rotation for X11 (KlipperScreen (RPIos)? [Y/n]: " answer
-answer=${answer:-Y}     # default to "Y" if empty
+read -p "❓ Rotate display for X11 (KlipperScreen) (RPIos)? [y/N]: " answer
+answer=${answer:-N}     # default to "Y" if empty
 if [[ "$answer" =~ ^[Yy]$ ]]; then
-    ###################################################
     echo "ℹ️  Display invertion for X11 (KlipperScreen) ..."
     DISPLAY=:0 xrandr || echo "❌  Faild: DISPLAY=:0 xrandr"
     echo " "
 
-#    echo "Make X11 use the DRM/KMS -modesetting- driver ..."
-#    sudo apt purge xserver-xorg-video-fbdev -y || echo "❌  Faild: apt purge xserver-xorg-video-fbdev"      # Make X pick modesetting
-#    sudo apt purge xserver-xorg-video-vesa -y  || echo "❌  Faild: apt purge xserver-xorg-video-vesa"       # Make X pick modesetting
-
-#    sudo mkdir -p /usr/share/X11/xorg.conf.d  || echo "❌  Faild: mkdir /usr/share/X11/xorg.conf.d"
-#    sudo cp "$source_base""/display-orientation/20-modesetting.conf" "/usr/share/X11/xorg.conf.d/20-modesetting.conf" || echo "❌  Faild copying 20-modesetting.conf"
-#    sudo apt install -y libgl1-mesa-dri libglx-mesa0 libegl1 libgbm1 || echo "❌  Faild installing: libgl1-mesa-dri libglx-mesa0 libegl1 libgbm1 "       # Ensures that Mesa/GBM is installed
-#    echo " "
-
     echo "Invert display (rotate 180°) ..."
     sudo cp "$source_base""/display-orientation/90-monitor.conf" "/usr/share/X11/xorg.conf.d/90-monitor.conf" || echo "❌  Faild copying 90-monitor.conf"
     sudo service KlipperScreen restart  || echo "❌  Faild retarting KlipperScreen"
-    echo "ℹ️  ... done"
-    echo " "
-
-    ###################################################
-    echo "ℹ️  Touch rotation by 180° ..."
-    sudo cp "$source_base""/display-orientation/51-touchscreen.rules.conf" "/etc/udev/rules.d/51-touchscreen.rules" || echo "❌  Faild 51-touchscreen.rules"
     echo "ℹ️  ... done"
     echo " "
 
@@ -257,10 +275,9 @@ fi
 echo " "
 
 ################################################################################################
-read -p "❓Install display & touch rotation for X11 (KlipperScreen (Armbian OS)? [y/N]: " answer
+read -p "❓ Rotate Display for X11 (KlipperScreen) (Armbian OS)? [y/N]: " answer
 answer=${answer:-N}     # default to "N" if empty
 if [[ "$answer" =~ ^[Yy]$ ]]; then
-    ###################################################
     echo "ℹ️  Display invertion for X11 (KlipperScreen) ..."
     DISPLAY=:0 xrandr || echo "❌  Faild: DISPLAY=:0 xrandr"
     echo " "
@@ -280,7 +297,23 @@ if [[ "$answer" =~ ^[Yy]$ ]]; then
     echo "ℹ️  ... done"
     echo " "
 
-    ###################################################
+else
+    echo "... no installation."
+    echo " "
+fi
+echo " "
+
+
+################################################################################################
+# Touch rotation
+################################################################################################
+read -p "❓ Touch invertion (RPIos)? [Y/n]: " answer
+answer=${answer:-Y}     # default to "Y" if empty
+if [[ "$answer" =~ ^[Yy]$ ]]; then
+    echo "ℹ️  Touch invertion ..."
+    DISPLAY=:0 xrandr || echo "❌  Faild: DISPLAY=:0 xrandr"
+    echo " "
+
     echo "ℹ️  Touch rotation by 180° ..."
     sudo cp "$source_base""/display-orientation/51-touchscreen.rules.conf" "/etc/udev/rules.d/51-touchscreen.rules" || echo "❌  Faild 51-touchscreen.rules"
     echo "ℹ️  ... done"
