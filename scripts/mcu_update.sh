@@ -319,6 +319,7 @@ if [[ "$MODE" = "linux" ]]; then
 
   echo "ℹ️  Stopping klipper-mcu ...:"
   sudo systemctl stop klipper-mcu || echo "❌  Stopping linux_mcu failed."
+  sleep 1
 
   echo "ℹ️  Copy klipper-mcu.service ..."
   sudo cp ~/klipper/scripts/klipper-mcu.service /etc/systemd/system/ || error_exit "❌  Copying Klipper-mcu.service failed."
@@ -335,6 +336,7 @@ if [[ "$MODE" = "linux" ]]; then
 
   echo "ℹ️  Starting klipper_mcu and klipper..."
   sudo systemctl start klipper-mcu klipper || error_exit "❌  Starting klipper-mcu failed."
+  sleep 1
 
   echo "Start Klipper.service"
   start_klipper
