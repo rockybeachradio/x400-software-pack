@@ -338,7 +338,8 @@ if [[ "$MODE" = "linux" ]]; then
   sudo systemctl start klipper-mcu klipper || error_exit "❌  Starting klipper-mcu failed."
   sleep 1
 
-  echo "ℹ️  Start Klipper service ..."
+  echo "ℹ️  Start Klipper.service ..."
+  echo "xxx"
   start_klipper || error_exit "❌  Starting klipper.service failed."
   sleep 1
 
