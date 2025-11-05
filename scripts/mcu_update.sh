@@ -227,6 +227,7 @@ if [[ "$MODE" = "usb" ]]; then
  
   echo "Stop Klipper.service"
   stop_klipper
+  sleep 1
 
   echo "ℹ️  Start Katapult bootloader on controller ..."
   if [ ! -e "$FLASH_DEVICE" ]; then
@@ -254,6 +255,7 @@ if [[ "$MODE" = "usb" ]]; then
 
   echo "Start Klipper.service"
   start_klipper
+  sleep 1
 
 fi
 
@@ -275,6 +277,7 @@ if [[ "$MODE" = "can" ]]; then
 
   echo "Stop Klipper.service"
   stop_klipper
+  sleep 1
 
   echo "ℹ️  Check (after stop_klipper): Is there a device? If not, dont worry!"
   $HOME/klippy-env/bin/python $HOME/klipper/scripts/canbus_query.py can0
@@ -302,6 +305,7 @@ if [[ "$MODE" = "can" ]]; then
 
   echo "Start Klipper.service"
   start_klipper
+  sleep 1
 fi
 
 ################################################################
@@ -311,6 +315,7 @@ if [[ "$MODE" = "linux" ]]; then
 
   echo "Stop Klipper.service"
   stop_klipper || echo "❌  Stopping stop_klipper failed."
+  sleep 1
 
   echo "ℹ️  Stopping klipper-mcu ...:"
   sudo systemctl stop klipper-mcu || echo "❌  Stopping linux_mcu failed."
@@ -333,6 +338,7 @@ if [[ "$MODE" = "linux" ]]; then
 
   echo "Start Klipper.service"
   start_klipper
+  sleep 1
 
   echo "ℹ️  Please reboot the system"
 fi
@@ -348,6 +354,7 @@ if [[ "$MODE" = "dfu" ]]; then
 
   echo "Stop Klipper.service"
   stop_klipper
+  sleep 1
 
   echo "ℹ️  Activate DFU mode ..."
   echo "ℹ️  ... MCU must be in DFU mode. Manual tricker via BOOT & RESET button. If not flashing will fail."
@@ -361,6 +368,7 @@ if [[ "$MODE" = "dfu" ]]; then
 
   echo "Start Klipper.service"
   start_klipper
+  sleep 1
 fi
 
 
