@@ -254,7 +254,7 @@ if [[ "$MODE" = "usb" ]]; then
   # nproc is a linux command line utility that prints the number of processing units (CPU cores)
 
   echo "Start Klipper.service"
-  start_klipper
+  start_klipper  || error_exit "❌  Starting klipper.service failed."
   sleep 1
 
 fi
@@ -304,7 +304,7 @@ if [[ "$MODE" = "can" ]]; then
   $HOME/klippy-env/bin/python $HOME/klipper/scripts/canbus_query.py can0
 
   echo "Start Klipper.service"
-  start_klipper
+  start_klipper  || error_exit "❌  Starting klipper.service failed."
   sleep 1
 fi
 
@@ -338,8 +338,8 @@ if [[ "$MODE" = "linux" ]]; then
   sudo systemctl start klipper-mcu klipper || error_exit "❌  Starting klipper-mcu failed."
   sleep 1
 
-  echo "Start Klipper.service"
-  start_klipper
+  echo "Start Klipper service"
+  start_klipper || error_exit "❌  Starting klipper.service failed."
   sleep 1
 
   echo "ℹ️  Please reboot the system"
@@ -369,7 +369,7 @@ if [[ "$MODE" = "dfu" ]]; then
   echo "ℹ️  ... press the RESET button."
 
   echo "Start Klipper.service"
-  start_klipper
+  start_klipper  || error_exit "❌  Starting klipper.service failed."
   sleep 1
 fi
 
