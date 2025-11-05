@@ -157,6 +157,7 @@ stop_klipper() {
 } 
 
 restart_klipper() {
+  echo "Execution script exit routine: restart_klipper"
   echo "ℹ️  Restart $SERVICE ..."
   sudo systemctl restart "$SERVICE" || echo "❌  Failed to restart $SERVICE."
   # Funktion restart_klipper - When called: Starts the Klipper Sevice.
@@ -254,7 +255,7 @@ if [[ "$MODE" = "usb" ]]; then
   # nproc is a linux command line utility that prints the number of processing units (CPU cores)
 
   echo "ℹ️  Start Klipper.service ..."
-  start_klipper  || error_exit "❌  Starting klipper.service failed."
+  start_klipper
   sleep 1
 
 fi
@@ -304,7 +305,7 @@ if [[ "$MODE" = "can" ]]; then
   $HOME/klippy-env/bin/python $HOME/klipper/scripts/canbus_query.py can0
 
   echo "ℹ️  Start Klipper.service ..."
-  start_klipper  || error_exit "❌  Starting klipper.service failed."
+  start_klipper
   sleep 1
 fi
 
@@ -314,7 +315,7 @@ if [[ "$MODE" = "linux" ]]; then
   cd ~/klipper   || error_exit "❌  lipper folder not found." 
 
   echo "Stop Klipper.service"
-  stop_klipper || echo "❌  Stopping stop_klipper failed."
+  stop_klipper
   sleep 1
 
   echo "ℹ️  Stopping klipper-mcu ...:"
@@ -339,8 +340,7 @@ if [[ "$MODE" = "linux" ]]; then
   sleep 1
 
   echo "ℹ️  Start Klipper.service ..."
-  echo "xxx"
-  start_klipper || error_exit "❌  Starting klipper.service failed."
+  start_klipper
   sleep 1
 
   echo "ℹ️  Please reboot the system"
@@ -370,7 +370,7 @@ if [[ "$MODE" = "dfu" ]]; then
   echo "ℹ️  ... press the RESET button."
 
   echo "ℹ️  Start Klipper.service ..."
-  start_klipper  || error_exit "❌  Starting klipper.service failed."
+  start_klipper
   sleep 1
 fi
 
