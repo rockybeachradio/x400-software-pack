@@ -13,14 +13,15 @@ from . import bus
 ### How to test ###
 #
 # Test Commands:
-#   M406 D=1234        ; write 123.4 mm
-#   M408 A=0           ; read back
-#   M407               ; sync + status
+#   M406 D1234   ; write 123.4 mm
+#   M408 A0      ; read back
+#   M407         ; sync + status
 #
 # Expected Mainsail output:
 #   EEPROM: 1234 → 123.400 mm
 #   Saved: 120.5
-#   → Updated to 123.4
+# 
+# Do it again and change M406 command to updated to 123.5
 
 
 ### ToDo ###
