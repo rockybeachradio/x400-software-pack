@@ -49,7 +49,7 @@ class at24cxx:  # Constructor of your at24cxx class — the first method that ru
         # Define M commands
         self.gcode.register_command('M406', self.cmd_write)                         # Register a custom G-code command M406o that when Klipper receives M406 in a G-code stream (from slicer, Mainsail, macro, etc.), it automatically calls your method self.cmd_write.
                                                                                     # M406: Writes Z to EEPROM
-        self.gcode.register_command('M407', self.cmd_read_wirte_variable)           # M407: Read + Compare + Sync with save_variables
+        self.gcode.register_command('M407', self.cmd_read_write_variable)           # M407: Read + Compare + Sync with save_variables
         self.gcode.register_command('M408', self.cmd_read)                          # Added: M408 is a debug command. The EEPROM can be read manually at any time, without relying on M407 or macros.
                                                                                     #   M406 D=1234 - Write 123.4 mm
                                                                                     #   M408 A=0    - Read address 0 --> should show [210, 4] or 1234
@@ -135,7 +135,7 @@ class at24cxx:  # Constructor of your at24cxx class — the first method that ru
         gcmd.respond_info(f"EEPROM[0x00] <- {val} → {val/10.0:.2f} mm")     # Added for debugging
 
     ##############################################################
-    def cmd_read_wirte_variable_by_eryone(self, gcmd):     # eryone version
+    def cmd_read_write_variable_by_eryone(self, gcmd):     # eryone version
         address = gcmd.get('A')                         # ignored, always reads addr 0
         raw = self.read_register(0x00, 2)               # Read 2 bytes from EEPROM
         eeprom_z = raw[0]| (raw[1]<<8)                  # Combine into 16-bit int
