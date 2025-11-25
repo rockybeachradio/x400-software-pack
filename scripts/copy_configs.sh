@@ -162,11 +162,6 @@ ask_yn() {
 #read -p "❓ This script will evetnually override existing files and folders. Changes made in those files will be removed. Continue? [Y/n]: " answer
 #answer=${answer:-Y}     # default to "N" if empty
 answer=$(ask_yn "This script will eventually override existing files and folders. Continue?" true)
-
-echo "answer: $answer"
-
-
-
 if [[ "$answer" =~ ^[Yy]$ ]]; then
     echo "Okay, lets start ..."
 else
@@ -481,8 +476,9 @@ echo " "
 if [[ $INSTALL == "true" ]]; then
   answer="N"
 else
-  read -p "❓ Restart Klipper? [Y/n]: " answer
-  answer=${answer:-Y}     # default to "N" if empty
+  #read -p "❓ Restart Klipper? [Y/n]: " answer
+  #answer=${answer:-Y}     # default to "N" if empty
+  answer=$(ask_yn "Restart Klipper?" true)
 fi
 
 if [[ "$answer" =~ ^[Yy]$ ]]; then
