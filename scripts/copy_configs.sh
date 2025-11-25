@@ -158,7 +158,6 @@ ask_yn() {
     fi
 
     fi
-    echo "ask_yn() answer: $answer"
 }
 
 
