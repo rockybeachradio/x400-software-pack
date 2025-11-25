@@ -155,7 +155,7 @@ ask_yn() {
         read -p "$prompt [y/N]: " answer
         answer=${answer:-N}
     fi
-    echo "$answer"
+    echo "ask_yn() answer: $answer"
 }
 
 
@@ -166,8 +166,7 @@ ask_yn() {
 #answer=${answer:-Y}     # default to "N" if empty
 answer=$(ask_yn "This script will eventually override existing files and folders. Continue?" true)
 
-echo "eee"
-echo "answer: $answer"
+echo "double_check answer: $answer"
 
 if [[ "$answer" =~ ^[Yy]$ ]]; then
     echo "Okay, lets start ..."
