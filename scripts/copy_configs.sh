@@ -56,32 +56,113 @@ source "$SCRIPT_DIR/read_write_config_files.sh"      # Include shell script with
 source "$SCRIPT_DIR/git_initiate.sh"
 
 
+
+
+
+
+################################################################################################
+# === AUTO-MODE DETECTION ===
+################################################################################################
+# If one of these environment variables is set → we are running from Moonraker update_manager
+if [[ -n "${MOONRAKER_UPDATE:-}" ]] || [[ -n "${AUTO_YES:-}" ]] || [[ "${1:-}" == "--auto" ]]; then
+    AUTO_MODE=1
+    echo "Running in AUTO mode (called from Moonraker update_manager)"
+else
+    AUTO_MODE=0
+    echo "Running in INTERACTIVE mode"
+fi
+
+
 ################################################################################################
 # Get parameters
 ################################################################################################
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    -i|--behavior)
+    -i|--install)
       INSTALL=true; shift ;;
+    --auto)
+      AUTO_MODE=1; shift ;;   # internal use by /x400-software-pack/update.py
     -h|--help)
-      echo "Usage: $0 -i"
-      echo "i = install - Will override some files with customer settings. update preseveres them."
-      exit 2 ;;
+      echo "Usage: $0 [-i|--install]"
+      echo "i/install - Will override some files with customer settings. update preseveres them."
+      exit 0 ;;
     *)
       echo "Unknown option: $1" >&2
-      echo "Use --help for usage."; exit 2 ;;
+      echo "Use --help for usage."
+      exit 1 ;;
   esac
 done
 echo " "
 
 
+# Parse parameters
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -i|--install) INSTALL=true; shift ;;
+        --auto)       AUTO_MODE=1; shift ;;   # internal use by update.py
+        -h|--help)    echo "Usage: $0 [-i|--install]"; exit 0 ;;
+        *)            echo "Unknown option: $1"; exit 1 ;;
+    esac
+done
+
+
+
+
+################################################################################################
+# Ask user dialog
+################################################################################################
+# Helper: Ask question only if not in auto mode
+ask() {
+    local prompt="$1"
+    local default="$2"
+    local answer
+
+    if [[ $AUTO_MODE -eq 1 ]]; then
+        echo "$prompt [auto: $default]"
+        echo "$default"
+        return
+    fi
+
+    read -p "$prompt [$default]: " answer
+    answer=${answer:-$default}
+    echo "$answer"
+}
+
+# Helper: yes/no question with default Y or N
+ask_yn() {
+    local prompt="$1"
+    local default_yes="$2"  # true = default Y, false = default N
+
+    if [[ $AUTO_MODE -eq 1 ]]; then
+        if [[ $default_yes == true ]]; then
+            echo "$prompt [auto: Y]"
+            echo "Y"
+        else
+            echo "$prompt [auto: N]"
+            echo "N"
+        fi
+        return
+    fi
+
+    if [[ $default_yes == true ]]; then
+        read -p "$prompt [Y/n]: " answer
+        answer=${answer:-Y}
+    else
+        read -p "$prompt [y/N]: " answer
+        answer=${answer:-N}
+    fi
+    echo "$answer"
+}
+
+
 ################################################################################################
 # Dobule check that all the preparation is done.
 ################################################################################################
-read -p "❓ This script will evetnually override existing files and folders. Changes made in those files will be removed. Contiue? [Y/n]: " answer
-answer=${answer:-Y}     # default to "N" if empty
+#read -p "❓ This script will evetnually override existing files and folders. Changes made in those files will be removed. Continue? [Y/n]: " answer
+#answer=${answer:-Y}     # default to "N" if empty
+answer=$(ask_yn "This script will eventually override existing files and folders. Continue? [Y/n]" true)
 if [[ "$answer" =~ ^[Yy]$ ]]; then
-    echo "Okay, letzt start ..."
+    echo "Okay, lets start ..."
 else
     echo "See you later."
     exit 0;
@@ -207,8 +288,9 @@ echo " "
 ################################################################################################
 # KlipperScreen panels
 ################################################################################################
-read -p "❓Install KlipperScreen panels? [y/N]: " answer
-answer=${answer:-N}     # default to "N" if empty
+#read -p "❓Install KlipperScreen panels? [y/N]: " answer
+#answer=${answer:-N}     # default to "N" if empty
+answer=$(ask_yn "Install KlipperScreen panels?" false)
 if [[ "$answer" =~ ^[Yy]$ ]]; then
   echo "ℹ️  Add KlipperScreen panels ..."
   cp "$source_base""/eryone-KlipperScreen-panels/"* "$HOME""/KlipperScreen/panels/" || echo "❌  Faild copying Klipper-panels."
@@ -224,8 +306,9 @@ echo " "
 if [[ $INSTALL == "true" ]]; then
   answer="Y"
 else
-  read -p "❓Setup CAN-Bus [y/N]: " answer
-  answer=${answer:-N}     # default to "N" if empty
+  #read -p "❓Setup CAN-Bus [y/N]: " answer
+  #answer=${answer:-N}     # default to "N" if empty
+  answer=$(ask_yn "Setup CAN-Bus? [y/N]" false)
 fi
 
 if [[ "$answer" =~ ^[Yy]$ ]]; then
@@ -255,8 +338,9 @@ echo " "
 ################################################################################################
 # x11vnc
 ################################################################################################
-read -p "Copy x11vnc.service? [y/N]: " answer
-answer=${answer:-N}     # default to "N" if empty
+#read -p "Copy x11vnc.service? [y/N]: " answer
+#answer=${answer:-N}     # default to "N" if empty
+answer=$(ask_yn "Copy x11vnc.service?" false)
 if [[ "$answer" =~ ^[Yy]$ ]]; then
 
   echo "ℹ️  Copy x11cnv.service ..."
@@ -271,8 +355,9 @@ echo " "
 ################################################################################################
 # backup script  - helper
 ################################################################################################
-read -p "Copy Backup Script - helper (git_push.sh)? [y/N]: " answer
-answer=${answer:-N}     # default to "N" if empty
+#read -p "Copy Backup Script - helper (git_push.sh)? [y/N]: " answer
+#answer=${answer:-N}     # default to "N" if empty
+answer=$(ask_yn "Copy Backup Script - helper (git_push.sh)?" false)
 if [[ "$answer" =~ ^[Yy]$ ]]; then
 
   echo "ℹ️  Copy Backup script - helper ..."
@@ -287,42 +372,43 @@ echo " "
 ################################################################################################
 # Klipper-Backup  - Create symlinks, to allow Klipper-Backup to backup files outside of the user`s folder
 ################################################################################################
-read -p "Copy Klipper-Backup files? [y/N]: " answer
-answer=${answer:-N}     # default to "N" if empty
+#read -p "Copy Klipper-Backup files? [y/N]: " answer
+#answer=${answer:-N}     # default to "N" if empty
+answer=$(ask_yn "Copy Klipper-Backup files and create symlinks?" false)
+
 if [[ "$answer" =~ ^[Yy]$ ]]; then
+  TARGET_DIR="klipper-backup"
+  REPO_URL="get.klipperbackup.xyz"
 
-TARGET_DIR="klipper-backup"
-REPO_URL="get.klipperbackup.xyz"
+  klipperbackup_dir="$HOME/$TARGET_DIR"
+  klipperbackup_file="$klipperbackup_dir/.env"
 
-klipperbackup_dir="$HOME/$TARGET_DIR"
-klipperbackup_file="$klipperbackup_dir/.env"
+  echo "ℹ️  Copy Klipper-Backup ..."
+  mkdir -p "$HOME/printer_data/symlinks_for_backup/"   || echo "❌  creating the /printer_data/symlink symlinks_for_backup/"
 
-echo "ℹ️  Copy Klipper-Backup ..."
-mkdir -p "$HOME/printer_data/symlinks_for_backup/"   || echo "❌  creating the /printer_data/symlink symlinks_for_backup/"
+  # Set symlinks to backup files outside of $HOME directory.
+  sudo ln -sfn "/etc/hostname"                     "$HOME/printer_data/symlinks_for_backup/hostname"      || echo "❌  Faild setting symlink /printer_data/symlinks_for_backup/hostname"
+  sudo ln -sfn "/etc/network/interfaces.d/can0"    "$HOME/printer_data/symlinks_for_backup/can0"          || echo "❌  Faild setting symlink /printer_data/symlinks_for_backup/can0"
 
-# Set symlinks to backup files outside of $HOME directory.
-sudo ln -sfn "/etc/hostname"                     "$HOME/printer_data/symlinks_for_backup/hostname"      || echo "❌  Faild setting symlink /printer_data/symlinks_for_backup/hostname"
-sudo ln -sfn "/etc/network/interfaces.d/can0"    "$HOME/printer_data/symlinks_for_backup/can0"          || echo "❌  Faild setting symlink /printer_data/symlinks_for_backup/can0"
+  if [ -d "$klipperbackup_dir" ]; then
+    # Folder exists
+    
+    cd "$klipperbackup_dir"
+      # Read from klipper-backup/.env
+      read_var_from_file "$klipperbackup_file" github_username
+      read_var_from_file "$klipperbackup_file" github_repository
+      read_var_from_file "$klipperbackup_file" github_token
 
-if [ -d "$klipperbackup_dir" ]; then
-  # Folder exists
-  
-  cd "$klipperbackup_dir"
-    # Read from klipper-backup/.env
-    read_var_from_file "$klipperbackup_file" github_username
-    read_var_from_file "$klipperbackup_file" github_repository
-    read_var_from_file "$klipperbackup_file" github_token
+    cp "$config_source""/klipper-backup env.conf" "$klipperbackup_file"   || echo "❌  Faild copying KlipperBackup env.cfg"
 
-  cp "$config_source""/klipper-backup env.conf" "$klipperbackup_file"   || echo "❌  Faild copying KlipperBackup env.cfg"
+    # Write to klipper-backup/.env
+    write_var_to_file "$klipperbackup_file" github_username
+    write_var_to_file "$klipperbackup_file" github_repository
+    write_var_to_file "$klipperbackup_file" github_token
 
-  # Write to klipper-backup/.env
-  write_var_to_file "$klipperbackup_file" github_username
-  write_var_to_file "$klipperbackup_file" github_repository
-  write_var_to_file "$klipperbackup_file" github_token
-
-else 
-  echo "❌  Faild: folder does not exist. KlipperBackup env.cfg could not be copied and customized."
-fi
+  else 
+    echo "❌  Faild: folder does not exist. KlipperBackup env.cfg could not be copied and customized."
+  fi
 
 else
     echo "... no copying."
@@ -334,8 +420,9 @@ echo " "
 # farm3d - Copy and call .install
 #     source: eryone-scripts-all/install_lib.sh
 ################################################################################################
-read -p "❓Install/Update Eryone farm3d - software? [y/N]: " answer
-answer=${answer:-N}     # default to "N" if empty
+#read -p "❓Install/Update Eryone farm3d - software? [y/N]: " answer
+#answer=${answer:-N}     # default to "N" if empty
+answer=$(ask_yn "Install/Update Eryone farm3d software?" false)
 if [[ "$answer" =~ ^[Yy]$ ]]; then
 
   echo "ℹ️  Copy Eryone farm3d ..."

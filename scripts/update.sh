@@ -5,12 +5,13 @@ set -euo pipefail
 # File: update.sh
 # Author: Andreas
 # Date: 20250925
-# Purpose:  Start this to update the x400-software-pack
+# Purpose:  Update the x400-software-pack
 #           Calls the: download_x400-software-pack.sh, copy_config.sh, mcu_update.sh
 #
 ################################################################################################
 echo "This is $(basename "$0")"
 echo " "
+
 
 ################################################################################################
 # Variables
@@ -26,9 +27,14 @@ cd "$REPO_DIR" || { echo "❌ x400-software-pack not found: $REPO_DIR"; exit 1; 
 ################################################################################################
 # Update Linux
 ################################################################################################
-echo "ℹ️  Updating Linux, components and software ..."
-sudo apt update
-sudo apt upgrade
+read -p "❓Update Linux, components and software? [Y/n]: " answer
+answer=${answer:-Y}     # default to "N" if empty
+if [[ "$answer" =~ ^[Yy]$ ]]; then
+    echo "ℹ️  Updating Linux, components and software ..."
+    sudo apt update
+    sudo apt upgrade -y
+    # sudo apt full-upgrade -y      # install new dependencies
+fi
 echo " "
 
 
@@ -48,7 +54,7 @@ echo " "
 
 
 ################################################################################################
-# copy config files
+# Copy config files
 ################################################################################################
 echo "ℹ️  Start configuration copy script (copy_configs.sh) ..."
 cd "$REPO_DIR/scripts/"  || echo "❌  Faild: Go to scripts folder"
