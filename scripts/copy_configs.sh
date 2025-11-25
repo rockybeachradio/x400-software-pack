@@ -169,6 +169,7 @@ ask_yn() {
 answer=$(ask_yn "This script will eventually override existing files and folders. Continue?" true)
 
 echo "whatever"
+echo "$answer"
 
 if [[ "$answer" =~ ^[Yy]$ ]]; then
     echo "Okay, lets start ..."
