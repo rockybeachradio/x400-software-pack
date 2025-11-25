@@ -48,7 +48,7 @@ github_username=""
 github_repository=""
 github_token=""
 
-echo "conf folder: $config_destination"
+echo "conf source: $config_source"
 
 
 ################################################################################################
