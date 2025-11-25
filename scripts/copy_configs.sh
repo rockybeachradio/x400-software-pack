@@ -168,7 +168,7 @@ ask_yn() {
 #answer=${answer:-Y}     # default to "N" if empty
 answer=$(ask_yn "This script will eventually override existing files and folders. Continue?" true)
 
-echo "double_check answer: $answer"
+echo "whatever"
 
 if [[ "$answer" =~ ^[Yy]$ ]]; then
     echo "Okay, lets start ..."
