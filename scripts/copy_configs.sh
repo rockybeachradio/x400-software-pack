@@ -141,14 +141,15 @@ ask_yn() {
         if [[ $default_answer == true ]]; then
             echo "$prompt [auto: Y]"
             echo "Y"
+            return
         else
             echo "$prompt [auto: N]"
             echo "N"
+            return
         fi
-        #return
-    #fi
-    else
-
+    fi
+    
+    # Interactive Mode
     if [[ $default_answer == true ]]; then
         read -p "$prompt [Y/n]: " answer
         answer=${answer:-Y}
@@ -156,8 +157,7 @@ ask_yn() {
         read -p "$prompt [y/N]: " answer
         answer=${answer:-N}
     fi
-
-    fi
+    echo "$answer"
 }
 
 
