@@ -133,15 +133,11 @@ ask_yn() {
     local prompt="$1"
     local default_answer="$2"  # true = Y, false = N
 
-    echo "AUTO_MODE: $AUTO_MODE"
-    echo "prompt: $prompt"
-    echo "default_answer: $default_answer"
-
     if [[ $AUTO_MODE -eq 1 ]]; then
         if [[ $default_answer == true ]]; then
             #echo "$prompt [auto: Y]"
             echo "Y"
-            return 0
+            return Y
         else
             echo "$prompt [auto: N]"
             echo "N"
