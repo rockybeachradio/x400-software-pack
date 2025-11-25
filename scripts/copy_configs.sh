@@ -204,6 +204,7 @@ files=(
     macros_debugging.cfg
     light_management.cfg
     marlin_compatibility.cfg
+    optical_issue_detection.cfg
     )
 
 # Copy to printer_data/config/
