@@ -20,8 +20,8 @@ print("x400-software-pack: Running copy_configs.sh in AUTO mode...")
 print(f"Repo directory : {REPO_DIR}")
 print(f"Running script : {SCRIPT}")
 
-print(">>> UPDATE.PY WAS EXECUTED AT " + os.popen('date').read().strip())
-open('/tmp/update_py_ran.txt', 'w').write('yes')
+#print(">>> UPDATE.PY WAS EXECUTED AT " + os.popen('date').read().strip())
+#open('/tmp/update_py_ran.txt', 'w').write('yes')
 
 if not os.path.isfile(SCRIPT):
     print(f"ERROR: Script not found: {SCRIPT}")
