@@ -141,11 +141,11 @@ ask_yn() {
         if [[ $default_answer == true ]]; then
             echo "$prompt [auto: Y]"
             echo "Y"
-            return
+            return 0
         else
             echo "$prompt [auto: N]"
             echo "N"
-            return
+            return 0
         fi
     fi
     
