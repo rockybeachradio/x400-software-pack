@@ -10,6 +10,7 @@ set -euo pipefail
 #
 ################################################################################################
 echo "This is $(basename "$0")"
+echo " "
 
 ################################################################################################
 # Variables
@@ -68,7 +69,7 @@ fi
 echo " "
 
 ################################################################################################
-# Update Linux
+# Change printer name
 ################################################################################################
 read -p "❓Changing printer name? [Y/n]: " answer
 answer=${answer:-Y}     # default to "Y" if empty
@@ -91,32 +92,36 @@ echo " "
 ################################################################################################
 # Update Linux
 ################################################################################################
-echo "ℹ️  Updating Linux, components and software ..."
-sudo apt update
-sudo apt upgrade -y
-
-# sudo apt full-upgrade -y      # install new dependencies
+read -p "❓Update Linux, components and software? [Y/n]: " answer
+answer=${answer:-Y}     # default to "N" if empty
+if [[ "$answer" =~ ^[Yy]$ ]]; then
+    echo "ℹ️  Updating Linux, components and software ..."
+    sudo apt update
+    sudo apt upgrade -y
+    # sudo apt full-upgrade -y      # install new dependencies
+fi
 echo " "
+
 
 ################################################################################################
 # Install Linux software
 ################################################################################################
-if [ "execute" = "no" ]; then # Auskommentierung --> Ist bereits installiert
+read -p "❓Install configng? [y/N]: " answer
+answer=${answer:-N}     # default to "N" if empty
+if [[ "$answer" =~ ^[Yy]$ ]]; then
+    TARGET_DIR="configng"
+    REPO_URL="https://github.com/armbian/configng.git"
 
-TARGET_DIR="configng"
-REPO_URL="https://github.com/armbian/configng.git"
-
-cd "$HOME"
-if [[ -d "$TARGET_DIR/.git" ]]; then
-    echo "✅ Repository '$TARGET_DIR' already exists."
-else
-    echo "ℹ️  Installing Armbian-config ..."
-    echo "⬇️  Cloning $REPO_URL ..."
-    git clone "$REPO_URL"
-    echo "✅ Clone completed."
+    cd "$HOME"
+    if [[ -d "$TARGET_DIR/.git" ]]; then
+        echo "✅ Repository '$TARGET_DIR' already exists."
+    else
+        echo "ℹ️  Installing Armbian-config ..."
+        echo "⬇️  Cloning $REPO_URL ..."
+        git clone "$REPO_URL"
+        echo "✅ Clone completed."
+    fi
 fi
-
-fi # Auskommentierung
 echo " "
 
 
@@ -155,6 +160,7 @@ echo " "
 sudo usermod -aG plugdev $USER
 echo " "
 
+
 ################################################################################################
 # Install KIAUH
 ################################################################################################
@@ -171,6 +177,7 @@ else
     echo "✅ Clone completed."
 fi
 echo " "
+
 
 ################################################################################################
 # Ende

@@ -114,6 +114,7 @@ files=(
     plr.cfg
     crowsnest.conf
     KlipperScreen.conf
+    mobileraker.conf
     moonraker.conf
     moonraker-obico.cfg
     electronics_bay.cfg
@@ -127,6 +128,15 @@ files=(
 for f in "${files[@]}"; do
     cp "$config_source""/""$f" "$config_destination/"  || echo "❌  Faild copying ""$f"
 done
+echo " "
+
+
+################################################################################################
+# Mainsail Theme - Additional Menu entries
+################################################################################################
+echo "ℹ️  Prepare Mainsail - Additional Menu entries ..."
+cp "$config_source/dot_theme/"* "$config_destination/.theme/" || echo "❌  Faild: Copying Mainsail Theme folder."
+#cp -a "$config_source/dot_theme"/{.*,*} "$config_destination/.theme"/ 2>/dev/null && echo "Copied Mainsail Theme folder" || echo "❌ Failed: Copying Mainsail Theme folder"
 echo " "
 
 
@@ -200,10 +210,8 @@ echo " "
 read -p "❓Install KlipperScreen panels? [y/N]: " answer
 answer=${answer:-N}     # default to "N" if empty
 if [[ "$answer" =~ ^[Yy]$ ]]; then
-
   echo "ℹ️  Add KlipperScreen panels ..."
   cp "$source_base""/eryone-KlipperScreen-panels/"* "$HOME""/KlipperScreen/panels/" || echo "❌  Faild copying Klipper-panels."
-
 else
   echo "... no installation."
 fi
@@ -242,20 +250,6 @@ else
   echo "... no"
 fi
 echo " "
-
-################################################################################################
-# Firmware configs
-################################################################################################
-#echo "ℹ️  Copy Katapult bootloader configuratons ..."
-#cp "$source_base""/mcu-bootloader-configurations/"* "$HOME""/katapult/" || echo "❌ Faild copying mcu-bootloader-configurations."
-
-#echo "ℹ️  Copy Klipper firmware configurations ..."
-#cp "$source_base""/mcu-firmware-configurations/"* "$HOME""/klipper/" || echo "❌  Faild copying mcu-firmware-configurations."
-
-#echo "Copy sensor firmware configuration ..."
-## sensor with stm32 chip on RP2040 board
-#cp "$source_base""/firmware-configurations/sensor_on_rp2040_firmware.config" "$HOME""/klipper/" || echo "❌  Faild copying sensor_on_rp2040_firmware.config."
-#cp "$source_base""/firmware-configurations/sensor_on_rp2040_katapult.config" "$HOME""/katapult/" || echo "❌  Faild copying sensor_on_rp2040_katapult.config."
 
 
 ################################################################################################

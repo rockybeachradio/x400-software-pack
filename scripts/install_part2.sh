@@ -22,29 +22,36 @@ cd "$REPO_DIR" || { echo "❌ x400-software-pack not found: $REPO_DIR"; exit 1; 
 echo " "
 
 ################################################################################################
-# install required software part 2
+# Install required software part 2
 ################################################################################################
 echo "ℹ️  Start software installer (install_software_2.sh) ..."
 "$REPO_DIR/scripts/install_software_2.sh"
 echo " "
 
 ################################################################################################
-# copy config files
+# Copy config files
 ################################################################################################
 echo "ℹ️  Start configuration copy script (copy_configs.sh) ..."
 "$REPO_DIR/scripts/copy_configs.sh" -i  || echo "❌  Faild: Starting copy_configs.sh"
 echo " "
 
+
 ################################################################################################
-# Update MCUs
+# Update MCU bootloader Katapult
+################################################################################################
+# - not implemented yet -
+
+
+################################################################################################
+# Update MCU firmwares
 ################################################################################################
 echo "ℹ️  The following script only works if Katapult is already installed on the SKIPR MCU and the toolehaead MCU."
-read -p "❓ Install/Update Klipper firmware on the MCUs? [y/N]: " answer
-answer=${answer:-N}     # default to "N" if empty
+read -p "❓ Install/Update Klipper firmware on the MCUs? [Y/n]: " answer
+answer=${answer:-Y}     # default to "N" if empty
 if [[ "$answer" =~ ^[Yy]$ ]]; then
-  "$REPO_DIR/scripts/mcu_update_all.sh"  || echo "❌  Faild: Starting mcu_update_all.sh"
+  "$REPO_DIR/scripts/mcu_firmware_update_all.sh"  || echo "❌  Faild: Starting mcu_update_all.sh"
 else
-  echo "... okay"
+  echo "... no MCU firmwar update"
 fi
 echo " "
 

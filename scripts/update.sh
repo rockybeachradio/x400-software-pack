@@ -62,7 +62,7 @@ echo " "
 if [ "execute" = "no" ]; then # Auskommentierung --> Needs to be implemented
 echo "ℹ️  Start script to update all MCUs (mcu_update_all.sh) ..."
 cd "$REPO_DIR/scripts/"  || echo "❌  Faild: Go to scripts folder"
-bash "$REPO_DIR/scripts/mcu_update_all.sh"   || echo "❌  Faild: Starting mcu_update_all.sh"
+bash "$REPO_DIR/scripts/mcu_firmware_update_all.sh"   || echo "❌  Faild: Starting mcu_update_all.sh"
 fi # Auskommentierung
 echo " "
 

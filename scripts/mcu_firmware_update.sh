@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 ################################################################################################
-# File: mcu_update.sh
+# File: mcu_firmware_update.sh
 # Author: Andreas
-# Date: 20250813
-# Purpose: Create the image and flash the MCU based on a given configuraion file.
+# Date: 20251125
+# Purpose: Create the firmware image (klipper) and flash the MCU based on a given configuraion file.
 #
 # How to create the CONFIG_File:
 #   Run "make menuconfig and make the changes you want. Example for smt32:
@@ -41,7 +41,7 @@ trap restart_klipper EXIT            # TRAP takes care that whenever the Script 
 ################################################################################################
 SERVICE="klipper.service"                       # Name of the Service which will be stopped / started
 klipper_folder="$HOME""/klipper"
-BIN_FILE="$klipper_folder/out/klipper.bin"    # Where make command stores the bin file.
+klipper_bin_file="$klipper_folder/out/klipper.bin"    # Where make command stores the bin file.
 
 # is_katapult_bootloader()
   CAN_IF="${CAN_IF:-can0}"
@@ -226,7 +226,7 @@ if [[ "$MODE" = "usb" ]]; then
   #echo "ℹ️  Show printer Config:"
   #grep canbus_uuid "$HOME/printer_data/config/"* -n  || error_exit "❌  Failed: grep."   # --> !!! WIRD FEHLERMLEDUNG !!!
  
-  echo "Stop Klipper.service"
+  echo "Stopping Klipper.service"
   stop_klipper
   sleep 1
 
@@ -276,7 +276,7 @@ if [[ "$MODE" = "can" ]]; then
   echo "ℹ️  Check (before stop_klipper): Is there a device? If not, dont worry!"
   $HOME/klippy-env/bin/python $HOME/klipper/scripts/canbus_query.py can0
 
-  echo "Stop Klipper.service"
+  echo "Stopping Klipper.service"
   stop_klipper
   sleep 1
 
@@ -296,10 +296,10 @@ if [[ "$MODE" = "can" ]]; then
   $HOME/klippy-env/bin/python $HOME/klipper/scripts/canbus_query.py can0
 
   echo "ℹ️  Flashing firmware to controller..."
-  "$HOME/klippy-env/bin/python3" "$HOME/katapult/scripts/flash_can.py" -i can0  -f "$BIN_FILE" -u "$UUID" || error_exit "❌  Failed: Flashing"
+  "$HOME/klippy-env/bin/python3" "$HOME/katapult/scripts/flash_can.py" -i can0  -f "$klipper_bin_file" -u "$UUID" || error_exit "❌  Failed: Flashing"
 
   #echo "ℹ️  Start Katapult bootloader on controller & Flashing to controller ..."
-  #"$HOME/klippy-env/bin/python3" "$HOME/katapult/scripts/flash_can.py" -i can0 -u "$UUID" -f "$BIN_FILE" -u "$UUID" || error_exit "❌  Starting Katapult bootloader or flashing failed."
+  #"$HOME/klippy-env/bin/python3" "$HOME/katapult/scripts/flash_can.py" -i can0 -u "$UUID" -f "$klipper_bin_file" -u "$UUID" || error_exit "❌  Starting Katapult bootloader or flashing failed."
 
   echo "ℹ️  Check (after flashing)"
   $HOME/klippy-env/bin/python $HOME/klipper/scripts/canbus_query.py can0
@@ -314,7 +314,7 @@ fi
 if [[ "$MODE" = "linux" ]]; then
   cd ~/klipper   || error_exit "❌  lipper folder not found." 
 
-  echo "Stop Klipper.service"
+  echo "Stopping Klipper.service"
   stop_klipper
   sleep 1
 
@@ -357,7 +357,7 @@ if [[ "$MODE" = "dfu" ]]; then
   make clean
   make  -j"$(nproc)" KCONFIG_CONFIG="$CONFIG_FILE" || error_exit "❌  Building firmware failed."
 
-  echo "Stop Klipper.service"
+  echo "Stopping Klipper.service"
   stop_klipper
   sleep 1
 
@@ -365,7 +365,7 @@ if [[ "$MODE" = "dfu" ]]; then
   echo "ℹ️  ... MCU must be in DFU mode. Manual tricker via BOOT & RESET button. If not flashing will fail."
 
   echo "ℹ️  Flashing to controller ..."
-  $ dfu-util -R -a 0 -s "$FLASH_DEVICE" -D "$BIN_FILE"
+  $ dfu-util -R -a 0 -s "$FLASH_DEVICE" -D "$klipper_bin_file"
   #$ dfu-util -R -a 0 -s 0x08000000:mass-erase:force -D ~/klipper/out/klipper.bin
 
   echo "ℹ️  Reset Controller ..."

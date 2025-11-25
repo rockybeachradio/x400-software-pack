@@ -2,9 +2,9 @@
 set -euo pipefail
 
 ################################################################################################
-# File: mcu_update_all.sh
+# File: mcu_firmware_update_all.sh
 # Author: Andreas
-# Date: 20250822
+# Date: 20251125
 # Purpose: Calls the muc_update.sh for each MCU.
 #
 ################################################################################################
@@ -68,15 +68,15 @@ if [[ "$answer" =~ ^[Yy]$ ]]; then
     echo " "
 
     echo "ℹ️  Calling mcu_update.sh for linux mcu..."
-    "$SCRIPT_DIR/mcu_update.sh" -m linux -c "$LINUX_MCU_KLIPPER_FIRMWARE_CONFIG_FILE" || echo "❌  Faild: Starting mcu_update.sh for Linux MCU"
+    "$SCRIPT_DIR/mcu_firmware_update.sh" -m linux -c "$LINUX_MCU_KLIPPER_FIRMWARE_CONFIG_FILE" || echo "❌  Faild: Starting mcu_update.sh for Linux MCU"
     echo " "
 
     echo "ℹ️  Calling mcu_update.sh for SKIPR mcu..."
-    "$SCRIPT_DIR/mcu_update.sh" -m usb -c "$MCU_FIRMWARE_CONFIGS_DIR/stm32f407_klipper_firmware.config" -u "$SKIPR_MCU_UUID" -d "$SKIPR_MCU_PORT" || echo "❌  Faild: Starting mcu_update.sh for SKIPR MCU"
+    "$SCRIPT_DIR/mcu_firmware_update.sh" -m usb -c "$MCU_FIRMWARE_CONFIGS_DIR/stm32f407_klipper_firmware.config" -u "$SKIPR_MCU_UUID" -d "$SKIPR_MCU_PORT" || echo "❌  Faild: Starting mcu_update.sh for SKIPR MCU"
     echo " "
 
     echo "ℹ️  Calling mcu_update.sh for toolhead mcu..."
-    "$SCRIPT_DIR/mcu_update.sh" -m can -c "$MCU_FIRMWARE_CONFIGS_DIR/rp2040_klipper_firmware.config" -u "$TOOLHEAD_MCU_UUID" || echo "❌  Faild: Starting mcu_update.sh for Toolhead MCU"
+    "$SCRIPT_DIR/mcu_firmware_update.sh" -m can -c "$MCU_FIRMWARE_CONFIGS_DIR/rp2040_klipper_firmware.config" -u "$TOOLHEAD_MCU_UUID" || echo "❌  Faild: Starting mcu_update.sh for Toolhead MCU"
     echo " "
 
     #echo "ℹ️  Call mcu_update.sh for piezzo stm32g on toolehad"

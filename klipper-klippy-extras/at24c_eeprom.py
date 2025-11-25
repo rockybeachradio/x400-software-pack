@@ -4,33 +4,22 @@
 # Author: Eryone, Andreas
 # Date: 202500602, 20251106
 # Purpose: Extension to allow Klipper to controll the at24xx chip which is added by Eryone for PLR (PowerLossRecovery)
-################################################################################################
-import math
-
-from . import bus
-
+#
 ################################################################################################
 ### How to test ###
-#
 # Test Commands:
 #   M406 D1234   ; write 123.4 mm
 #   M408 A0      ; read back
 #   M407         ; sync + status
-#
-# Expected Mainsail output:
+## Expected Mainsail output:
 #   EEPROM: 1234 → 123.400 mm
 #   Saved: 120.5
-# 
-# Do it again and change M406 command to updated to 123.5
-
-
-### ToDo ###
-#
-# Replace: self.gcode.respond_info(...)  -  with: gcmd.respond_info(...)
-# self.gcode is the dispatcher. gcmd is created from that dispatcher → gcmd.respond_info just calls the same method.
+# Repeat with changed M406 command value: 123.5
 #
 ################################################################################################
 
+import math         # Imports Python’s built-in math module, giving your code access to mathematical functions and constants.
+from . import bus   # Imports the bus module from the same package (i.e., from the klippy directory where at24c_eeprom.py lives).
 
 class at24cxx:  # Constructor of your at24cxx class — the first method that runs when Klipper creates an instance of your EEPROM module.
     ##############################################################
@@ -132,7 +121,7 @@ class at24cxx:  # Constructor of your at24cxx class — the first method that ru
         data = [val & 0xff,(val >> 8) & 0xff]
         self.write_register(0x00, data)
         
-        self.gcode.respond_info(f"write data: {data}")
+        gcmd.respond_info(f"write data: {data}")
         gcmd.respond_info(f"EEPROM[0x00] <- {val} → {val/10.0:.2f} mm")     # Added for debugging
 
     ##############################################################
@@ -142,19 +131,19 @@ class at24cxx:  # Constructor of your at24cxx class — the first method that ru
         eeprom_z = raw[0]| (raw[1]<<8)                  # Combine into 16-bit int
         
         if 'power_resume_z' in self.vars:
-            self.gcode.respond_info(f"raw %d %d eeprom_z:%d  %f"%(raw[0],raw[1],eeprom_z,self.variables['power_resume_z']))     # What’s currently saved in variables.cfg
+            gcmd.respond_info(f"raw %d %d eeprom_z:%d  %f"%(raw[0],raw[1],eeprom_z,self.variables['power_resume_z']))     # What’s currently saved in variables.cfg
         # if math.fabs(eeprom_z / 10.0 - self.variables['power_resume_z']) > 0.01:
         
         z_str = str(eeprom_z / 10.0)         # e.g. "123.4"
-        self.gcode.respond_info(z_str)
-        self.gcode.respond_info(f"{z_str.find('0.')}")
+        gcmd.respond_info(z_str)
+        gcmd.respond_info(f"{z_str.find('0.')}")
         
         #Clean up decimal formatting for SAVE_VARIABLE
         if z_str.rfind('.0') != -1:
             z_str = z_str[:-2]              # "123.4" → "123" if ends with ".0"
         if z_str.find('0.') == 0:
             z_str = z_str[1:]               # "0.5" → ".5" (rare)
-        self.gcode.respond_info(z_str)
+        gcmd.respond_info(z_str)
 
     ##############################################################
     def cmd_read_write_variable(self, gcmd):

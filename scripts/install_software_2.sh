@@ -132,32 +132,33 @@ read -p "❓Install Klipper-backup tool? [y/N]: " answer
 answer=${answer:-N}     # default to "N" if empty
 if [[ "$answer" =~ ^[Yy]$ ]]; then
 
-TARGET_DIR="klipper-backup"
-REPO_URL="get.klipperbackup.xyz"
+    TARGET_DIR="klipper-backup"
+    REPO_URL="get.klipperbackup.xyz"
 
-klipperbackup_dir="$HOME/$TARGET_DIR"
-klipperbackup_file="$klipperbackup_dir/.env"
+    klipperbackup_dir="$HOME/$TARGET_DIR"
+    klipperbackup_file="$klipperbackup_dir/.env"
 
-echo "ℹ️  Installing Klipper-backup tool ..."
+    echo "ℹ️  Installing Klipper-backup tool ..."
 
-# Installation gem klipperbackup.xyz
-curl -fsSL $REPO_URL | bash
-$klipperbackup_dir/install.sh
+    # Installation gem klipperbackup.xyz
+    curl -fsSL $REPO_URL | bash
+    $klipperbackup_dir/install.sh
 
-# Add settings from /configurations/klipper-backup.conf to klipper-backup/.env
-read -p "❓ GitHub user name: " github_username
-read -p "❓ GitHub repo name (eg. x400-backup): " github_repository
-read -p "❓ GitHub repo ssh token (eg. ssh-ed25519... / github_pat_ed25519...): " github_token
+    # Add settings from /configurations/klipper-backup.conf to klipper-backup/.env
+    read -p "❓ GitHub user name: " github_username
+    read -p "❓ GitHub repo name (eg. x400-backup): " github_repository
+    read -p "❓ GitHub repo ssh token (eg. ssh-ed25519... / github_pat_ed25519...): " github_token
 
-# Write to klipper-backup/.env      # Writes in the .env file which is created during the klipper-backup/install.sh. Will later be replaced by the x400-software-pack version.
-write_var_to_file "$klipperbackup_file" github_username
-write_var_to_file "$klipperbackup_file" github_repository
-write_var_to_file "$klipperbackup_file" github_token
+    # Write to klipper-backup/.env      # Writes in the .env file which is created during the klipper-backup/install.sh. Will later be replaced by the x400-software-pack version.
+    write_var_to_file "$klipperbackup_file" github_username
+    write_var_to_file "$klipperbackup_file" github_repository
+    write_var_to_file "$klipperbackup_file" github_token
 
 else
     echo "... no installation."
 fi
 echo " "
+
 
 ################################################################################################
 # Install x11vnc
@@ -415,6 +416,25 @@ echo " "
 
 
 ################################################################################################
+# OctoEverywhere
+################################################################################################
+read -p "❓ Install OctoEverywhere? [Y/n]: " answer
+answer=${answer:-Y}     # default to "Y" if empty
+if [[ "$answer" =~ ^[Yy]$ ]]; then
+    echo "ℹ️  Installing OctoEverywhere (AI issue detection)..."
+    cd ~/ || echo "❌ Failed: cd ~/"
+    bash <(curl -s https://octoeverywhere.com/install.sh) || echo "❌ Failed: bash install"
+    echo " "
+    echo "For remote access a app is needed."
+    echo "Get the App for iOS in the App Store: OctoApp for OctoPrintKlipper"
+    echo "Login in the app: Burger menu (boottom right) --> Configure remote access --> OcotoEverywhere"
+    echo " "
+else
+    echo "... no installation."
+fi
+
+
+################################################################################################
 # Flash Linux MCU (rpi)
 ################################################################################################
 read -p "❓ Install the Linux MCU? [Y/n]: " answer
@@ -426,6 +446,7 @@ else
     echo "... no installation."
 fi
 echo " "
+
 
 ################################################################################################
 # Helper Tools
@@ -441,49 +462,49 @@ echo " "
 #######################################################
 if [ "execute" = "no" ]; then # Auskommentierung
 
-sudo apt install -y htop                        # htop: Interactive system-monitoring tool for CPU, memory, and process usage (more user-friendly than top).
-sudo apt install -y iotop                       # iotop: Monitors disk I/O usage by processes (complements htop for system debugging).
+    sudo apt install -y htop                        # htop: Interactive system-monitoring tool for CPU, memory, and process usage (more user-friendly than top).
+    sudo apt install -y iotop                       # iotop: Monitors disk I/O usage by processes (complements htop for system debugging).
 
-sudo apt install bpytop -y                      # bpytop: system monitoring tool written in Python, similar to htop but with a more graphical interface.
-pip3 install --upgrade psutil                   # psutil: A cross-platform Python library for retrieving system utilization metrics.
+    sudo apt install bpytop -y                      # bpytop: system monitoring tool written in Python, similar to htop but with a more graphical interface.
+    pip3 install --upgrade psutil                   # psutil: A cross-platform Python library for retrieving system utilization metrics.
 
-sudo apt install -y tcpdump                     # tcpdump: Network packet analyzer for capturing and analyzing network traffic.
-sudo apt install -y iptraf                      # iptraf: Interactive network monitoring tool for bandwidth and traffic statistics.
+    sudo apt install -y tcpdump                     # tcpdump: Network packet analyzer for capturing and analyzing network traffic.
+    sudo apt install -y iptraf                      # iptraf: Interactive network monitoring tool for bandwidth and traffic statistics.
 
-sudo apt install -y speedtest-cli               # speedtest-cli: Command-line tool to test internet speed (useful for checking network).
-sudo apt install -y wavemon                     # wavemon: Wireless network monitoring tool to check Wi-Fi signal strength and stats.
+    sudo apt install -y speedtest-cli               # speedtest-cli: Command-line tool to test internet speed (useful for checking network).
+    sudo apt install -y wavemon                     # wavemon: Wireless network monitoring tool to check Wi-Fi signal strength and stats.
 
-sudo apt install -y tldr                        # tldr: Simplified man pages with practical command examples.
-sudo apt install -y ranger                      # ranger: Console-based file manager with a modern, vim-like interface.
-sudo apt install -y mc                          # mc: Midnight Commander, a text-based file manager for navigating directories.
+    sudo apt install -y tldr                        # tldr: Simplified man pages with practical command examples.
+    sudo apt install -y ranger                      # ranger: Console-based file manager with a modern, vim-like interface.
+    sudo apt install -y mc                          # mc: Midnight Commander, a text-based file manager for navigating directories.
 
-sudo apt install -y dcfldd                      # dcfldd: Enhanced version of dd for disk imaging and data recovery with forensic features.
+    sudo apt install -y dcfldd                      # dcfldd: Enhanced version of dd for disk imaging and data recovery with forensic features.
 
-sudo apt install -y fd-find                     # fd-find: Fast alternative to find for searching files (often aliased as fd).
-sudo apt install -y silversearcher-ag           # silversearcher-ag: A fast code-searching tool (ag) for finding text in files, useful for developers.
+    sudo apt install -y fd-find                     # fd-find: Fast alternative to find for searching files (often aliased as fd).
+    sudo apt install -y silversearcher-ag           # silversearcher-ag: A fast code-searching tool (ag) for finding text in files, useful for developers.
 
-sudo apt install -y hexedit                     # hexedit: Hexadecimal editor for viewing/editing binary files (e.g., firmware or EEPROM data).
-sudo apt install -y ultitail                    # multitail: Monitor multiple log files simultaneously (e.g., klippy.log for Klipper debugging).
+    sudo apt install -y hexedit                     # hexedit: Hexadecimal editor for viewing/editing binary files (e.g., firmware or EEPROM data).
+    sudo apt install -y ultitail                    # multitail: Monitor multiple log files simultaneously (e.g., klippy.log for Klipper debugging).
 
-sudo apt install -y usbutils                    # usbutils: Tools like lsusb to list and debug USB devices (e.g. USB connections).
+    sudo apt install -y usbutils                    # usbutils: Tools like lsusb to list and debug USB devices (e.g. USB connections).
 
-sudo apt install -y ncdu                        # ncdu: Disk usage analyzer for finding large files/directories (e.g., to manage SD card space).
+    sudo apt install -y ncdu                        # ncdu: Disk usage analyzer for finding large files/directories (e.g., to manage SD card space).
 
-sudo apt install -y can-utils                   # can-utils: Tools for Controller Area Network (CAN) interfaces.
+    sudo apt install -y can-utils                   # can-utils: Tools for Controller Area Network (CAN) interfaces.
 
-sudo apt install -y lsof                        # lsof: Lists open files and their associated processes (useful for debugging resource usage).
+    sudo apt install -y lsof                        # lsof: Lists open files and their associated processes (useful for debugging resource usage).
 
-sudo apt install -y minicom                     # minicom: Serial communication tool for interacting with devices like microcontrollers (e.g., STM32F407).
-sudo apt install -y i2c-tools                   # i2c-tools: Utilities like i2cdetect for debugging I²C devices (e.g., AT24C32 EEPROM on PB10/PB11).
+    sudo apt install -y minicom                     # minicom: Serial communication tool for interacting with devices like microcontrollers (e.g., STM32F407).
+    sudo apt install -y i2c-tools                   # i2c-tools: Utilities like i2cdetect for debugging I²C devices (e.g., AT24C32 EEPROM on PB10/PB11).
 
-#sudo apt install -y git                         # git: Version control system for tracking code changes (e.g., managing Klipper source code).
-#sudo apt install -y nano                        # nano: Simple command-line text editor for editing files like printer.cfg.
+    #sudo apt install -y git                         # git: Version control system for tracking code changes (e.g., managing Klipper source code).
+    #sudo apt install -y nano                        # nano: Simple command-line text editor for editing files like printer.cfg.
 
-#sudo apt install -y terminator                  # terminator: Advanced terminal emulator with split panes (requires GUI).
-#sudo apt install -y cutecom                     # cutecom: Graphical serial terminal for debugging serial connections (requires GUI).
+    #sudo apt install -y terminator                  # terminator: Advanced terminal emulator with split panes (requires GUI).
+    #sudo apt install -y cutecom                     # cutecom: Graphical serial terminal for debugging serial connections (requires GUI).
 
-#sudo apt install -y joystick                    # joystick: Tools for configuring and testing joysticks
-#sudo apt install -y jstest-gtk                  # jstest-gtk: Graphical joystick testing tool (requires GUI).
+    #sudo apt install -y joystick                    # joystick: Tools for configuring and testing joysticks
+    #sudo apt install -y jstest-gtk                  # jstest-gtk: Graphical joystick testing tool (requires GUI).
 
 fi # Auskommentierung
 
@@ -492,13 +513,14 @@ fi # Auskommentierung
 # Update TL;DR chache
 ################################################################################################
 if [ "execute" = "no" ]; then # Auskommentierung
-tldr -u     # Update the local cache of TL;DR pages for the tldr command-line tool
+    tldr -u     # Update the local cache of TL;DR pages for the tldr command-line tool
 fi # Auskommentierung
+
 
 ################################################################################################
 # Cleaning up
 ################################################################################################
-echo "ℹ️  Clean up ..."
+echo "ℹ️  Cleaning up ..."
 cd "$HOME"
 sudo apt autoremove -y modem* cups* pulse* avahi* triggerhappy*
 echo " "
@@ -507,12 +529,5 @@ echo " "
 ################################################################################################
 # Ende
 ################################################################################################
-echo " "
-echo "Next steps:"
-echo "call: ~/x400-software-pack/scripts/copy_configs.sh -i"
-echo "Thats it. YOur printer is ready to print"
-
-echo " "
 echo "ℹ️  $(basename "$0") completed."
-
 exit 0
