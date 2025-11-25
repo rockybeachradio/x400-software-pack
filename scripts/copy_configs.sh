@@ -133,6 +133,9 @@ ask_yn() {
     local prompt="$1"
     local default_answer="$2"  # true = Y, false = N
 
+    echo "prompt: §prompt"
+    echo "default_answer: $default_answer"
+    
     if [[ $AUTO_MODE -eq 1 ]]; then
         if [[ $default_answer == "true" ]]; then
             echo "$prompt [auto: Y]"
@@ -161,6 +164,7 @@ ask_yn() {
 #read -p "❓ This script will evetnually override existing files and folders. Changes made in those files will be removed. Continue? [Y/n]: " answer
 #answer=${answer:-Y}     # default to "N" if empty
 answer=$(ask_yn "This script will eventually override existing files and folders. Continue? [Y/n]" true)
+echo "$answer"
 if [[ "$answer" =~ ^[Yy]$ ]]; then
     echo "Okay, lets start ..."
 else
