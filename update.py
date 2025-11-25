@@ -18,24 +18,24 @@ SCRIPT = os.path.join(REPO_DIR, "scripts", "copy_configs.sh")
 
 print("x400-software-pack: Running copy_configs.sh in AUTO mode...")
 print(f"Repo directory : {REPO_DIR}")
-print(f"Running script : {UPDATE_SCRIPT}")
+print(f"Running script : {SCRIPT}")
 
 
 
-if not os.path.isfile(UPDATE_SCRIPT):
-    print(f"ERROR: Script not found: {UPDATE_SCRIPT}")
+if not os.path.isfile(SCRIPT):
+    print(f"ERROR: Script not found: {SCRIPT}")
     sys.exit(1)
 
-if not os.access(UPDATE_SCRIPT, os.X_OK):
-    print(f"ERROR: Script not executable: {UPDATE_SCRIPT}")
-    print("Fix with: chmod +x " + UPDATE_SCRIPT)
+if not os.access(SCRIPT, os.X_OK):
+    print(f"ERROR: Script not executable: {SCRIPT}")
+    print("Fix with: chmod +x " + SCRIPT)
     sys.exit(1)
 
 # Run the real update script with AUTO mode
 env = {**os.environ, "MOONRAKER_UPDATE": "1"}
 
 result = subprocess.run(
-    ["bash", UPDATE_SCRIPT],
+    ["bash", SCRIPT],
     cwd=REPO_DIR,
     env=env
 )
