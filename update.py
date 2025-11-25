@@ -21,6 +21,7 @@ print(f"Repo directory : {REPO_DIR}")
 print(f"Running script : {UPDATE_SCRIPT}")
 
 
+
 if not os.path.isfile(UPDATE_SCRIPT):
     print(f"ERROR: Script not found: {UPDATE_SCRIPT}")
     sys.exit(1)
@@ -41,7 +42,7 @@ result = subprocess.run(
 
 if result.returncode != 0:
     print(f"Update failed with exit code {result.returncode}")
-    sys.exit(result.returncode
+    sys.exit(result.returncode)
 
 print("=== x400-software-pack update completed successfully ===")
 sys.exit(0)
