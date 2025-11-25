@@ -165,7 +165,10 @@ ask_yn() {
 #read -p "❓ This script will evetnually override existing files and folders. Changes made in those files will be removed. Continue? [Y/n]: " answer
 #answer=${answer:-Y}     # default to "N" if empty
 answer=$(ask_yn "This script will eventually override existing files and folders. Continue?" true)
+
+echo "eee"
 echo "answer: $answer"
+
 if [[ "$answer" =~ ^[Yy]$ ]]; then
     echo "Okay, lets start ..."
 else
