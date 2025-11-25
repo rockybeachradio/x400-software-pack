@@ -131,10 +131,10 @@ ask() {
 # Helper: yes/no question with default Y or N
 ask_yn() {
     local prompt="$1"
-    local default_yes="$2"  # true = default Y, false = default N
+    local default_answer="$2"  # true = Y, false = N
 
     if [[ $AUTO_MODE -eq 1 ]]; then
-        if [[ $default_yes == true ]]; then
+        if [[ $default_answer == "true" ]]; then
             echo "$prompt [auto: Y]"
             echo "Y"
         else
@@ -144,7 +144,7 @@ ask_yn() {
         return
     fi
 
-    if [[ $default_yes == true ]]; then
+    if [[ $default_answer == true ]]; then
         read -p "$prompt [Y/n]: " answer
         answer=${answer:-Y}
     else
