@@ -139,7 +139,7 @@ ask_yn() {
 
     if [[ $AUTO_MODE -eq 1 ]]; then
         if [[ $default_answer == true ]]; then
-            echo "$prompt [auto: Y]"
+            #echo "$prompt [auto: Y]"
             echo "Y"
             return 0
         else
