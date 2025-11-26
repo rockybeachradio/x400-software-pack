@@ -11,13 +11,13 @@ echo "This is $(basename "$0")"
 echo " "
 
 # Go to repo root
-cd "$(dirname "$0")/.."
+cd "$(dirname "$0")/../../"
 
 # Optional logging
-LOG_FILE="./x400-post-update.log"
+LOG_FILE="./git-post-update.log"
 echo "[$(date)] post-merge hook running..." >> "$LOG_FILE"
 
 # Run your script
-bash ../scripts/copy_configs.sh --auto >> "$LOG_FILE" 2>&1
+bash ./scripts/copy_configs.sh --auto >> "$LOG_FILE" 2>&1
 
 echo "[$(date)] post-merge hook done." >> "$LOG_FILE"
