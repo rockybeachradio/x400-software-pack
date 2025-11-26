@@ -60,7 +60,7 @@ source "$SCRIPT_DIR/git_initiate.sh"
 
 
 ################################################################################################
-# === AUTO-MODE DETECTION ===
+# AUTO-MODE detection
 ################################################################################################
 # If one of these environment variables is set → we are running from Moonraker update_manager
 if [[ -n "${MOONRAKER_UPDATE:-}" ]] || [[ -n "${AUTO_YES:-}" ]] || [[ "${1:-}" == "--auto" ]]; then
@@ -92,19 +92,6 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 echo " "
-
-
-# Parse parameters
-while [[ $# -gt 0 ]]; do
-    case "$1" in
-        -i|--install) INSTALL=true; shift ;;
-        --auto)       AUTO_MODE=1; shift ;;   # internal use by update.py
-        -h|--help)    echo "Usage: $0 [-i|--install]"; exit 0 ;;
-        *)            echo "Unknown option: $1"; exit 1 ;;
-    esac
-done
-
-
 
 
 ################################################################################################
@@ -148,9 +135,11 @@ ask_yn() {
     if [[ $default_answer == true ]]; then
         read -p "$prompt [Y/n]: " answer
         answer=${answer:-Y}
+        return
     else
         read -p "$prompt [y/N]: " answer
         answer=${answer:-N}
+        return
     fi
 }
 
