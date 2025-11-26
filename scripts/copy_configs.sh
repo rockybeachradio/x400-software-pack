@@ -135,7 +135,7 @@ ask_yn() {
     if [[ $default_answer == true ]]; then
         read -p "$prompt [Y/n]: " answer
         answer=${answer:-Y}
-        cho "Y"
+        echo "Y"
         return
     else
         read -p "$prompt [y/N]: " answer
