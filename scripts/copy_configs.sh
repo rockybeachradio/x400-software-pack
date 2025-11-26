@@ -55,10 +55,6 @@ source "$SCRIPT_DIR/read_write_config_files.sh"      # Include shell script with
 source "$SCRIPT_DIR/git_initiate.sh"
 
 
-
-
-
-
 ################################################################################################
 # AUTO-MODE detection
 ################################################################################################
@@ -165,7 +161,7 @@ echo " "
 # git hooks - symlink
 ################################################################################################
 echo "ℹ️  git hooks symlinks ..."
-ln -sfn "$REPO_DIR/git-hooks/post-merge"  "$REPO_DIR/.git/hooks/post-merge"  || echo "❌  Faild: Create symlinkt .git/hooks/post-merge"
+ln -sfn "$REPO_DIR/git-hooks/post-merge.sh"  "$REPO_DIR/.git/hooks/post-merge"  || echo "❌  Faild: Create symlinkt .git/hooks/post-merge"
 echo " "
 
 

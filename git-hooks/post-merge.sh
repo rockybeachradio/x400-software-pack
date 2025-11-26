@@ -5,7 +5,12 @@ set -euo pipefail
 # File: ~/x400-software-pack/.git/hooks/post-merge
 # Author: Andreas
 # Date: 20251126
-# Purpose: will be executed by git after git pull. Needed to install x400-software-pack.
+# Purpose: Calls the copy_configs.sh in x400-software-pack to update printer.
+#
+# This script will be executed by git after git pull.
+# It is a post-merge command from git. Normally the file needs to be in /x400-software-pack/.git/hooks.
+# The .git folder is not pushed/piulle by git. So the copy_configs.sh creates a symling there which refers to this file.
+# The output of the copy_configs.sh is stored in ~/x400-software-pack/git.-pist.merge.log
 ################################################################################################
 echo "This is $(basename "$0")"
 echo " "
