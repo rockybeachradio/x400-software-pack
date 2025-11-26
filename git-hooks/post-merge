@@ -18,6 +18,6 @@ LOG_FILE="./x400-post-update.log"
 echo "[$(date)] post-merge hook running..." >> "$LOG_FILE"
 
 # Run your script
-bash ./scripts/copy_configs.sh --auto >> "$LOG_FILE" 2>&1
+bash ../scripts/copy_configs.sh --auto >> "$LOG_FILE" 2>&1
 
 echo "[$(date)] post-merge hook done." >> "$LOG_FILE"
