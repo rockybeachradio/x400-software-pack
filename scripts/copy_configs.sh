@@ -495,7 +495,7 @@ else
 fi
 
 if [[ "$answer" =~ ^[Yy]$ ]]; then
-  echo "Restsrting Klipper"
+  echo "Restarting Klipper"
   sudo systemctl restart klipper
 else
   echo "... no"
