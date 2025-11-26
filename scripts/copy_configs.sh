@@ -171,6 +171,14 @@ echo " "
 
 
 ################################################################################################
+# git hooks - symlink
+################################################################################################
+echo "ℹ️  git hooks symlinks ..."
+ln -sfn "$REPO_DIR/git-hooks/post-merge"  "$REPO_DIR/.git/hooks/post-merge"  || echo "❌  Faild: Create symlinkt .git/hooks/post-merge"
+echo " "
+
+
+################################################################################################
 # Configuration files - Copy files to /printer_data/config/
 ################################################################################################
 # printer_data - config
