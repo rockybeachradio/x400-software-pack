@@ -139,6 +139,35 @@ ask_yn() {
         echo "N"
         return
     fi
+
+
+
+    # Interactive Mode
+    if [[ $default_answer == true ]]; then
+        read -p "$prompt [Y/n]: " answer
+        answer=${answer:-Y}
+    else
+        read -p "$prompt [y/N]: " answer
+        answer=${answer:-N}
+    fi
+    
+    if [[ "$answer" =~ ^[Yy]$ ]]; then
+        echo "Y"
+        return
+    elif [[ "$answer" =~ ^[Nn]$ ]]; then
+        echo "N"
+        return
+    else
+        if [[ $default_answer == true ]]; then
+          echo "Y"
+          return
+        else
+          echo "N"
+          return
+        fi
+    fi
+
+
 }
 
 
