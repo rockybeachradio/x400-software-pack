@@ -27,7 +27,7 @@ result=$?   # capture exit status
 
 # Check result and print to Mainsail + logfile
 if [ $result -eq 0 ]; then
-  echo "[x400-software-pack] ✅ copy_configs.sh --auto completed successfully. For detailes see git-post-update.log" | tee -a "$LOG_FILE"
+  echo "[x400-software-pack] ✅ copy_configs.sh --auto completed successfully. For details see git-post-update.log" | tee -a "$LOG_FILE"
 else
   echo "[x400-software-pack] ❌ copy_configs.sh --auto FAILED (exit reason: $result). For details see git-post-update.log" | tee -a "$LOG_FILE"
 fi
