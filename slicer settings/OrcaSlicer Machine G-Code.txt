@@ -6,6 +6,9 @@ M83     ; Extruder relative mode
 ; Set acceleration parameters: S = general acceleration - all moves; P = print acceleration -  moves with extruision; T = travel acceleration - moves without non-extrusion
 M204 S[machine_max_acceleration_extruding] T[machine_max_acceleration_retracting]
 
+; KAMP: This ensures that adaptive meshing and pruging works. Needs to be called right before PRINT_START
+M117
+
 ; Call PRINT_START macro & Handover variables
 PRINT_START EXTRUDER=[first_layer_temperature] BED=[bed_temperature_initial_layer] CHAMBER=[chamber_temperature]
 
