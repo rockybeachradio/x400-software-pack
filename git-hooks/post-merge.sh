@@ -15,14 +15,21 @@ set -euo pipefail
 echo "This is $(basename "$0")"
 echo " "
 
-# Go to repo root
-cd "$(dirname "$0")/../../"
-
-# Optional logging
+# Variable definition
 LOG_FILE="./git-post-update.log"
-echo "[$(date)] post-merge hook running..." >> "$LOG_FILE"
 
-# Run your script
-bash ./scripts/copy_configs.sh --auto >> "$LOG_FILE" 2>&1
+echo "[$(date)] post-merge hook running..." | tee -a "$LOG_FILE"
 
-echo "[$(date)] post-merge hook done." >> "$LOG_FILE"
+cd "$(dirname "$0")/../../"     # Go to repo root
+
+bash ./scripts/copy_configs.sh --auto >> "$LOG_FILE" 2>&1 | tee -a "$LOG_FILE"      # Run script
+result=$?   # capture exit status
+
+# Check result and print to Mainsail + logfile
+if [ $result -eq 0 ]; then
+  echo "[x400-software-pack] ✅ copy_configs.sh --auto completed successfully. For detailes see git-post-update.log" | tee -a "$LOG_FILE"
+else
+  echo "[x400-software-pack] ❌ copy_configs.sh --auto FAILED (exit reason: $result). For details see git-post-update.log" | tee -a "$LOG_FILE"
+fi
+
+echo "[$(date)] post-merge hook done." | tee -a "$LOG_FILE"
