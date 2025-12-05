@@ -2,7 +2,14 @@
   {
     "title": "",
     "position": 100,
-    "icon": ""    // Additional entries in the Mainsail menu on the left side.
+    "icon": ""
+    // Additional entries in the Mainsail menu on the left side.
+    // source: https://docs.mainsail.xyz/overview/features/themes/custom-navigation
+    //
+    // icons:
+    // source: https://pictogrammers.com/library/mdi/
+    // copy svg and past here. Remove HTML code
+  },
   {
     "title": "Moonraker",
     "href": "http://192.168.11.120:7125",
