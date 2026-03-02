@@ -36,7 +36,7 @@ For information what was changed comapred to the original Eryone Firmware, may b
     - ln -s /home/mks/KlipperScreen/all /home/mks/mainsail/all
 
 ## Check why these files are in the eryone repo compared to the original repos.
-- [ ] Eryone Scripts /all/ --> Where arethey used?
+- [ ] Eryone Scripts /all/ --> Where are they used?
 - [ ] Eryone /KlipperScreen/ --> Check
     - /KlipperScreen/Panels/ - What are they doing?
         - [ ] calibrate.py

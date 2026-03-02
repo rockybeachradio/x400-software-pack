@@ -39,9 +39,9 @@ RPI_MCU_PORT=$(grep -A1 "\[mcu rpi\]" $CONFIG_FILE | grep "serial" | cut -d':' -
 # Checks
 ################################################################################################
 # Ensure helper script exists
-if [[ ! -x "$SCRIPT_DIR/mcu_update.sh" ]]; then
-  echo "❌  Not executable or missing: $SCRIPT_DIR/mcu_update.sh"
-  echo "    Try: chmod +x \"$SCRIPT_DIR/mcu_update.sh\""
+if [[ ! -x "$SCRIPT_DIR/mcu_firmware_update.sh" ]]; then
+  echo "❌  Not executable or missing: $SCRIPT_DIR/mcu_firmware_update.sh"
+  echo "    Try: chmod +x \"$SCRIPT_DIR/mcu_firmware_update.sh\""
   exit 1
 fi
 echo " "

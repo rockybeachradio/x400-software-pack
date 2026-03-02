@@ -68,10 +68,10 @@ while getopts "m:c:d:u:h" opt; do
       echo "  -d   Flash device (e.g. ttyACM0, 2e8a:0003)"
       echo " "
       echo "Examples:"
-      echo "./mcu_update.sh -m usb -c ~/x400-software-pack/mcu-firmware-configurations/stm32f407_klipper_firmware.config -u e718d4677a2f -d /dev/ttyN0"
-      echo "./mcu_update.sh -m can -c ~/x400-software-pack/mcu-firmware-configurations/rp2040_klipper_firmware.config -u 972e3df7498c"
-      echo "./mcu_update.sh -m linux -c ~/x400-software-pack/mcu-firmware-configurations/linux_mcu_klipper_firmware.config"
-      echo "./mcu_update.sh -m dfu -c configuration_file.config - d 0x0800000"
+      echo "./mcu_firmware_update.sh -m usb -c ~/x400-software-pack/mcu-firmware-configurations/stm32f407_klipper_firmware.config -u e718d4677a2f -d /dev/ttyN0"
+      echo "./mcu_firmware_update.sh -m can -c ~/x400-software-pack/mcu-firmware-configurations/rp2040_klipper_firmware.config -u 972e3df7498c"
+      echo "./mcu_firmware_update.sh -m linux -c ~/x400-software-pack/mcu-firmware-configurations/linux_mcu_klipper_firmware.config"
+      echo "./mcu_firmware_update.sh -m dfu -c configuration_file.config - d 0x0800000"
       exit 0       # Exit the Script, when -h was called
       ;;
     \?)
